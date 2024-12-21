@@ -21,7 +21,7 @@ enum class CompetitionType(
     BSA("BSA"), // todo
     ELC("ELC", top = 1, second = 5, last = 3),
     PL("PL", top = 3, second = 4, last = 3),
-    CL("CL", top = 1, second = 2),
+    CL("CL", top = 7, second = 23, last = 12),
     EC("EC", top = 1, second = 2),
     FL1("FL1", top = 3, second = 4, last = 3),
     BL1("BL1", top = 3, second = 4, last = 3),

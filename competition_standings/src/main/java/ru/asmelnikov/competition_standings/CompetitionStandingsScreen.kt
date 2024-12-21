@@ -264,7 +264,7 @@ fun CompetitionStandingsContent(
                     modifier = Modifier
                         .fillMaxSize(),
                     state = pagerState,
-                    beyondBoundsPageCount = 2,
+                    beyondViewportPageCount = 2,
                     verticalAlignment = Alignment.Top
                 ) { page ->
                     when (page) {

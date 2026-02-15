@@ -11,12 +11,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/competition_standings" />
-            <option value="$PROJECT_DIR$/competitions_main" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/person_info" />
-            <option value="$PROJECT_DIR$/team_info" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/competition_standings" />
+            <option value="$PROJECT_DIR$/feature/competitions_main" />
+            <option value="$PROJECT_DIR$/feature/person_info" />
+            <option value="$PROJECT_DIR$/feature/team_info" />
             <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>

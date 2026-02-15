@@ -103,11 +103,11 @@ dependencies {
     implementation(libs.navigation.compose)
 
     // Module
-    implementation(project(":competitions_main"))
+    implementation(project(":feature:competitions_main"))
+    implementation(project(":feature:competition_standings"))
+    implementation(project(":feature:team_info"))
+    implementation(project(":feature:person_info"))
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":utils"))
-    implementation(project(":competition_standings"))
-    implementation(project(":team_info"))
-    implementation(project(":person_info"))
 }

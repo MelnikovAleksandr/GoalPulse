@@ -1,6 +1,9 @@
 package ru.asmelnikov.competition_standings
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,9 +35,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mxalbert.sharedelements.FadeMode
-import com.mxalbert.sharedelements.MaterialContainerTransformSpec
-import com.mxalbert.sharedelements.SharedMaterialContainer
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
@@ -60,7 +60,7 @@ import ru.asmelnikov.utils.navigation.popUp
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
-fun CompetitionStandingsScreen(
+fun SharedTransitionScope.CompetitionStandingsScreen(
     appState: MainAppState,
     showSnackbar: (
         String,
@@ -68,6 +68,7 @@ fun CompetitionStandingsScreen(
         String?,
         actionPerformed: () -> Unit
     ) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: CompetitionStandingsViewModel = koinViewModel()
 ) {
 
@@ -116,13 +117,14 @@ fun CompetitionStandingsScreen(
         onReloadStandingsClick = viewModel::updateStandingsFromRemoteToLocal,
         onReloadMatchesClick = viewModel::updateMatchesFromRemoteToLocal,
         onReloadScorersClick = viewModel::updateScorersFromRemoteToLocal,
-        onPersonClick = viewModel::onPersonClick
+        onPersonClick = viewModel::onPersonClick,
+        animatedVisibilityScope = animatedVisibilityScope
     )
 }
 
-@OptIn(ExperimentalToolbarApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalToolbarApi::class)
 @Composable
-fun CompetitionStandingsContent(
+fun SharedTransitionScope.CompetitionStandingsContent(
     competitionStandings: CompetitionStandings?,
     seasons: List<String>,
     onBackClick: () -> Unit,
@@ -146,7 +148,8 @@ fun CompetitionStandingsContent(
     onReloadStandingsClick: () -> Unit,
     onReloadScorersClick: () -> Unit,
     onReloadMatchesClick: () -> Unit,
-    onPersonClick: (Int) -> Unit
+    onPersonClick: (Int) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     val configuration = LocalConfiguration.current
@@ -215,21 +218,18 @@ fun CompetitionStandingsContent(
 
                     val imgSize = (40 + (100 * progress)).dp
 
-                    SharedMaterialContainer(
-                        key = competitionStandings?.competition?.emblem ?: "",
-                        screenKey = Routes.Competition_Standings,
-                        color = Color.Transparent,
-                        transitionSpec = MaterialContainerTransformSpec(
-                            durationMillis = 1000,
-                            fadeMode = FadeMode.Out
-                        )
-                    ) {
-                        SubComposeAsyncImageCommon(
-                            imageUri = competitionStandings?.competition?.emblem ?: "",
-                            shape = RoundedCornerShape(0.dp),
-                            size = imgSize
-                        )
-                    }
+                    SubComposeAsyncImageCommon(
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(key = competitionStandings?.competition?.emblem ?: ""),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ ->
+                                tween(durationMillis = 1000)
+                            }
+                        ),
+                        imageUri = competitionStandings?.competition?.emblem ?: "",
+                        shape = RoundedCornerShape(0.dp),
+                        size = imgSize
+                    )
                 }
 
                 Text(

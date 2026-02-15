@@ -1,6 +1,8 @@
 package ru.asmelnikov.goalpulse.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -20,7 +22,7 @@ import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.navigation.Routes
 
 @Composable
-fun NavGraph(
+fun SharedTransitionScope.NavGraph(
     appState: MainAppState,
     paddingValues: PaddingValues,
     showSnackbar: (
@@ -28,7 +30,7 @@ fun NavGraph(
         SnackbarDuration,
         String?,
         actionPerformed: () -> Unit
-    ) -> Unit,
+    ) -> Unit
 ) {
 
     NavHost(
@@ -37,7 +39,11 @@ fun NavGraph(
         modifier = Modifier.padding(paddingValues)
     ) {
         composable(route = Routes.Competitions_Main) {
-            CompetitionsScreen(appState = appState, showSnackbar = showSnackbar)
+            CompetitionsScreen(
+                appState = appState,
+                showSnackbar = showSnackbar,
+                animatedVisibilityScope = this
+            )
         }
         composable(
             route = "${Routes.Competition_Standings}/{compId}",
@@ -71,7 +77,8 @@ fun NavGraph(
             }) {
             CompetitionStandingsScreen(
                 appState = appState,
-                showSnackbar = showSnackbar
+                showSnackbar = showSnackbar,
+                animatedVisibilityScope = this
             )
         }
         composable(

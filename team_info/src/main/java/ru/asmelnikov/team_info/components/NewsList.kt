@@ -71,7 +71,7 @@ fun NewsList(
                     items = news.articles,
                 ) { article ->
                     ArticleItem(
-                        modifier = Modifier.animateItemPlacement(),
+                        modifier = Modifier.animateItem(),
                         article = article,
                         onArticleClick = { url ->
                             Intent(Intent.ACTION_VIEW).also {

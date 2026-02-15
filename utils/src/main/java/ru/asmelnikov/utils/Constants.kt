@@ -8,8 +8,9 @@ import ru.asmelnikov.utils.ui.theme.topGreen
 
 object Constants {
 
-    const val FOOTBALL_API_KEY = "8c02a856ac284753b67eacd7ab31d010"
-    const val NEW_API_KEY = "30902f38d91440588b9c1a0b43035e83"
+    const val FOOTBALL_API_KEY = BuildConfig.FOOTBALL_API_KEY
+    const val NEW_API_KEY = BuildConfig.NEW_API_KEY
+    
 }
 
 enum class CompetitionType(

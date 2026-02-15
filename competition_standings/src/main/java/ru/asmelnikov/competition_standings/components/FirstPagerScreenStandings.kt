@@ -1,7 +1,5 @@
 package ru.asmelnikov.competition_standings.components
 
-import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +19,6 @@ import ru.asmelnikov.utils.composables.LoadingGif
 import ru.asmelnikov.utils.getCompColor
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FirstPagerScreenStandings(
     competitionStandings: CompetitionStandings?,
@@ -78,7 +75,7 @@ fun FirstPagerScreenStandings(
                                 standing.table.size
                             )
                             StandingItem(
-                                modifier = Modifier.animateItemPlacement(),
+                                modifier = Modifier.animateItem(),
                                 table = table,
                                 firstBoxColor = color,
                                 onTeamClick = onTeamClick

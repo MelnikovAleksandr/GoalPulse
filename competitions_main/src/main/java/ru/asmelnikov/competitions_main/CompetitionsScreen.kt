@@ -2,6 +2,8 @@
 
 package ru.asmelnikov.competitions_main
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,7 +48,7 @@ import ru.asmelnikov.utils.navigation.navigateWithArgs
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
-fun CompetitionsScreen(
+fun SharedTransitionScope.CompetitionsScreen(
     appState: MainAppState,
     showSnackbar: (
         String,
@@ -54,6 +56,7 @@ fun CompetitionsScreen(
         String?,
         actionPerformed: () -> Unit
     ) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: CompetitionsScreenViewModel = koinViewModel()
 ) {
 
@@ -82,18 +85,20 @@ fun CompetitionsScreen(
         updateComps = viewModel::updateCompetitionsFromRemoteToLocal,
         swipeRefreshState = swipeRefreshState,
         isLoading = state.isLoading,
-        onCompClick = viewModel::onCompClick
+        onCompClick = viewModel::onCompClick,
+        animatedVisibilityScope = animatedVisibilityScope
     )
 
 }
 
 @Composable
-fun CompetitionsScreenContent(
+fun SharedTransitionScope.CompetitionsScreenContent(
     comps: List<Competition>,
     updateComps: () -> Unit,
     swipeRefreshState: SwipeRefreshState,
     isLoading: Boolean,
-    onCompClick: (String) -> Unit
+    onCompClick: (String) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
     val state = rememberCollapsingToolbarScaffoldState()
@@ -189,7 +194,11 @@ fun CompetitionsScreenContent(
 
                     else -> {
                         items(items = comps, key = { it.id }) { comp ->
-                            CompetitionItem(competition = comp, onCompClick = onCompClick)
+                            CompetitionItem(
+                                competition = comp,
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                onCompClick = onCompClick
+                            )
                         }
                     }
                 }

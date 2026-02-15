@@ -32,7 +32,7 @@ fun MatchList(
             key = { _, match -> match.id }
         ) { index, match ->
             MatchItem(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(),
                 match = match,
                 isAhead = isAhead,
                 expandedItemId = expandedItemId,

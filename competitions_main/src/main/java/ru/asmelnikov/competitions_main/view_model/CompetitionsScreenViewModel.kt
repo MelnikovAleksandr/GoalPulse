@@ -2,18 +2,12 @@ package ru.asmelnikov.competitions_main.view_model
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
-import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.syntax.simple.repeatOnSubscription
 import org.orbitmvi.orbit.viewmodel.container
 import ru.asmelnikov.domain.repository.CompetitionsRepository
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
 import ru.asmelnikov.utils.StringResourceProvider
-import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.getErrorMessage
 
 class CompetitionsScreenViewModel(

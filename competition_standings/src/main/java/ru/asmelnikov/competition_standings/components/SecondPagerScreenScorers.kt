@@ -64,7 +64,7 @@ fun SecondPagerScreenScorers(
                         items = scorers,
                         key = { _, scorer -> scorer.player.id }) { index, scorer ->
                         ScorerItem(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                             scorer = scorer,
                             index = index + 1,
                             onPersonClick = onPersonClick

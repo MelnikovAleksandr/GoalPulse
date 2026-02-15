@@ -1,5 +1,8 @@
 package ru.asmelnikov.competitions_main.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,20 +20,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.mxalbert.sharedelements.FadeMode
-import com.mxalbert.sharedelements.MaterialContainerTransformSpec
-import com.mxalbert.sharedelements.SharedMaterialContainer
 import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
-import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
-fun CompetitionItem(
+fun SharedTransitionScope.CompetitionItem(
     competition: Competition,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     onCompClick: (String) -> Unit
 ) {
     Card(
@@ -50,22 +49,19 @@ fun CompetitionItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            SharedMaterialContainer(
-                key = competition.emblem,
-                screenKey = Routes.Competitions_Main,
-                color = Color.Transparent,
-                transitionSpec = MaterialContainerTransformSpec(
-                    durationMillis = 1000,
-                    fadeMode = FadeMode.Out
+            SubComposeAsyncImageCommon(
+                modifier = Modifier.sharedElement(
+                    rememberSharedContentState(key = competition.emblem),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    boundsTransform = { _, _ ->
+                        tween(durationMillis = 1000)
+                    }
+                ),
+                imageUri = competition.emblem,
+                shape = if (competition.emblem == competition.area.flag) CircleShape else RoundedCornerShape(
+                    0.dp
                 )
-            ) {
-                SubComposeAsyncImageCommon(
-                    imageUri = competition.emblem,
-                    shape = if (competition.emblem == competition.area.flag) CircleShape else RoundedCornerShape(
-                        0.dp
-                    )
-                )
-            }
+            )
 
             Column(
                 modifier = Modifier

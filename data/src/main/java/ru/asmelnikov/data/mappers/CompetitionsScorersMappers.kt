@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.CompetitionScorersEntity
 import ru.asmelnikov.data.local.models.PlayerEntity
 import ru.asmelnikov.data.local.models.ScorerEntity
@@ -13,7 +14,7 @@ import ru.asmelnikov.domain.models.Scorer
 import kotlin.random.Random
 
 fun CompetitionScorersModelDTO.toCompetitionScorersEntity(): CompetitionScorersEntity {
-    val scorers: RealmList<ScorerEntity> = RealmList()
+    val scorers: RealmList<ScorerEntity> = realmListOf()
     this@toCompetitionScorersEntity.scorers?.map { it.toScorerEntity() }
         ?.let { scorers.addAll(it) }
     return CompetitionScorersEntity(

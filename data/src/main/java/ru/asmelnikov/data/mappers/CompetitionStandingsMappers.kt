@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.CompetitionEmbeddedEntity
 import ru.asmelnikov.data.local.models.CompetitionStandingsEntity
 import ru.asmelnikov.data.local.models.FiltersEntity
@@ -25,7 +26,7 @@ import ru.asmelnikov.domain.models.Team
 import kotlin.random.Random
 
 fun CompetitionStandingsModelDTO.toCompetitionStandingsEntity(): CompetitionStandingsEntity {
-    val standings: RealmList<StandingEntity> = RealmList()
+    val standings: RealmList<StandingEntity> = realmListOf()
     this@toCompetitionStandingsEntity.standings?.map { it.toStandingEntity() }
         ?.filter { it.type == "TOTAL" }
         ?.let { standings.addAll(it) }
@@ -40,7 +41,7 @@ fun CompetitionStandingsModelDTO.toCompetitionStandingsEntity(): CompetitionStan
 }
 
 fun CompetitionDTO.toCompetitionEmbeddedEntity(): CompetitionEmbeddedEntity {
-    val seasons: RealmList<SeasonEntity> = RealmList()
+    val seasons: RealmList<SeasonEntity> = realmListOf()
     this@toCompetitionEmbeddedEntity.seasons?.map {
         it.toSeasonEntity()
     }?.take(4)?.let { seasons.addAll(it) }
@@ -76,7 +77,7 @@ fun SeasonDTO.toSeasonEntity(): SeasonEntity {
 }
 
 fun StandingDTO.toStandingEntity(): StandingEntity {
-    val table: RealmList<TableEntity> = RealmList()
+    val table: RealmList<TableEntity> = realmListOf()
     this@toStandingEntity.table?.map { it.toTableEntity() }?.let { table.addAll(it) }
     return StandingEntity(
         group = group ?: "",

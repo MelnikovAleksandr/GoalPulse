@@ -1,19 +1,19 @@
 package ru.asmelnikov.data.local.models
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
+import io.realm.kotlin.types.EmbeddedRealmObject
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
 
-open class TeamInfoEntity(
+class TeamInfoEntity(
+    @PrimaryKey
+    var id: String = "",
     var address: String = "",
     var area: AreaEntity? = null,
     var clubColors: String = "",
     var coach: CoachEntity? = null,
     var crest: String = "",
     var founded: Int = -1,
-    @PrimaryKey
-    var id: String = "",
     var lastUpdated: String = "",
     var name: String = "",
     var shortName: String = "",
@@ -21,35 +21,41 @@ open class TeamInfoEntity(
     var tla: String = "",
     var venue: String = "",
     var website: String = ""
-) : RealmObject()
+) : RealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class CoachEntity(
+class CoachEntity(
+    var id: Int = -1,
     var contract: ContractEntity? = null,
     var dateOfBirth: String = "",
     var firstName: String = "",
-    var id: Int = -1,
     var lastName: String = "",
     var name: String = "",
     var nationality: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class SquadByPositionEntity(
+class SquadByPositionEntity(
     var position: String = "",
     var squad: RealmList<SquadEntity>? = null
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class SquadEntity(
-    var dateOfBirth: String = "",
+class SquadEntity(
     var id: Int = -1,
+    var dateOfBirth: String = "",
     var name: String = "",
     var nationality: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class ContractEntity(
+class ContractEntity(
     var start: String = "",
     var until: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this("")
+}

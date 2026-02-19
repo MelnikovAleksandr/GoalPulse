@@ -1,32 +1,34 @@
 package ru.asmelnikov.data.local.models
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
+import io.realm.kotlin.types.EmbeddedRealmObject
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
 
-open class CompetitionScorersEntity(
+class CompetitionScorersEntity(
     @PrimaryKey
     var id: String = "",
     var season: SeasonEntity? = null,
     var scorers: RealmList<ScorerEntity>? = null
-) : RealmObject()
+) : RealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class ScorerEntity(
+class ScorerEntity(
     var assists: Int? = -1,
     var goals: Int? = -1,
     var penalties: Int? = -1,
     var playedMatches: Int? = -1,
     var player: PlayerEntity? = null,
     var team: TeamEntity? = null
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class PlayerEntity(
+class PlayerEntity(
+    var id: Int? = -1,
     var dateOfBirth: String? = "",
     var firstName: String? = "",
-    var id: Int? = -1,
     var lastName: String? = "",
     var lastUpdated: String? = "",
     var name: String? = "",
@@ -34,4 +36,6 @@ open class PlayerEntity(
     var position: String? = "",
     var section: String? = "",
     var shirtNumber: Int? = -1
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}

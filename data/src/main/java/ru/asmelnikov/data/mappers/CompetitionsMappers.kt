@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.AreaEntity
 import ru.asmelnikov.data.local.models.CompetitionEntity
 import ru.asmelnikov.data.local.models.CurrentSeasonEntity
@@ -16,7 +17,7 @@ import ru.asmelnikov.domain.models.CurrentSeason
 import ru.asmelnikov.domain.models.Winner
 
 fun CompetitionDTO.toCompetitionEntity(): CompetitionEntity {
-    val seasons: RealmList<SeasonEntity> = RealmList()
+    val seasons: RealmList<SeasonEntity> = realmListOf()
     this@toCompetitionEntity.seasons?.map {
         it.toSeasonEntity()
     }?.take(4)?.let { seasons.addAll(it) }

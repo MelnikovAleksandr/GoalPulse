@@ -1,7 +1,8 @@
 package ru.asmelnikov.data.di
 
-import io.realm.RealmConfiguration
-import io.realm.annotations.RealmModule
+import io.realm.kotlin.Configuration
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.qualifier.named
@@ -13,11 +14,6 @@ import ru.asmelnikov.data.api.NewsApi
 import ru.asmelnikov.data.local.CompetitionsRealmOptions
 import ru.asmelnikov.data.local.StandingsRealmOptions
 import ru.asmelnikov.data.local.TeamInfoRealmOptions
-import ru.asmelnikov.data.local.models.AreaEntity
-import ru.asmelnikov.data.local.models.CompetitionEntity
-import ru.asmelnikov.data.local.models.CurrentSeasonEntity
-import ru.asmelnikov.data.local.models.*
-import ru.asmelnikov.data.local.models.WinnerEntity
 import ru.asmelnikov.data.repository.CompetitionStandingsRepositoryImpl
 import ru.asmelnikov.data.repository.CompetitionsRepositoryImpl
 import ru.asmelnikov.data.repository.NewsRepositoryImpl
@@ -31,57 +27,30 @@ import ru.asmelnikov.domain.repository.PersonRepository
 import ru.asmelnikov.domain.repository.TeamInfoRepository
 
 private const val FOOTBALL_API_URL = "https://api.football-data.org/v4/"
-
 private const val NEWS_API_URL = "https://newsapi.org/v2/"
+private const val DB_NAME = "goal_pulse.realm"
+private const val SCHEMA_VERSION = 1L
 
 val dataModule = module {
 
-    single<RealmConfiguration> {
-        RealmConfiguration.Builder()
+    single<Configuration> {
+        RealmConfiguration.Builder(
+            schema = entities)
+            .name(DB_NAME)
             .deleteRealmIfMigrationNeeded()
-            .name("goal_pulse.realm")
-            .schemaVersion(1L)
-            .modules(
-                CompetitionScorersDbModule(),
-                ScorerDbModule(),
-                PlayerDbModule(),
-                CompetitionStandingsDbModule(),
-                CompetitionEmbeddedDbModule(),
-                FiltersDbModule(),
-                SeasonDbModule(),
-                StandingDbModule(),
-                TableDbModule(),
-                TeamDbModule(),
-                CompetitionDbModule(),
-                AreaDbModule(),
-                CurrentSeasonDbModule(),
-                WinnerDbModule(),
-                CompetitionMatchesDbModule(),
-                MatchDbModule(),
-                AwayTeamDbModule(),
-                HomeTeamDbModule(),
-                RefereeDbModule(),
-                ScoreDbModule(),
-                FullTimeDbModule(),
-                HalfTimeDbModule(),
-                MatchesByTourDbModule(),
-                TeamInfoDbModule(),
-                CoachDbModule(),
-                SquadByPositionDbModule(),
-                SquadDbModule(),
-                ContractDbModule(),
-                TeamMatchesDbModule()
-            )
+            .schemaVersion(SCHEMA_VERSION)
             .build()
     }
 
+    single<Realm> { Realm.open(configuration = get()) }
+
     factory<RetrofitErrorsHandler> { RetrofitErrorsHandler.RetrofitErrorsHandlerImpl() }
 
-    single<CompetitionsRealmOptions> { CompetitionsRealmOptions.RealmOptionsImpl(realmConfig = get()) }
+    single<CompetitionsRealmOptions> { CompetitionsRealmOptions.RealmOptionsImpl(realm = get()) }
 
-    single<StandingsRealmOptions> { StandingsRealmOptions.RealmOptionsImpl(realmConfig = get()) }
+    single<StandingsRealmOptions> { StandingsRealmOptions.RealmOptionsImpl(realm = get()) }
 
-    single<TeamInfoRealmOptions> { TeamInfoRealmOptions.RealmOptionsImpl(realmConfig = get()) }
+    single<TeamInfoRealmOptions> { TeamInfoRealmOptions.RealmOptionsImpl(realm = get()) }
 
     single<OkHttpClient> { okHttp() }
 

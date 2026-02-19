@@ -1,6 +1,5 @@
 package ru.asmelnikov.data.di
 
-import io.realm.annotations.RealmModule
 import ru.asmelnikov.data.local.models.AreaEntity
 import ru.asmelnikov.data.local.models.AwayTeamEntity
 import ru.asmelnikov.data.local.models.CoachEntity
@@ -31,147 +30,34 @@ import ru.asmelnikov.data.local.models.TeamInfoEntity
 import ru.asmelnikov.data.local.models.TeamMatchesEntity
 import ru.asmelnikov.data.local.models.WinnerEntity
 
-@RealmModule(library = false, classes = [CompetitionScorersEntity::class])
-data class CompetitionScorersDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [ScorerEntity::class])
-data class ScorerDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [PlayerEntity::class])
-data class PlayerDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CompetitionStandingsEntity::class])
-data class CompetitionStandingsDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CompetitionEmbeddedEntity::class])
-data class CompetitionEmbeddedDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [FiltersEntity::class])
-data class FiltersDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [SeasonEntity::class])
-data class SeasonDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [StandingEntity::class])
-data class StandingDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [TableEntity::class])
-data class TableDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [TeamEntity::class])
-data class TeamDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CompetitionEntity::class])
-data class CompetitionDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [AreaEntity::class])
-data class AreaDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CurrentSeasonEntity::class])
-data class CurrentSeasonDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [WinnerEntity::class])
-data class WinnerDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CompetitionMatchesEntity::class])
-data class CompetitionMatchesDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [MatchEntity::class])
-data class MatchDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [AwayTeamEntity::class])
-data class AwayTeamDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [HomeTeamEntity::class])
-data class HomeTeamDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [RefereeEntity::class])
-data class RefereeDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [ScoreEntity::class])
-data class ScoreDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [FullTimeEntity::class])
-data class FullTimeDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [HalfTimeEntity::class])
-data class HalfTimeDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [MatchesByTourEntity::class])
-data class MatchesByTourDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [TeamInfoEntity::class])
-data class TeamInfoDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [CoachEntity::class])
-data class CoachDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [SquadByPositionEntity::class])
-data class SquadByPositionDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [SquadEntity::class])
-data class SquadDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [ContractEntity::class])
-data class ContractDbModule(val placeholder: String) {
-    constructor() : this("")
-}
-
-@RealmModule(library = false, classes = [TeamMatchesEntity::class])
-data class TeamMatchesDbModule(val placeholder: String) {
-    constructor() : this("")
-}
+internal val entities = setOf(
+    CompetitionScorersEntity::class,
+    ScorerEntity::class,
+    PlayerEntity::class,
+    CompetitionStandingsEntity::class,
+    CompetitionEmbeddedEntity::class,
+    FiltersEntity::class,
+    SeasonEntity::class,
+    StandingEntity::class,
+    TableEntity::class,
+    TeamEntity::class,
+    CompetitionEntity::class,
+    AreaEntity::class,
+    CurrentSeasonEntity::class,
+    WinnerEntity::class,
+    CompetitionMatchesEntity::class,
+    MatchEntity::class,
+    AwayTeamEntity::class,
+    HomeTeamEntity::class,
+    RefereeEntity::class,
+    ScoreEntity::class,
+    FullTimeEntity::class,
+    HalfTimeEntity::class,
+    MatchesByTourEntity::class,
+    TeamInfoEntity::class,
+    CoachEntity::class,
+    SquadByPositionEntity::class,
+    SquadEntity::class,
+    ContractEntity::class,
+    TeamMatchesEntity::class
+)

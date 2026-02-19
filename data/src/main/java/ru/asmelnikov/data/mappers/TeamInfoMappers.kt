@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.CoachEntity
 import ru.asmelnikov.data.local.models.ContractEntity
 import ru.asmelnikov.data.local.models.SquadByPositionEntity
@@ -112,15 +113,15 @@ fun SquadEntity.toSquad(): Squad {
 }
 
 fun convertToRealmList(squadDTOList: List<SquadDTO>?): RealmList<SquadByPositionEntity> {
-    val squadByPositionList = RealmList<SquadByPositionEntity>()
+    val squadByPositionList = realmListOf<SquadByPositionEntity>()
     squadDTOList?.groupBy { it.position }?.forEach { (position, squadDTOs) ->
-        val squadEntityList = RealmList<SquadEntity>()
+        val squadEntityList = realmListOf<SquadEntity>()
         squadDTOs.forEach { squadDTO ->
             val squadEntity = SquadEntity(
-                squadDTO.dateOfBirth ?: "",
-                squadDTO.id ?: -1,
-                squadDTO.name ?: "",
-                squadDTO.nationality ?: ""
+                dateOfBirth = squadDTO.dateOfBirth ?: "",
+                id = squadDTO.id ?: -1,
+                name = squadDTO.name ?: "",
+                nationality = squadDTO.nationality ?: ""
             )
             squadEntityList.add(squadEntity)
         }

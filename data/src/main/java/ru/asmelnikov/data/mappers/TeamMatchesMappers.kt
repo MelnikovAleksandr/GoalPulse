@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.MatchEntity
 import ru.asmelnikov.data.local.models.TeamMatchesEntity
 import ru.asmelnikov.data.models.CompetitionMatchesDTO
@@ -20,7 +21,7 @@ fun CompetitionMatchesDTO.toTeamMatchesEntity(teamId: String): TeamMatchesEntity
 }
 
 fun groupMatchesByDateCompletedDTO(matches: List<MatchDTO>): RealmList<MatchEntity> {
-    return RealmList<MatchEntity>().apply {
+    return realmListOf<MatchEntity>().apply {
         addAll(matches.filter { it.status == "FINISHED" && it.homeTeam?.id != null && it.awayTeam?.id != null }
             .sortedByDescending { it.utcDate }
             .map { it.toMatchEntity() })
@@ -28,7 +29,7 @@ fun groupMatchesByDateCompletedDTO(matches: List<MatchDTO>): RealmList<MatchEnti
 }
 
 fun groupMatchesByDateAheadDTO(matches: List<MatchDTO>): RealmList<MatchEntity> {
-    return RealmList<MatchEntity>().apply {
+    return realmListOf<MatchEntity>().apply {
         addAll(matches.filter { it.status != "FINISHED" && it.homeTeam?.id != null && it.awayTeam?.id != null }
             .sortedBy { it.utcDate }
             .map { it.toMatchEntity() })

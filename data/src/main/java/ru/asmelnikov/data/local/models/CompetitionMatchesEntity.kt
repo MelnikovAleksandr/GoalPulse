@@ -1,34 +1,36 @@
 package ru.asmelnikov.data.local.models
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
+import io.realm.kotlin.types.EmbeddedRealmObject
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
 
-open class CompetitionMatchesEntity(
+class CompetitionMatchesEntity(
     @PrimaryKey
     var id: String = "",
     var season: String = "",
     var seasonType: String = "",
     var matchesByTourCompleted: RealmList<MatchesByTourEntity>? = null,
     var matchesByTourAhead: RealmList<MatchesByTourEntity>? = null,
-) : RealmObject()
+) : RealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class MatchesByTourEntity(
+class MatchesByTourEntity(
     var matchday: Int? = -1,
     var stage: String? = "",
     var matches: RealmList<MatchEntity>? = null
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class MatchEntity(
+class MatchEntity(
+    var id: Int? = -1,
     var area: AreaEntity? = null,
     var competition: CompetitionEntity? = null,
     var awayTeam: AwayTeamEntity? = null,
     var group: String? = "",
     var homeTeam: HomeTeamEntity? = null,
-    var id: Int? = -1,
     var lastUpdated: String? = "",
     var matchday: Int? = -1,
     var referees: RealmList<RefereeEntity>? = null,
@@ -36,50 +38,58 @@ open class MatchEntity(
     var stage: String? = "",
     var status: String? = "",
     var utcDate: String? = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class AwayTeamEntity(
-    var crest: String? = "",
+class AwayTeamEntity(
     var id: Int? = -1,
+    var crest: String? = "",
     var name: String? = "",
     var shortName: String? = "",
     var tla: String? = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class HomeTeamEntity(
-    var crest: String? = "",
+class HomeTeamEntity(
     var id: Int? = -1,
+    var crest: String? = "",
     var name: String? = "",
     var shortName: String? = "",
     var tla: String? = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class RefereeEntity(
+class RefereeEntity(
     var id: Int? = -1,
     var name: String? = "",
     var nationality: String? = "",
     var type: String? = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class ScoreEntity(
+class ScoreEntity(
     var duration: String? = "",
     var fullTime: FullTimeEntity? = null,
     var halfTime: HalfTimeEntity? = null,
     var winner: String? = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class FullTimeEntity(
+class FullTimeEntity(
     var away: Int? = -1,
     var home: Int? = -1
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}
 
-@RealmClass(embedded = true)
-open class HalfTimeEntity(
+class HalfTimeEntity(
     var away: Int? = -1,
     var home: Int? = -1
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(0)
+}

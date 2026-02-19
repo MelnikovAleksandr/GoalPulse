@@ -1,11 +1,11 @@
 package ru.asmelnikov.data.local.models
 
-import io.realm.RealmList
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
+import io.realm.kotlin.types.EmbeddedRealmObject
+import io.realm.kotlin.types.RealmList
+import io.realm.kotlin.types.RealmObject
+import io.realm.kotlin.types.annotations.PrimaryKey
 
-open class CompetitionStandingsEntity(
+class CompetitionStandingsEntity(
     @PrimaryKey
     var id: String = "",
     var area: AreaEntity? = null,
@@ -13,10 +13,11 @@ open class CompetitionStandingsEntity(
     var filters: FiltersEntity? = null,
     var season: SeasonEntity? = null,
     var standings: RealmList<StandingEntity>? = null
-) : RealmObject()
+) : RealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class CompetitionEmbeddedEntity(
+class CompetitionEmbeddedEntity(
     var id: Int = -1,
     var area: AreaEntity? = null,
     var code: String = "",
@@ -28,32 +29,36 @@ open class CompetitionEmbeddedEntity(
     var plan: String = "",
     var type: String = "",
     var seasons: RealmList<SeasonEntity>? = null
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class FiltersEntity(
+class FiltersEntity(
     var season: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class SeasonEntity(
+class SeasonEntity(
+    var id: Int = -1,
     var currentMatchday: Int = -1,
     var endDate: String = "",
-    var id: Int = -1,
     var startDate: String = "",
     var winner: WinnerEntity? = null
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class StandingEntity(
+class StandingEntity(
     var group: String = "",
     var stage: String = "",
     var table: RealmList<TableEntity>? = null,
     var type: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this("")
+}
 
-@RealmClass(embedded = true)
-open class TableEntity(
+class TableEntity(
     var draw: Int = -1,
     var form: String = "",
     var goalDifference: Int = -1,
@@ -65,13 +70,16 @@ open class TableEntity(
     var position: Int = -1,
     var team: TeamEntity? = null,
     var won: Int = -1
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}
 
-@RealmClass(embedded = true)
-open class TeamEntity(
-    var crest: String = "",
+class TeamEntity(
     var id: Int = -1,
+    var crest: String = "",
     var name: String = "",
     var shortName: String = "",
     var tla: String = ""
-) : RealmObject()
+) : EmbeddedRealmObject {
+    constructor() : this(-1)
+}

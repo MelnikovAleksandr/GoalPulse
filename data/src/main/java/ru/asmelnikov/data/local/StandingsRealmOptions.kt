@@ -1,15 +1,12 @@
 package ru.asmelnikov.data.local
 
-import io.realm.Realm
-import io.realm.RealmChangeListener
-import io.realm.RealmConfiguration
-import io.realm.RealmObjectChangeListener
-import io.realm.RealmResults
+import io.realm.kotlin.Realm
+import io.realm.kotlin.UpdatePolicy
+import io.realm.kotlin.ext.query
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ru.asmelnikov.data.local.models.CompetitionMatchesEntity
 import ru.asmelnikov.data.local.models.CompetitionScorersEntity
@@ -19,117 +16,55 @@ interface StandingsRealmOptions {
 
     suspend fun upsertStandingsFromRemoteToLocal(standings: CompetitionStandingsEntity)
 
-    suspend fun getStandingsFlowById(compId: String): Flow<List<CompetitionStandingsEntity>>
+    fun getStandingsFlowById(compId: String): Flow<List<CompetitionStandingsEntity>>
 
     suspend fun upsertScorersFromRemoteToLocal(comp: CompetitionScorersEntity)
 
-    suspend fun getScorersFlowById(compId: String): Flow<List<CompetitionScorersEntity>>
+    fun getScorersFlowById(compId: String): Flow<List<CompetitionScorersEntity>>
 
-    suspend fun upsertMatchesFromRemoteToLocal(comp: CompetitionMatchesEntity)
+    suspend fun upsertMatchesFromRemoteToLocal(matches: CompetitionMatchesEntity)
 
-    suspend fun getMatchesFlowById(compId: String): Flow<List<CompetitionMatchesEntity>>
+    fun getMatchesFlowById(compId: String): Flow<List<CompetitionMatchesEntity>>
 
-    class RealmOptionsImpl(private val realmConfig: RealmConfiguration) : StandingsRealmOptions {
+    class RealmOptionsImpl(private val realm: Realm) : StandingsRealmOptions {
         override suspend fun upsertStandingsFromRemoteToLocal(standings: CompetitionStandingsEntity) {
             withContext(Dispatchers.IO) {
-                val realm = Realm.getInstance(realmConfig)
-                realm.executeTransaction { transition ->
-                    transition.insertOrUpdate(standings)
+                realm.write {
+                    copyToRealm(standings, UpdatePolicy.ALL)
                 }
-                realm.close()
             }
         }
 
-        override suspend fun getStandingsFlowById(compId: String): Flow<List<CompetitionStandingsEntity>> {
-            return callbackFlow {
-                val realm = Realm.getInstance(realmConfig)
-                val competition =
-                    realm.where(CompetitionStandingsEntity::class.java)
-                        .equalTo("id", compId)
-                        .findAll()
-
-                val compEntity =
-                    realm.copyFromRealm(competition)
-
-                send(compEntity)
-
-                val listener =
-                    RealmChangeListener<RealmResults<CompetitionStandingsEntity>> { updatedEntity ->
-                        val updateComp = realm.copyFromRealm(updatedEntity)
-                        trySend(updateComp)
-                    }
-
-                competition.addChangeListener(listener)
-
-                awaitClose {
-                    competition.removeChangeListener(listener)
-                    realm.close()
-                }
-            }.flowOn(Dispatchers.Main)
+        override fun getStandingsFlowById(compId: String): Flow<List<CompetitionStandingsEntity>> {
+            return realm.query<CompetitionStandingsEntity>().asFlow().map { it.list }
+                .flowOn(Dispatchers.IO)
         }
 
         override suspend fun upsertScorersFromRemoteToLocal(comp: CompetitionScorersEntity) {
             withContext(Dispatchers.IO) {
-                val realm = Realm.getInstance(realmConfig)
-                realm.executeTransaction { transition ->
-                    transition.insertOrUpdate(comp)
+                realm.write {
+                    copyToRealm(comp, UpdatePolicy.ALL)
                 }
-                realm.close()
             }
         }
 
-        override suspend fun getScorersFlowById(compId: String): Flow<List<CompetitionScorersEntity>> {
-            return callbackFlow {
-                val realm = Realm.getInstance(realmConfig)
-                val scorers = realm.where(CompetitionScorersEntity::class.java)
-                    .equalTo("id", compId).findAll()
-
-                val scorersEntity = realm.copyFromRealm(scorers)
-                trySend(scorersEntity)
-                val listener =
-                    RealmChangeListener<RealmResults<CompetitionScorersEntity>> { updatedEntity ->
-                        val updateScorers = realm.copyFromRealm(updatedEntity)
-                        trySend(updateScorers)
-                    }
-                scorers.addChangeListener(listener)
-                awaitClose {
-                    scorers.removeChangeListener(listener)
-                    realm.close()
-                }
-            }.flowOn(Dispatchers.Main)
+        override fun getScorersFlowById(compId: String): Flow<List<CompetitionScorersEntity>> {
+            return realm.query<CompetitionScorersEntity>().asFlow().map { it.list }
+                .flowOn(Dispatchers.IO)
         }
 
 
-        override suspend fun upsertMatchesFromRemoteToLocal(comp: CompetitionMatchesEntity) {
+        override suspend fun upsertMatchesFromRemoteToLocal(matches: CompetitionMatchesEntity) {
             withContext(Dispatchers.IO) {
-                val realm = Realm.getInstance(realmConfig)
-                realm.executeTransaction { transition ->
-                    transition.insertOrUpdate(comp)
+                realm.write {
+                    copyToRealm(matches, UpdatePolicy.ALL)
                 }
-                realm.close()
             }
         }
 
-        override suspend fun getMatchesFlowById(compId: String): Flow<List<CompetitionMatchesEntity>> {
-            return callbackFlow {
-                val realm = Realm.getInstance(realmConfig)
-                val matches = realm.where(CompetitionMatchesEntity::class.java)
-                    .equalTo("id", compId)
-                    .findAll()
-                val matchEntity =
-                    realm.copyFromRealm(matches)
-                trySend(matchEntity)
-                val listener =
-                    RealmChangeListener<RealmResults<CompetitionMatchesEntity>> { updatedEntity ->
-                        val updateMatch = realm.copyFromRealm(updatedEntity)
-                        trySend(updateMatch)
-                    }
-                matches.addChangeListener(listener)
-                awaitClose {
-                    matches.removeChangeListener(listener)
-                    realm.close()
-                }
-            }.flowOn(Dispatchers.Main)
+        override fun getMatchesFlowById(compId: String): Flow<List<CompetitionMatchesEntity>> {
+            return realm.query<CompetitionMatchesEntity>().asFlow().map { it.list }
+                .flowOn(Dispatchers.IO)
         }
     }
 }

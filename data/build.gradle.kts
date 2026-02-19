@@ -2,8 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    id("kotlin-kapt")
-    id("realm-android")
+    alias(libs.plugins.kotlin.realm)
 }
 
 android {
@@ -54,6 +53,9 @@ dependencies {
     api(libs.moshi)
     api(libs.moshi.adapters)
     api(libs.moshi.kotlin)
+
+    // Realm
+    implementation(libs.realm.kotlin.library.base)
 
     // module
     implementation(project(":domain"))

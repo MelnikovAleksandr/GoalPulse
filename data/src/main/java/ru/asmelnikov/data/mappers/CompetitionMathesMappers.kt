@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.RealmList
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.AwayTeamEntity
 import ru.asmelnikov.data.local.models.CompetitionMatchesEntity
 import ru.asmelnikov.data.local.models.FullTimeEntity
@@ -62,7 +63,7 @@ fun groupMatchesByStageAndTourCompletedDTO(matches: List<MatchDTO>): RealmList<M
             val matchesByTourEntity = MatchesByTourEntity(
                 stage = getDescription(stage),
                 matchday = matchday,
-                matches = RealmList()
+                matches = realmListOf()
             )
 
             matchesByMatchday.forEach { matchDto ->
@@ -73,7 +74,7 @@ fun groupMatchesByStageAndTourCompletedDTO(matches: List<MatchDTO>): RealmList<M
         }
     }
 
-    return RealmList<MatchesByTourEntity>().apply {
+    return realmListOf<MatchesByTourEntity>().apply {
         addAll(result.reversed())
     }
 }
@@ -83,7 +84,7 @@ fun groupMatchesByStageAndTourAheadDTO(matches: List<MatchDTO>): RealmList<Match
     val groupedMatches =
         matches.filter { it.status != "FINISHED" && it.homeTeam?.id != null && it.awayTeam?.id != null }
             .groupBy { it.stage }
-    val result = RealmList<MatchesByTourEntity>()
+    val result = realmListOf<MatchesByTourEntity>()
     groupedMatches.forEach { (stage, matchesByStage) ->
         val matchesByTourEntities = matchesByStage.groupBy { it.matchday }
         matchesByTourEntities.entries.sortedBy { it.key }.forEach { (matchday, matchesByMatchday) ->
@@ -91,7 +92,7 @@ fun groupMatchesByStageAndTourAheadDTO(matches: List<MatchDTO>): RealmList<Match
                 MatchesByTourEntity(
                     stage = getDescription(stage),
                     matchday = matchday,
-                    matches = RealmList()
+                    matches = realmListOf()
                 )
             matchesByMatchday.forEach { matchDto ->
                 matchesByTourEntity.matches?.add(matchDto.toMatchEntity())
@@ -104,7 +105,7 @@ fun groupMatchesByStageAndTourAheadDTO(matches: List<MatchDTO>): RealmList<Match
 
 
 fun MatchDTO.toMatchEntity(): MatchEntity {
-    val referees: RealmList<RefereeEntity> = RealmList()
+    val referees: RealmList<RefereeEntity> = realmListOf()
     this@toMatchEntity.referees?.map { it.toRefereeEntity() }
         ?.let { referees.addAll(it) }
     return MatchEntity(

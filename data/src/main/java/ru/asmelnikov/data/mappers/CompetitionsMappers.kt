@@ -1,124 +1,100 @@
 package ru.asmelnikov.data.mappers
 
-import io.realm.kotlin.ext.realmListOf
-import io.realm.kotlin.types.RealmList
 import ru.asmelnikov.data.local.models.AreaEntity
+import ru.asmelnikov.data.local.models.CompetitionEmbeddedEntity
 import ru.asmelnikov.data.local.models.CompetitionEntity
 import ru.asmelnikov.data.local.models.CurrentSeasonEntity
-import ru.asmelnikov.data.local.models.SeasonEntity
-import ru.asmelnikov.data.local.models.WinnerEntity
+import ru.asmelnikov.data.local.models.TeamEmbeddedEntity
 import ru.asmelnikov.data.models.AreaDTO
 import ru.asmelnikov.data.models.CompetitionDTO
 import ru.asmelnikov.data.models.CurrentSeasonDTO
-import ru.asmelnikov.data.models.WinnerDTO
 import ru.asmelnikov.domain.models.Area
 import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.CurrentSeason
-import ru.asmelnikov.domain.models.Winner
+import ru.asmelnikov.domain.models.Team
+import java.util.UUID
 
 fun CompetitionDTO.toCompetitionEntity(): CompetitionEntity {
-    val seasons: RealmList<SeasonEntity> = realmListOf()
-    this@toCompetitionEntity.seasons?.map {
-        it.toSeasonEntity()
-    }?.take(4)?.let { seasons.addAll(it) }
-    return CompetitionEntity(
-        area = area.toAreaEntity(),
-        code = code ?: "",
-        currentSeason = currentSeason.toCurrentSeasonEntity(),
-        emblem = emblem ?: "",
-        id = id ?: -1,
-        lastUpdated = lastUpdated ?: "",
-        name = name ?: "",
-        numberOfAvailableSeasons = numberOfAvailableSeasons ?: -1,
-        plan = plan ?: "",
-        type = type ?: "",
-        seasons = seasons
-    )
+    return CompetitionEntity().apply {
+        id = this@toCompetitionEntity.id ?: UUID.randomUUID().hashCode()
+        area = this@toCompetitionEntity.area.toAreaEntity()
+        code = this@toCompetitionEntity.code ?: ""
+        currentSeason = this@toCompetitionEntity.currentSeason.toCurrentSeasonEntity()
+        emblem = this@toCompetitionEntity.emblem ?: ""
+        name = this@toCompetitionEntity.name ?: ""
+        type = this@toCompetitionEntity.type ?: ""
+    }
+}
+
+fun CompetitionDTO.toCompetitionEmbeddedEntity(): CompetitionEmbeddedEntity {
+    return CompetitionEmbeddedEntity().apply {
+        id = this@toCompetitionEmbeddedEntity.id ?: UUID.randomUUID().hashCode()
+        area = this@toCompetitionEmbeddedEntity.area.toAreaEntity()
+        code = this@toCompetitionEmbeddedEntity.code ?: ""
+        currentSeason = this@toCompetitionEmbeddedEntity.currentSeason.toCurrentSeasonEntity()
+        emblem = this@toCompetitionEmbeddedEntity.emblem ?: ""
+        name = this@toCompetitionEmbeddedEntity.name ?: ""
+        type = this@toCompetitionEmbeddedEntity.type ?: ""
+    }
 }
 
 fun AreaDTO?.toAreaEntity(): AreaEntity {
-    return AreaEntity(
-        code = this?.code ?: "",
-        flag = this?.flag ?: "",
-        id = this?.id ?: -1,
-        name = this?.name ?: ""
-    )
+    return AreaEntity().apply {
+        id = this@toAreaEntity?.id ?: UUID.randomUUID().hashCode()
+        code = this@toAreaEntity?.code ?: ""
+        flag = this@toAreaEntity?.flag ?: ""
+        name = this@toAreaEntity?.name ?: ""
+    }
 }
 
 fun CurrentSeasonDTO?.toCurrentSeasonEntity(): CurrentSeasonEntity {
-    return CurrentSeasonEntity(
-        currentMatchDay = this?.currentMatchDay ?: -1,
-        endDate = this?.endDate ?: "",
-        id = this?.id ?: -1,
-        startDate = this?.startDate ?: "",
-        winner = this?.winner.toWinnerEntity()
-    )
-}
-
-fun WinnerDTO?.toWinnerEntity(): WinnerEntity {
-    return WinnerEntity(
-        address = this?.address ?: "",
-        clubColors = this?.clubColors ?: "",
-        crest = this?.crest ?: "",
-        founded = this?.founded ?: -1,
-        id = this?.id ?: -1,
-        lastUpdated = this?.lastUpdated ?: "",
-        name = this?.name ?: "",
-        shortName = this?.shortName ?: "",
-        tla = this?.tla ?: "",
-        website = this?.website ?: "",
-        venue = this?.venue ?: ""
-    )
+    return CurrentSeasonEntity().apply {
+        id = this@toCurrentSeasonEntity?.id ?: UUID.randomUUID().hashCode()
+        currentMatchDay = this@toCurrentSeasonEntity?.currentMatchDay ?: -1
+        endDate = this@toCurrentSeasonEntity?.endDate ?: ""
+        startDate = this@toCurrentSeasonEntity?.startDate ?: ""
+        winner = this@toCurrentSeasonEntity?.winner?.toTeamEmbeddedEntity()
+    }
 }
 
 fun CompetitionEntity?.toCompetition(): Competition {
     return Competition(
+        id = this?.id ?: UUID.randomUUID().hashCode(),
         area = this?.area.toArea(),
         code = this?.code ?: "",
         currentSeason = this?.currentSeason.toCurrentSeason(),
         emblem = this?.emblem ?: "",
-        id = this?.id ?: -1,
-        lastUpdated = this?.lastUpdated ?: "",
         name = this?.name ?: "",
-        numberOfAvailableSeasons = this?.numberOfAvailableSeasons ?: -1,
-        plan = this?.plan ?: "",
-        type = this?.type ?: "",
-        seasons = this?.seasons?.map { it.toSeason() } ?: emptyList()
+        type = this?.type ?: ""
     )
 }
 
 fun AreaEntity?.toArea(): Area {
     return Area(
+        id = this?.id ?: UUID.randomUUID().hashCode(),
         code = this?.code ?: "",
         flag = this?.flag ?: "",
-        id = this?.id ?: -1,
         name = this?.name ?: ""
     )
 }
 
 fun CurrentSeasonEntity?.toCurrentSeason(): CurrentSeason {
     return CurrentSeason(
+        id = this?.id ?: UUID.randomUUID().hashCode(),
         currentMatchDay = this?.currentMatchDay ?: -1,
         startDateEndDate = createYearRange(this?.startDate ?: "", this?.endDate ?: ""),
         endDate = this?.endDate ?: "",
-        id = this?.id ?: -1,
         startDate = this?.startDate ?: "",
-        winner = this?.winner.toWinner()
+        winner = this?.winner.toTeam()
     )
 }
 
-fun WinnerEntity?.toWinner(): Winner {
-    return Winner(
-        address = this?.address ?: "",
-        clubColors = this?.clubColors ?: "",
+fun TeamEmbeddedEntity?.toTeam(): Team {
+    return Team(
+        id = this?.id ?: UUID.randomUUID().hashCode(),
         crest = this?.crest ?: "",
-        founded = this?.founded ?: -1,
-        id = this?.id ?: -1,
-        lastUpdated = this?.lastUpdated ?: "",
         name = this?.name ?: "",
         shortName = this?.shortName ?: "",
         tla = this?.tla ?: "",
-        website = this?.website ?: "",
-        venue = this?.venue ?: ""
     )
 }

@@ -23,23 +23,12 @@ data class CurrentTeam(
     val address: String = "",
     val area: Area = Area(),
     val clubColors: String = "",
-    val contract: Contract = Contract(),
     val crest: String = "",
     val founded: Int = -1,
     val id: Int = -1,
     val name: String = "",
-    val runningCompetitions: List<RunningCompetition> = emptyList(),
     val shortName: String = "",
     val tla: String = "",
     val venue: String = "",
     val website: String = ""
-) : Parcelable
-
-@Parcelize
-data class RunningCompetition(
-    val code: String = "",
-    val emblem: String = "",
-    val id: Int = -1,
-    val name: String = "",
-    val type: String = ""
 ) : Parcelable

@@ -12,7 +12,6 @@ data class TeamInfo(
     val crest: String = "",
     val founded: Int = -1,
     val id: String = "",
-    val lastUpdated: String = "",
     val name: String = "",
     val shortName: String = "",
     val squadByPosition: List<SquadByPosition> = emptyList(),

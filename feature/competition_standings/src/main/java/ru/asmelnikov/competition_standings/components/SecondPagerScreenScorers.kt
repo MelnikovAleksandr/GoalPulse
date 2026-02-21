@@ -22,21 +22,12 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SecondPagerScreenScorers(
     scorers: List<Scorer>,
-    seasons: List<String>,
-    currentSeasonScorers: String,
-    onSeasonScorersUpdate: (String) -> Unit,
     isLoadingScorers: Boolean,
     onReloadClick: () -> Unit,
     onPersonClick: (Int) -> Unit
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SeasonDropDown(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            onItemChanged = onSeasonScorersUpdate,
-            items = seasons,
-            selectedItem = currentSeasonScorers
-        )
 
         Box(
             modifier = Modifier

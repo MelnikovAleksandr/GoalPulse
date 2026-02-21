@@ -1,6 +1,5 @@
 package ru.asmelnikov.domain.models
 
-
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 

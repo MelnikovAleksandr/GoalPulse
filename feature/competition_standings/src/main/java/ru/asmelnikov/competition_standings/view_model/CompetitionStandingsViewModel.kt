@@ -30,7 +30,6 @@ class CompetitionStandingsViewModel(
         updateStandingsFromRemoteToLocal()
         updateScorersFromRemoteToLocal()
         updateMatchesFromRemoteToLocal()
-        getSeasons()
     }
 
     fun matchItemClick(itemId: Int) = intent {
@@ -70,12 +69,11 @@ class CompetitionStandingsViewModel(
         postSideEffect(CompetitionStandingSideEffects.BackClick)
     }
 
-    fun updateScorersFromRemoteToLocal(season: String? = null) = intent {
+    fun updateScorersFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingScorers = true) }
         when (val compsFromRemote =
             standingsRepository.getCompetitionTopScorersBySeason(
-                state.compId,
-                season
+                state.compId
             )) {
             is Resource.Success -> {
                 reduce {
@@ -91,12 +89,11 @@ class CompetitionStandingsViewModel(
         }
     }
 
-    fun updateStandingsFromRemoteToLocal(season: String? = null) = intent {
+    fun updateStandingsFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingStandings = true) }
         when (val compsFromRemote =
             standingsRepository.getCompetitionStandingsFromRemoteToLocalById(
-                state.compId,
-                season
+                state.compId
             )) {
             is Resource.Success -> {
                 reduce {
@@ -112,12 +109,11 @@ class CompetitionStandingsViewModel(
         }
     }
 
-    fun updateMatchesFromRemoteToLocal(season: String? = null) = intent {
+    fun updateMatchesFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingMatches = true) }
         when (val matchesFromRemote =
             standingsRepository.getAllMatchesFromRemoteToLocal(
-                state.compId,
-                season
+                state.compId
             )) {
             is Resource.Success -> {
                 reduce {
@@ -137,29 +133,13 @@ class CompetitionStandingsViewModel(
         postSideEffect(CompetitionStandingSideEffects.OnTeamInfoNavigate(teamId = teamId.toString()))
     }
 
-    private fun getSeasons() = intent {
-        when (val seasons = standingsRepository.getCompetitionSeasonsById(state.compId)) {
-            is Resource.Success -> {
-                reduce {
-                    state.copy(
-                        seasons = seasons.data ?: emptyList()
-                    )
-                }
-            }
-
-            is Resource.Error -> {
-                handleError(seasons.httpErrors ?: ErrorsTypesHttp.UnknownError())
-            }
-        }
-    }
 
     private fun collectStandingsFlowFromLocal() = intent(registerIdling = false) {
         repeatOnSubscription {
             standingsRepository.getStandingsFlowFromLocalById(state.compId).collect { standings ->
                 reduce {
                     state.copy(
-                        competitionStandings = standings,
-                        currentSeasonStandings = standings?.season?.startDateEndDate ?: ""
+                        competitionStandings = standings
                     )
                 }
             }
@@ -185,8 +165,7 @@ class CompetitionStandingsViewModel(
                 reduce {
                     state.copy(
                         matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
-                        matchesAhead = matches?.matchesByTourAhead ?: emptyList(),
-                        currentSeasonMatches = matches?.season ?: ""
+                        matchesAhead = matches?.matchesByTourAhead ?: emptyList()
                     )
                 }
             }

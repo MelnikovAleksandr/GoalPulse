@@ -6,7 +6,7 @@ import ru.asmelnikov.utils.Resource
 
 interface CompetitionsRepository {
 
-    suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<List<Competition>>
+    suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<Boolean>
 
     suspend fun getAllCompetitionsFlowFromLocal(): Flow<List<Competition>>
 }

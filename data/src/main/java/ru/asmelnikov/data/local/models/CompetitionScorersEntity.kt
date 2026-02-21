@@ -4,38 +4,33 @@ import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
+import ru.asmelnikov.data.models.TeamInfoDTO
+import java.util.UUID
 
-class CompetitionScorersEntity(
+class CompetitionScorersEntity : RealmObject {
     @PrimaryKey
-    var id: String = "",
-    var season: SeasonEntity? = null,
+    var id: String = UUID.randomUUID().toString()
+    var season: CurrentSeasonEntity? = null
     var scorers: RealmList<ScorerEntity>? = null
-) : RealmObject {
-    constructor() : this("")
 }
 
-class ScorerEntity(
-    var assists: Int? = -1,
-    var goals: Int? = -1,
-    var penalties: Int? = -1,
-    var playedMatches: Int? = -1,
-    var player: PlayerEntity? = null,
-    var team: TeamEntity? = null
-) : EmbeddedRealmObject {
-    constructor() : this(-1)
+class ScorerEntity : EmbeddedRealmObject {
+    var id: Int = UUID.randomUUID().hashCode()
+    var assists: Int = -1
+    var goals: Int = -1
+    var penalties: Int = -1
+    var playedMatches: Int = -1
+    var player: PlayerEntity? = null
+    var team: TeamEmbeddedEntity? = null
 }
 
-class PlayerEntity(
-    var id: Int? = -1,
-    var dateOfBirth: String? = "",
-    var firstName: String? = "",
-    var lastName: String? = "",
-    var lastUpdated: String? = "",
-    var name: String? = "",
-    var nationality: String? = "",
-    var position: String? = "",
-    var section: String? = "",
+class PlayerEntity : EmbeddedRealmObject {
+    var id: Int = UUID.randomUUID().hashCode()
+    var dateOfBirth: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
+    var name: String = ""
+    var nationality: String = ""
+    var position: String = ""
     var shirtNumber: Int? = -1
-) : EmbeddedRealmObject {
-    constructor() : this(-1)
 }

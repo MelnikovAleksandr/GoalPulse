@@ -4,9 +4,8 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CompetitionMatches(
+data class Matches(
     val id: String = "",
-    val season: String = "",
     val matchesByTourCompleted: List<MatchesByTour> = emptyList(),
     val matchesByTourAhead: List<MatchesByTour> = emptyList()
 ) : Parcelable
@@ -23,12 +22,11 @@ data class MatchesByTour(
 data class Match(
     val area: Area,
     val competition: Competition,
-    val awayTeam: AwayTeam,
+    val awayTeam: MatchTeam,
     val group: String,
-    val homeTeam: HomeTeam,
+    val homeTeam: MatchTeam,
     val id: Int,
-    val lastUpdated: String,
-    val matchday: Int,
+    val matchDay: Int,
     val referees: List<Referee>,
     val score: Score,
     val stage: String,
@@ -38,16 +36,7 @@ data class Match(
 ) : Parcelable
 
 @Parcelize
-data class AwayTeam(
-    val crest: String,
-    val id: Int,
-    val name: String,
-    val shortName: String,
-    val tla: String
-) : Parcelable
-
-@Parcelize
-data class HomeTeam(
+data class MatchTeam(
     val crest: String,
     val id: Int,
     val name: String,
@@ -66,19 +55,13 @@ data class Referee(
 @Parcelize
 data class Score(
     val duration: String,
-    val fullTime: FullTime,
-    val halfTime: HalfTime,
+    val fullTime: Time,
+    val halfTime: Time,
     val winner: String
 ) : Parcelable
 
 @Parcelize
-data class FullTime(
-    val away: Int,
-    val home: Int
-) : Parcelable
-
-@Parcelize
-data class HalfTime(
+data class Time(
     val away: Int,
     val home: Int
 ) : Parcelable

@@ -22,9 +22,6 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun FirstPagerScreenStandings(
     competitionStandings: CompetitionStandings?,
-    seasons: List<String>,
-    currentSeason: String,
-    onSeasonUpdate: (String) -> Unit,
     isLoading: Boolean,
     onTeamClick: (Int) -> Unit,
     onReloadClick: () -> Unit
@@ -34,12 +31,6 @@ fun FirstPagerScreenStandings(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        SeasonDropDown(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            onItemChanged = onSeasonUpdate,
-            items = seasons,
-            selectedItem = currentSeason
-        )
 
         Box(
             modifier = Modifier

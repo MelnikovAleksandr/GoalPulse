@@ -93,19 +93,12 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 
     CompetitionStandingsContent(
         competitionStandings = state.competitionStandings,
-        seasons = state.seasons.map { it.startDateEndDate },
-        currentSeasonStandings = state.currentSeasonStandings,
-        onSeasonStandingsUpdate = viewModel::updateStandingsFromRemoteToLocal,
         onBackClick = viewModel::onBackClick,
         isLoadingStandings = state.isLoadingStandings,
-        currentSeasonScorers = state.currentSeasonScorers,
-        onSeasonScorersUpdate = viewModel::updateScorersFromRemoteToLocal,
         isLoadingScorers = state.isLoadingScorers,
         scorers = state.scorers,
         matchesCompleted = state.matchesCompleted,
         matchesAhead = state.matchesAhead,
-        currentSeasonMatches = state.currentSeasonMatches,
-        onSeasonMatchesUpdate = viewModel::updateMatchesFromRemoteToLocal,
         isLoadingMatches = state.isLoadingMatches,
         expandedItemId = state.expandedItem,
         onMatchItemClick = viewModel::matchItemClick,
@@ -124,19 +117,12 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 @Composable
 fun SharedTransitionScope.CompetitionStandingsContent(
     competitionStandings: CompetitionStandings?,
-    seasons: List<String>,
     onBackClick: () -> Unit,
-    currentSeasonStandings: String,
-    onSeasonStandingsUpdate: (String) -> Unit,
     isLoadingStandings: Boolean,
     scorers: List<Scorer>,
-    currentSeasonScorers: String,
-    onSeasonScorersUpdate: (String) -> Unit,
     isLoadingScorers: Boolean,
     matchesCompleted: List<MatchesByTour>,
     matchesAhead: List<MatchesByTour>,
-    currentSeasonMatches: String,
-    onSeasonMatchesUpdate: (String) -> Unit,
     isLoadingMatches: Boolean,
     expandedItemId: Int,
     onMatchItemClick: (Int) -> Unit,
@@ -269,9 +255,6 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         0 -> {
                             FirstPagerScreenStandings(
                                 competitionStandings = competitionStandings,
-                                seasons = seasons,
-                                currentSeason = currentSeasonStandings,
-                                onSeasonUpdate = onSeasonStandingsUpdate,
                                 isLoading = isLoadingStandings,
                                 onTeamClick = onTeamClick,
                                 onReloadClick = onReloadStandingsClick
@@ -281,9 +264,6 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         1 -> {
                             SecondPagerScreenScorers(
                                 scorers = scorers,
-                                seasons = seasons,
-                                currentSeasonScorers = currentSeasonScorers,
-                                onSeasonScorersUpdate = onSeasonScorersUpdate,
                                 isLoadingScorers = isLoadingScorers,
                                 onReloadClick = onReloadScorersClick,
                                 onPersonClick = onPersonClick
@@ -294,9 +274,6 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             ThirdPagerScreenMatches(
                                 matchesCompleted = matchesCompleted,
                                 matchesAhead = matchesAhead,
-                                seasons = seasons,
-                                currentSeasonMatches = currentSeasonMatches,
-                                onSeasonMatchesUpdate = onSeasonMatchesUpdate,
                                 isLoadingMatches = isLoadingMatches,
                                 expandedItemId = expandedItemId,
                                 onMatchItemClick = onMatchItemClick,

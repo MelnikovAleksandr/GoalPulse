@@ -28,9 +28,6 @@ import ru.asmelnikov.utils.ui.theme.dimens
 fun ThirdPagerScreenMatches(
     matchesCompleted: List<MatchesByTour>,
     matchesAhead: List<MatchesByTour>,
-    seasons: List<String>,
-    currentSeasonMatches: String,
-    onSeasonMatchesUpdate: (String) -> Unit,
     isLoadingMatches: Boolean,
     expandedItemId: Int,
     onMatchItemClick: (Int) -> Unit,
@@ -48,12 +45,6 @@ fun ThirdPagerScreenMatches(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SeasonDropDown(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            onItemChanged = onSeasonMatchesUpdate,
-            items = seasons,
-            selectedItem = currentSeasonMatches
-        )
 
         Box(
             modifier = Modifier

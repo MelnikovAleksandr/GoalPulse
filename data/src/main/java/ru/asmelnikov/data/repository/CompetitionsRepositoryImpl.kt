@@ -19,7 +19,7 @@ class CompetitionsRepositoryImpl(
     private val retrofitErrorsHandler: RetrofitErrorsHandler
 ) : CompetitionsRepository {
 
-    override suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<List<Competition>> {
+    override suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<Boolean> {
         return retrofitErrorsHandler.executeSafely {
             val response: Response<CompetitionModelDTO> = footballApi.getAllFootballCompetitions()
             if (response.isSuccessful && response.code() == 200) {
@@ -27,7 +27,7 @@ class CompetitionsRepositoryImpl(
                     it.toCompetitionEntity()
                 } ?: emptyList()
                 realmOptions.upsertCompetitionsDataFromRemoteToLocal(competitions)
-                Resource.Success(competitions.map { it.toCompetition() })
+                Resource.Success(true)
             } else {
                 retrofitErrorsHandler.responseFailureHandler(response)
             }

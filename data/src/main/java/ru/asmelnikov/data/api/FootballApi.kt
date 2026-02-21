@@ -5,13 +5,12 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.asmelnikov.data.models.CompetitionDTO
-import ru.asmelnikov.data.models.CompetitionMatchesDTO
+import ru.asmelnikov.data.models.MatchesDTO
 import ru.asmelnikov.data.models.CompetitionModelDTO
 import ru.asmelnikov.data.models.CompetitionScorersModelDTO
 import ru.asmelnikov.data.models.CompetitionStandingsModelDTO
 import ru.asmelnikov.data.models.Head2headDTO
-import ru.asmelnikov.data.models.PersonDTO
+import ru.asmelnikov.data.models.PersonInfoDTO
 import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.utils.Constants.FOOTBALL_API_KEY
 
@@ -23,36 +22,28 @@ interface FootballApi {
 
     @GET("competitions/{competitionId}/standings")
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
-    suspend fun getCompetitionStandingByIdAndSeason(
-        @Path("competitionId") competitionId: String,
-        @Query("season") season: String?
+    suspend fun getCompetitionStandingById(
+        @Path("competitionId") competitionId: String
     ): Response<CompetitionStandingsModelDTO>
-
-    @GET("competitions/{competitionId}")
-    @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
-    suspend fun getCompetitionSeasonsById(@Path("competitionId") competitionId: String): Response<CompetitionDTO>
 
     @GET("competitions/{competitionId}/scorers")
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
-    suspend fun getCompetitionTopScorersBySeason(
+    suspend fun getCompetitionTopScorers(
         @Path("competitionId") competitionId: String,
-        @Query("season") season: String?,
         @Query("limit") limit: Int = 20
     ): Response<CompetitionScorersModelDTO>
 
     @GET("competitions/{competitionId}/matches")
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
-    suspend fun getCompetitionMatchesBySeason(
-        @Path("competitionId") competitionId: String,
-        @Query("season") season: String?
-    ): Response<CompetitionMatchesDTO>
+    suspend fun getCompetitionMatches(
+        @Path("competitionId") competitionId: String
+    ): Response<MatchesDTO>
 
     @GET("teams/{teamId}/matches/")
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
-    suspend fun getTeamMatchesBySeason(
-        @Path("teamId") teamId: String,
-        @Query("season") season: String?
-    ): Response<CompetitionMatchesDTO>
+    suspend fun getTeamMatches(
+        @Path("teamId") teamId: String
+    ): Response<MatchesDTO>
 
     @GET("matches/{matchId}/head2head")
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
@@ -70,5 +61,5 @@ interface FootballApi {
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
     suspend fun getPersonInfo(
         @Path("personId") personId: String
-    ): Response<PersonDTO>
+    ): Response<PersonInfoDTO>
 }

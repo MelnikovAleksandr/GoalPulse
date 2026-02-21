@@ -18,5 +18,5 @@ sealed class PersonSideEffects {
     data class Snackbar(val text: String, val duration: SnackbarDuration = SnackbarDuration.Short) :
         PersonSideEffects()
 
-    object BackClick : PersonSideEffects()
+    data object BackClick : PersonSideEffects()
 }

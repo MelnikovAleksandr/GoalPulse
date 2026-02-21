@@ -2,14 +2,12 @@ package ru.asmelnikov.data.mappers
 
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmList
-import ru.asmelnikov.data.local.models.CoachEntity
+import ru.asmelnikov.data.local.models.PersonEntity
 import ru.asmelnikov.data.local.models.ContractEntity
 import ru.asmelnikov.data.local.models.SquadByPositionEntity
-import ru.asmelnikov.data.local.models.SquadEntity
 import ru.asmelnikov.data.local.models.TeamInfoEntity
-import ru.asmelnikov.data.models.CoachDTO
+import ru.asmelnikov.data.models.PersonDTO
 import ru.asmelnikov.data.models.ContractDTO
-import ru.asmelnikov.data.models.SquadDTO
 import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.domain.models.Coach
 import ru.asmelnikov.domain.models.Contract
@@ -19,43 +17,43 @@ import ru.asmelnikov.domain.models.TeamInfo
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 fun TeamInfoDTO.toTeamInfoEntity(): TeamInfoEntity {
-    return TeamInfoEntity(
-        address = address ?: "",
-        area = area.toAreaEntity(),
-        clubColors = clubColors ?: "",
-        coach = coach.toCoachEntity(),
-        crest = crest ?: "",
-        founded = founded ?: -1,
-        id = id.toString(),
-        lastUpdated = lastUpdated ?: "",
-        name = name ?: "",
-        shortName = shortName ?: "",
-        squadByPosition = convertToRealmList(squad),
-        tla = tla ?: "",
-        venue = venue ?: "",
-        website = website ?: ""
-    )
+    return TeamInfoEntity().apply {
+        id = this@toTeamInfoEntity.id?.toString() ?: UUID.randomUUID().toString()
+        address = this@toTeamInfoEntity.address ?: ""
+        area = this@toTeamInfoEntity.area.toAreaEntity()
+        clubColors = this@toTeamInfoEntity.clubColors ?: ""
+        coach = this@toTeamInfoEntity.coach.toCoachEntity()
+        crest = this@toTeamInfoEntity.crest ?: ""
+        founded = this@toTeamInfoEntity.founded ?: -1
+        name = this@toTeamInfoEntity.name ?: ""
+        shortName = this@toTeamInfoEntity.shortName ?: ""
+        squadByPosition = convertToRealmList(this@toTeamInfoEntity.squad)
+        tla = this@toTeamInfoEntity.tla ?: ""
+        venue = this@toTeamInfoEntity.venue ?: ""
+        website = this@toTeamInfoEntity.website ?: ""
+    }
 }
 
-fun CoachDTO?.toCoachEntity(): CoachEntity {
-    return CoachEntity(
-        contract = this?.contract.toContractEntity(),
-        dateOfBirth = this?.dateOfBirth ?: "",
-        firstName = this?.firstName ?: "",
-        id = this?.id ?: -1,
-        lastName = this?.lastName ?: "",
-        name = this?.name ?: "",
-        nationality = this?.nationality ?: ""
-    )
+fun PersonDTO?.toCoachEntity(): PersonEntity {
+    return PersonEntity().apply {
+        id = this@toCoachEntity?.id ?: UUID.randomUUID().hashCode()
+        contract = this@toCoachEntity?.contract.toContractEntity()
+        dateOfBirth = this@toCoachEntity?.dateOfBirth ?: ""
+        firstName = this@toCoachEntity?.firstName ?: ""
+        lastName = this@toCoachEntity?.lastName ?: ""
+        name = this@toCoachEntity?.name ?: ""
+        nationality = this@toCoachEntity?.nationality ?: ""
+    }
 }
 
 fun ContractDTO?.toContractEntity(): ContractEntity {
-    return ContractEntity(
-        start = this?.start ?: "",
-        until = this?.until ?: ""
-    )
+    return ContractEntity().apply {
+        start = this@toContractEntity?.start ?: ""
+        until = this@toContractEntity?.until ?: ""
+    }
 }
 
 fun TeamInfoEntity.toTeamInfo(): TeamInfo {
@@ -67,7 +65,6 @@ fun TeamInfoEntity.toTeamInfo(): TeamInfo {
         crest = crest,
         founded = founded,
         id = id,
-        lastUpdated = lastUpdated,
         name = name,
         shortName = shortName,
         squadByPosition = squadByPosition?.map { it.toSquadByPosition() } ?: emptyList(),
@@ -77,12 +74,12 @@ fun TeamInfoEntity.toTeamInfo(): TeamInfo {
     )
 }
 
-fun CoachEntity?.toCoach(): Coach {
+fun PersonEntity?.toCoach(): Coach {
     return Coach(
+        id = this?.id ?: UUID.randomUUID().hashCode(),
         contract = this?.contract.toContract(),
         dateOfBirth = this?.dateOfBirth ?: "",
         firstName = this?.firstName ?: "",
-        id = this?.id ?: -1,
         lastName = this?.lastName ?: "",
         name = this?.name ?: "",
         nationality = this?.nationality ?: ""
@@ -103,7 +100,7 @@ fun SquadByPositionEntity.toSquadByPosition(): SquadByPosition {
     )
 }
 
-fun SquadEntity.toSquad(): Squad {
+fun PersonEntity.toSquad(): Squad {
     return Squad(
         age = dateOfBirth.calculateAge(),
         id = id,
@@ -112,20 +109,23 @@ fun SquadEntity.toSquad(): Squad {
     )
 }
 
-fun convertToRealmList(squadDTOList: List<SquadDTO>?): RealmList<SquadByPositionEntity> {
+fun convertToRealmList(squadDTOList: List<PersonDTO>?): RealmList<SquadByPositionEntity> {
     val squadByPositionList = realmListOf<SquadByPositionEntity>()
     squadDTOList?.groupBy { it.position }?.forEach { (position, squadDTOs) ->
-        val squadEntityList = realmListOf<SquadEntity>()
+        val squadEntityList = realmListOf<PersonEntity>()
         squadDTOs.forEach { squadDTO ->
-            val squadEntity = SquadEntity(
-                dateOfBirth = squadDTO.dateOfBirth ?: "",
-                id = squadDTO.id ?: -1,
-                name = squadDTO.name ?: "",
+            val squadEntity = PersonEntity().apply {
+                dateOfBirth = squadDTO.dateOfBirth ?: ""
+                id = squadDTO.id ?: -1
+                name = squadDTO.name ?: ""
                 nationality = squadDTO.nationality ?: ""
-            )
+            }
             squadEntityList.add(squadEntity)
         }
-        val squadByPositionEntity = SquadByPositionEntity(position ?: "", squadEntityList)
+        val squadByPositionEntity = SquadByPositionEntity().apply {
+            this.position = position ?: ""
+            this.squad = squadEntityList
+        }
         squadByPositionList.add(squadByPositionEntity)
     }
     return squadByPositionList

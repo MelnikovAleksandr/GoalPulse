@@ -8,8 +8,6 @@ data class CompetitionStandings(
     val id: String,
     val area: Area,
     val competition: Competition,
-    val filters: Filters,
-    val season: Season,
     val standings: List<Standing>
 ) : Parcelable
 
@@ -25,7 +23,7 @@ data class Season(
     val startDateEndDate: String, // example - 2022/2023
     val id: Int,
     val startDate: String,
-    val winner: Winner
+    val winner: Team
 ) : Parcelable
 
 @Parcelize

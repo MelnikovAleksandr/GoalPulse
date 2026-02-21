@@ -42,6 +42,7 @@ import me.onebone.toolbar.ExperimentalToolbarApi
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
@@ -56,20 +57,21 @@ import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.navigation.Routes
-import ru.asmelnikov.utils.navigation.navigateWithArgs
+import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun TeamInfoScreen(
     appState: MainAppState,
+    teamId: String,
     showSnackbar: (
         String,
         SnackbarDuration,
         String?,
         actionPerformed: () -> Unit
     ) -> Unit,
-    viewModel: TeamInfoViewModel = koinViewModel()
+    viewModel: TeamInfoViewModel = koinViewModel(parameters = { parametersOf(teamId) })
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()
@@ -85,7 +87,7 @@ fun TeamInfoScreen(
             is TeamInfoSideEffects.BackClick -> appState.popUp()
 
             is TeamInfoSideEffects.OnPersonInfoNavigate -> {
-                appState.navigateWithArgs(route = Routes.Person_Info, args = it.personId)
+                appState.navigate(route = Routes.Person(it.personId))
             }
 
         }

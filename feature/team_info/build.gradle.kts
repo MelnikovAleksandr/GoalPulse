@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.plugin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kotlin-parcelize")
 }
 
@@ -77,7 +78,11 @@ dependencies {
     implementation(libs.coil.svg)
 
     // Navigation
-    implementation(libs.navigation.compose)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.kotlinx.serialization.core)
 
     //Orbit MVI
     implementation(libs.orbit.core)

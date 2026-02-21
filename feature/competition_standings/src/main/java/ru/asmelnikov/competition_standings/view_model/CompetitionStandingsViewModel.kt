@@ -14,6 +14,7 @@ import ru.asmelnikov.utils.getErrorMessage
 class CompetitionStandingsViewModel(
     private val standingsRepository: CompetitionStandingsRepository,
     private val stringResourceProvider: StringResourceProvider,
+    private val compId: String,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
     ContainerHost<CompetitionStandingsState, CompetitionStandingSideEffects> {
@@ -22,8 +23,7 @@ class CompetitionStandingsViewModel(
         initialState = CompetitionStandingsState(),
         savedStateHandle = savedStateHandle
     ) {
-        val compId = savedStateHandle.get<String>("compId")
-        reduce { state.copy(compId = compId ?: "") }
+        reduce { state.copy(compId = compId) }
         collectStandingsFlowFromLocal()
         collectScorersFlowFromLocal()
         collectMatchesFlowFromLocal()

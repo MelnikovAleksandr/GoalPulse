@@ -1,13 +1,18 @@
 package ru.asmelnikov.utils.navigation
 
-object Routes {
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
-    const val Competitions_Main = "competitions_main"
+sealed interface Routes : NavKey {
+    @Serializable
+    data object Competitions : Routes
 
-    const val Competition_Standings = "competition_standings?compId={compId}"
+    @Serializable
+    data class Standings(val compId: String) : Routes
 
-    const val Team_Info = "team_info?teamId={teamId}"
+    @Serializable
+    data class Team(val teamId: String) : Routes
 
-    const val Person_Info = "person_info?personId={personId}"
-
+    @Serializable
+    data class Person(val personId: String) : Routes
 }

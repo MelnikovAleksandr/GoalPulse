@@ -14,6 +14,7 @@ import ru.asmelnikov.utils.getErrorMessage
 class PersonViewModel(
     private val repository: PersonRepository,
     private val stringResourceProvider: StringResourceProvider,
+    private val personId: String,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), ContainerHost<PersonState, PersonSideEffects> {
 
@@ -21,7 +22,6 @@ class PersonViewModel(
         initialState = PersonState(),
         savedStateHandle = savedStateHandle
     ) {
-        val personId = savedStateHandle.get<String>("personId")
         reduce { state.copy(personId = personId ?: "") }
         getPersonFromRemote()
     }

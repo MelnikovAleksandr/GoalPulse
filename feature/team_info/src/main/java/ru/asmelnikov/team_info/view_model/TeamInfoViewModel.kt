@@ -1,6 +1,5 @@
 package ru.asmelnikov.team_info.view_model
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -23,6 +22,7 @@ class TeamInfoViewModel(
     private val standingsRepository: CompetitionStandingsRepository,
     private val newsRepository: NewsRepository,
     private val colorGenerator: ColorGenerator,
+    private val teamId: String,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
     ContainerHost<TeamInfoState, TeamInfoSideEffects> {
@@ -31,8 +31,7 @@ class TeamInfoViewModel(
         initialState = TeamInfoState(),
         savedStateHandle = savedStateHandle
     ) {
-        val teamId = savedStateHandle.get<String>("teamId")
-        reduce { state.copy(teamId = teamId ?: "") }
+        reduce { state.copy(teamId = teamId) }
         collectTeamInfoFlowFromLocal()
         getTeamInfoFromRemoteToLocal()
         collectTeamMatchesFlowFromLocal()

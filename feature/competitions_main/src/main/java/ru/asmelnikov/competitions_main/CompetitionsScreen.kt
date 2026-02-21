@@ -44,7 +44,7 @@ import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.navigation.Routes
-import ru.asmelnikov.utils.navigation.navigateWithArgs
+import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -71,7 +71,7 @@ fun SharedTransitionScope.CompetitionsScreen(
             ) {}
 
             is CompetitionsScreenSideEffects.OnCompetitionNavigate -> {
-                appState.navigateWithArgs(route = Routes.Competition_Standings, args = it.compId)
+                appState.navigate(route = Routes.Standings(it.compId))
             }
         }
     }

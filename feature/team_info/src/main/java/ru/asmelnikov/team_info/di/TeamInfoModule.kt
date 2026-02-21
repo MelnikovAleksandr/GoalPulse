@@ -7,14 +7,15 @@ import ru.asmelnikov.team_info.view_model.TeamInfoViewModel
 
 val teamInfoModule = module {
 
-    viewModel { (savedStateHandle: SavedStateHandle) ->
+    viewModel { (teamId: String, savedStateHandle: SavedStateHandle) ->
         TeamInfoViewModel(
             teamRepository = get(),
             stringResourceProvider = get(),
             savedStateHandle = savedStateHandle,
             standingsRepository = get(),
             newsRepository = get(),
-            colorGenerator = get()
+            colorGenerator = get(),
+            teamId = teamId
         )
     }
 }

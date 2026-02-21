@@ -7,11 +7,12 @@ import ru.asmelnikov.person_info.view_model.PersonViewModel
 
 val personModule = module {
 
-    viewModel { (savedStateHandle: SavedStateHandle) ->
+    viewModel { (personId: String, savedStateHandle: SavedStateHandle) ->
         PersonViewModel(
             savedStateHandle = savedStateHandle,
             repository = get(),
-            stringResourceProvider = get()
+            stringResourceProvider = get(),
+            personId = personId
         )
     }
 }

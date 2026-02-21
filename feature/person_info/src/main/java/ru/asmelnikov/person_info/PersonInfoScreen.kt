@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.domain.models.Person
 import ru.asmelnikov.person_info.view_model.PersonSideEffects
@@ -41,13 +42,14 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun PersonInfoScreen(
     appState: MainAppState,
+    personId: String,
     showSnackbar: (
         String,
         SnackbarDuration,
         String?,
         actionPerformed: () -> Unit
     ) -> Unit,
-    viewModel: PersonViewModel = koinViewModel()
+    viewModel: PersonViewModel = koinViewModel(parameters = { parametersOf(personId) })
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()

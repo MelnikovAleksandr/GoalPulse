@@ -39,6 +39,7 @@ import me.onebone.toolbar.ExperimentalToolbarApi
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competition_standings.components.FirstPagerScreenStandings
 import ru.asmelnikov.competition_standings.components.SecondPagerScreenScorers
@@ -53,13 +54,14 @@ import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.navigation.Routes
-import ru.asmelnikov.utils.navigation.navigateWithArgs
+import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun SharedTransitionScope.CompetitionStandingsScreen(
     appState: MainAppState,
+    compId: String,
     showSnackbar: (
         String,
         SnackbarDuration,
@@ -67,7 +69,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
         actionPerformed: () -> Unit
     ) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: CompetitionStandingsViewModel = koinViewModel()
+    viewModel: CompetitionStandingsViewModel = koinViewModel(parameters = { parametersOf(compId) })
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()
@@ -83,10 +85,10 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
             is CompetitionStandingSideEffects.BackClick -> appState.popUp()
 
             is CompetitionStandingSideEffects.OnTeamInfoNavigate -> {
-                appState.navigateWithArgs(route = Routes.Team_Info, args = it.teamId)
+                appState.navigate(route = Routes.Team(it.teamId))
             }
             is CompetitionStandingSideEffects.OnPersonInfoNavigate -> {
-                appState.navigateWithArgs(route = Routes.Person_Info, args = it.personId)
+                appState.navigate(route = Routes.Person(it.personId))
             }
         }
     }

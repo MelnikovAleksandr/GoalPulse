@@ -13,14 +13,19 @@ import ru.asmelnikov.data.models.MatchDTO
 import ru.asmelnikov.data.models.RefereeDTO
 import ru.asmelnikov.data.models.ScoreDTO
 import ru.asmelnikov.data.models.TeamInfoDTO
+import ru.asmelnikov.domain.models.Group
 import ru.asmelnikov.domain.models.MatchTeam
 import ru.asmelnikov.domain.models.Matches
 import ru.asmelnikov.domain.models.Time
 import ru.asmelnikov.domain.models.Match
+import ru.asmelnikov.domain.models.MatchStatus
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.Referee
 import ru.asmelnikov.domain.models.Score
+import ru.asmelnikov.domain.models.Stage
 import ru.asmelnikov.domain.models.TeamMatches
+import ru.asmelnikov.domain.models.TournamentType
+import ru.asmelnikov.domain.models.Winner
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -139,9 +144,9 @@ fun filterAheadMatches(matches: MatchesEntity): List<MatchesByTour> {
         for ((matchDay, matchesByMatchDay) in sortedTourEntities) {
             val domainMatches = matchesByMatchDay.map { it.toMatches() }
             val matchesByTour = MatchesByTour(
-                matchday = matchDay,
-                stage = stage,
-                seasonType = matches.seasonType,
+                matchDay = matchDay,
+                stage = Stage.safeValueOf(stage),
+                seasonType = TournamentType.safeValueOf(matches.seasonType),
                 matches = domainMatches
             )
             result.add(matchesByTour)
@@ -179,9 +184,9 @@ fun filterCompletedMatches(matches: MatchesEntity): List<MatchesByTour> {
 
             val domainMatches = matchesByMatchDay.map { it.toMatches() }
             val matchesByTour = MatchesByTour(
-                matchday = matchDay,
-                stage = stage,
-                seasonType = matches.seasonType,
+                matchDay = matchDay,
+                stage = Stage.safeValueOf(stage),
+                seasonType = TournamentType.safeValueOf(matches.seasonType),
                 matches = domainMatches
             )
             result.add(matchesByTour)
@@ -195,14 +200,14 @@ fun MatchEntity.toMatches(): Match {
         area = area.toArea(),
         competition = competition.toCompetition(),
         awayTeam = awayTeam.toMatchTeam(),
-        group = group,
+        group = Group.safeValueOf(group),
         homeTeam = homeTeam.toMatchTeam(),
         id = id,
         matchDay = matchDay,
         referees = referees?.map { it.toReferee() } ?: emptyList(),
         score = score.toScore(),
-        stage = stage,
-        status = status,
+        stage = Stage.safeValueOf(stage),
+        status = MatchStatus.safeValueOf(status),
         utcDate = utcDate.toDate()?.formatTo("dd MMMM yyyy, HH:mm") ?: "",
         bigDate = utcDate.toDate()?.formatTo("dd.MM") ?: "",
     )
@@ -230,7 +235,7 @@ fun RefereeEntity.toReferee(): Referee {
 fun ScoreEntity?.toScore(): Score {
     return Score(
         duration = this?.duration ?: "",
-        winner = this?.winner ?: "",
+        winner = Winner.safeValueOf(this?.winner ?: ""),
         fullTime = this?.fullTime.toTime(),
         halfTime = this?.halfTime.toTime(),
     )

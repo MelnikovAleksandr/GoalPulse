@@ -13,6 +13,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingGif
@@ -54,7 +55,7 @@ fun FirstPagerScreenStandings(
                         item {
                             Divider(color = MaterialTheme.colorScheme.primary)
                             StandingTopItem(
-                                tableName = standing.group.ifEmpty { "Team" }
+                                tableName = stringResource(standing.group.stringResId)
                             )
                             Divider(color = MaterialTheme.colorScheme.primary)
                         }

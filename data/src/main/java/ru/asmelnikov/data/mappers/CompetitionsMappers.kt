@@ -64,15 +64,13 @@ fun CompetitionEntity?.toCompetition(): Competition {
         code = this?.code ?: "",
         currentSeason = this?.currentSeason.toCurrentSeason(),
         emblem = this?.emblem ?: "",
-        name = this?.name ?: "",
-        type = this?.type ?: ""
+        name = this?.name ?: ""
     )
 }
 
 fun AreaEntity?.toArea(): Area {
     return Area(
         id = this?.id ?: UUID.randomUUID().hashCode(),
-        code = this?.code ?: "",
         flag = this?.flag ?: "",
         name = this?.name ?: ""
     )
@@ -84,8 +82,7 @@ fun CurrentSeasonEntity?.toCurrentSeason(): CurrentSeason {
         currentMatchDay = this?.currentMatchDay ?: -1,
         startDateEndDate = createYearRange(this?.startDate ?: "", this?.endDate ?: ""),
         endDate = this?.endDate ?: "",
-        startDate = this?.startDate ?: "",
-        winner = this?.winner.toTeam()
+        startDate = this?.startDate ?: ""
     )
 }
 

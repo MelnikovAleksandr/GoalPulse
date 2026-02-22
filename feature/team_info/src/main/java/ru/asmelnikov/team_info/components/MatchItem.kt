@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
+import ru.asmelnikov.domain.models.Winner
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.ui.theme.lastRed
@@ -142,8 +143,8 @@ fun ScoreItem(
     val isAwayTeam = teamId == match.awayTeam.id.toString()
 
     val resultColor = when (match.score.winner) {
-        "HOME_TEAM" -> if (isHomeTeam) MaterialTheme.colorScheme.primary else lastRed.copy(alpha = 0.5f)
-        "AWAY_TEAM" -> if (isAwayTeam) MaterialTheme.colorScheme.primary else lastRed.copy(alpha = 0.5f)
+        Winner.HOME_TEAM -> if (isHomeTeam) MaterialTheme.colorScheme.primary else lastRed.copy(alpha = 0.5f)
+        Winner.AWAY_TEAM -> if (isAwayTeam) MaterialTheme.colorScheme.primary else lastRed.copy(alpha = 0.5f)
         else -> MaterialTheme.colorScheme.secondary
     }
 

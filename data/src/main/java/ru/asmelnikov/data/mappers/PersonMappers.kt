@@ -6,6 +6,7 @@ import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.domain.models.Area
 import ru.asmelnikov.domain.models.CurrentTeam
 import ru.asmelnikov.domain.models.Person
+import ru.asmelnikov.domain.models.PlayerPosition
 import java.util.UUID
 
 fun PersonInfoDTO.toPerson(): Person {
@@ -18,7 +19,7 @@ fun PersonInfoDTO.toPerson(): Person {
         lastUpdated = lastUpdated ?: "",
         name = name ?: "",
         nationality = nationality ?: "",
-        position = position ?: "",
+        position = PlayerPosition.fromValue(position),
         section = section ?: "",
         shirtNumber = shirtNumber ?: -1
     )
@@ -43,7 +44,6 @@ fun TeamInfoDTO?.toCurrentTeam(): CurrentTeam {
 fun AreaDTO?.toArea(): Area {
     return Area(
         id = this?.id ?: UUID.randomUUID().hashCode(),
-        code = this?.code ?: "",
         flag = this?.flag ?: "",
         name = this?.name ?: ""
     )

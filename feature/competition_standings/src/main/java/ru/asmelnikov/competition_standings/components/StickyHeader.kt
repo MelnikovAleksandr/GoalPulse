@@ -11,10 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.MatchesByTour
+import ru.asmelnikov.domain.models.TournamentType
 import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.R
 
 @Composable
 fun StickyHeader(
@@ -23,9 +26,9 @@ fun StickyHeader(
 ) {
 
     val text = when {
-        matchesByTour.matchday == -1 -> matchesByTour.matches.firstOrNull()?.stage.toString()
-        matchesByTour.seasonType == "CUP" -> "${matchesByTour.matchday} tour ${matchesByTour.stage}"
-        else -> "${matchesByTour.matchday} tour"
+        matchesByTour.matchDay == -1 -> stringResource(matchesByTour.matches.firstOrNull()?.stage?.stringResId ?: R.string.non)
+        matchesByTour.seasonType == TournamentType.CUP -> "${matchesByTour.matchDay} tour ${stringResource(matchesByTour.stage.stringResId)}"
+        else -> "${matchesByTour.matchDay} tour"
     }
 
     Row(

@@ -11,6 +11,7 @@ import ru.asmelnikov.data.models.ContractDTO
 import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.domain.models.Coach
 import ru.asmelnikov.domain.models.Contract
+import ru.asmelnikov.domain.models.PlayerPosition
 import ru.asmelnikov.domain.models.Squad
 import ru.asmelnikov.domain.models.SquadByPosition
 import ru.asmelnikov.domain.models.TeamInfo
@@ -95,7 +96,7 @@ fun ContractEntity?.toContract(): Contract {
 
 fun SquadByPositionEntity.toSquadByPosition(): SquadByPosition {
     return SquadByPosition(
-        position = position,
+        position = PlayerPosition.fromValue(position),
         squad = squad?.map { it.toSquad() } ?: emptyList()
     )
 }

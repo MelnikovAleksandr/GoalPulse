@@ -9,6 +9,7 @@ import ru.asmelnikov.data.models.PersonDTO
 import ru.asmelnikov.data.models.ScorerDTO
 import ru.asmelnikov.domain.models.CompetitionScorers
 import ru.asmelnikov.domain.models.Player
+import ru.asmelnikov.domain.models.PlayerPosition
 import ru.asmelnikov.domain.models.Scorer
 import java.util.UUID
 
@@ -27,7 +28,7 @@ fun CompetitionScorersEntity.toCompetitionScorers(): CompetitionScorers {
     return CompetitionScorers(
         id = id,
         scorers = this.scorers?.map { it.toScorer() } ?: emptyList(),
-        season = this.season.toSeason(),
+        season = this.season.toCurrentSeason(),
     )
 }
 
@@ -74,7 +75,7 @@ fun PlayerEntity?.toPlayer(): Player {
         lastName = this?.lastName ?: "",
         name = this?.name ?: "",
         nationality = this?.nationality ?: "",
-        position = this?.position ?: "",
+        position = PlayerPosition.fromValue(this?.position),
         shirtNumber = this?.shirtNumber ?: 0
     )
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.domain.models.Person
+import ru.asmelnikov.domain.models.PlayerPosition
 import ru.asmelnikov.person_info.view_model.PersonSideEffects
 import ru.asmelnikov.person_info.view_model.PersonViewModel
 import ru.asmelnikov.utils.R
@@ -191,7 +193,7 @@ fun PersonInfoContent(
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }
-                if (person.position.isNotEmpty())
+                if (person.position != PlayerPosition.NON)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -206,7 +208,7 @@ fun PersonInfoContent(
                         )
                         Text(
                             modifier = Modifier,
-                            text = person.position,
+                            text = stringResource(person.position.stringResId),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelMedium,
                             maxLines = 1,

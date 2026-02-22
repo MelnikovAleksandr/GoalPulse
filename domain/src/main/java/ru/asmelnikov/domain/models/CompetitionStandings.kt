@@ -2,58 +2,44 @@ package ru.asmelnikov.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.UUID
 
 @Parcelize
 data class CompetitionStandings(
-    val id: String,
-    val area: Area,
-    val competition: Competition,
+    val id: String = UUID.randomUUID().toString(),
+    val area: Area = Area(),
+    val competition: Competition = Competition(),
     val standings: List<Standing>
 ) : Parcelable
 
 @Parcelize
-data class Filters(
-    val season: String
-) : Parcelable
-
-@Parcelize
-data class Season(
-    val currentMatchday: Int,
-    val endDate: String,
-    val startDateEndDate: String, // example - 2022/2023
-    val id: Int,
-    val startDate: String,
-    val winner: Team
-) : Parcelable
-
-@Parcelize
 data class Standing(
-    val group: String,
-    val stage: String,
-    val table: List<Table>,
-    val type: String
+    val group: Group = Group.NON,
+    val stage: Stage = Stage.NON,
+    val table: List<Table> = emptyList(),
+    val type: TournamentType = TournamentType.NON
 ) : Parcelable
 
 @Parcelize
 data class Table(
-    val draw: Int,
-    val form: String,
-    val goalDifference: Int,
-    val goalsAgainst: Int,
-    val goalsFor: Int,
-    val lost: Int,
-    val playedGames: Int,
-    val points: Int,
-    val position: Int,
-    val team: Team,
-    val won: Int
+    val draw: Int = 0,
+    val form: String = "",
+    val goalDifference: Int = 0,
+    val goalsAgainst: Int = 0,
+    val goalsFor: Int = 0,
+    val lost: Int = 0,
+    val playedGames: Int = 0,
+    val points: Int = 0,
+    val position: Int = 0,
+    val team: Team = Team(),
+    val won: Int = 0
 ) : Parcelable
 
 @Parcelize
 data class Team(
-    val crest: String,
-    val id: Int,
-    val name: String,
-    val shortName: String,
-    val tla: String
+    val id: Int = UUID.randomUUID().hashCode(),
+    val crest: String = "",
+    val name: String = "",
+    val shortName: String = "",
+    val tla: String = ""
 ) : Parcelable

@@ -3,7 +3,6 @@ package ru.asmelnikov.data.mappers
 import io.realm.kotlin.ext.realmListOf
 import ru.asmelnikov.data.local.models.CompetitionEmbeddedEntity
 import ru.asmelnikov.data.local.models.CompetitionStandingsEntity
-import ru.asmelnikov.data.local.models.CurrentSeasonEntity
 import ru.asmelnikov.data.local.models.StandingEntity
 import ru.asmelnikov.data.local.models.TableEntity
 import ru.asmelnikov.data.models.CompetitionStandingsModelDTO
@@ -11,9 +10,11 @@ import ru.asmelnikov.data.models.StandingDTO
 import ru.asmelnikov.data.models.TableDTO
 import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.CompetitionStandings
-import ru.asmelnikov.domain.models.Season
+import ru.asmelnikov.domain.models.Group
+import ru.asmelnikov.domain.models.Stage
 import ru.asmelnikov.domain.models.Standing
 import ru.asmelnikov.domain.models.Table
+import ru.asmelnikov.domain.models.TournamentType
 import java.util.UUID
 
 fun CompetitionStandingsModelDTO.toCompetitionStandingsEntity(): CompetitionStandingsEntity {
@@ -73,27 +74,15 @@ fun CompetitionEmbeddedEntity?.toCompetition(): Competition {
         code = this?.code ?: "",
         currentSeason = this?.currentSeason.toCurrentSeason(),
         emblem = this?.emblem ?: "",
-        name = this?.name ?: "",
-        type = this?.type ?: ""
-    )
-}
-
-fun CurrentSeasonEntity?.toSeason(): Season {
-    return Season(
-        id = this?.id ?: UUID.randomUUID().hashCode(),
-        currentMatchday = this?.currentMatchDay ?: -1,
-        startDateEndDate = createYearRange(this?.startDate ?: "", this?.endDate ?: ""),
-        endDate = this?.endDate ?: "",
-        startDate = this?.startDate ?: "",
-        winner = this?.winner.toTeam()
+        name = this?.name ?: ""
     )
 }
 
 fun StandingEntity.toStanding(): Standing {
     return Standing(
-        group = group,
-        stage = stage,
-        type = type,
+        group = Group.safeValueOf(group),
+        stage = Stage.safeValueOf(stage),
+        type = TournamentType.safeValueOf(type),
         table = this.table?.map { it.toTable() } ?: emptyList()
     )
 }

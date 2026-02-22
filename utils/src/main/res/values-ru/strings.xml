@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Errors -->
     <string name="http_400_errors">Неверный запрос.</string>
     <string name="http_403_errors">"Ой! У вас нет доступа к запрошенному ресурсу. Пожалуйста, проверьте свои разрешения."</string>
     <string name="http_429_errors">Превышен лимит запросов, повторите через минуту.</string>
@@ -8,4 +9,86 @@
     <string name="http_missing_error">Отсутствует соединение для ответа, повторите попытку позже.</string>
     <string name="http_network_error">Ошибка сети, повторите попытку позже.</string>
     <string name="http_unknown_error">Что то пошло не так… %1$s</string>
+
+    <!-- Position Type -->
+    <string name="position_goalkeeper">Вратарь</string>
+    <string name="position_defence">Защитник</string>
+    <string name="position_center_back">Центральный защитник</string>
+    <string name="position_left_back">Левый защитник</string>
+    <string name="position_right_back">Правый защитник</string>
+    <string name="position_defensive_midfield">Опорный полузащитник</string>
+    <string name="position_central_midfield">Центральный полузащитник</string>
+    <string name="position_attacking_midfield">Атакующий полузащитник</string>
+    <string name="position_right_midfield">Правый полузащитник</string>
+    <string name="position_left_midfield">Левый полузащитник</string>
+    <string name="position_midfield">Полузащитник</string>
+    <string name="position_left_winger">Левый вингер</string>
+    <string name="position_right_winger">Правый вингер</string>
+    <string name="position_offence">Нападающий</string>
+    <string name="position_centre_forward">Центрфорвард</string>
+    <string name="non">Не указано</string>
+
+    <!-- Stage Type -->
+    <string name="stage_league">Групповой этап</string>
+    <string name="stage_final">Финал</string>
+    <string name="stage_third_place">Матч за 3-е место</string>
+    <string name="stage_semi_finals">Полуфинал</string>
+    <string name="stage_quarter_finals">Четвертьфинал</string>
+    <string name="stage_last_16">1/16 финала</string>
+    <string name="stage_last_32">1/32 финала</string>
+    <string name="stage_last_64">1/64 финала</string>
+    <string name="stage_round_4">Раунд 4</string>
+    <string name="stage_round_3">Раунд 3</string>
+    <string name="stage_round_2">Раунд 2</string>
+    <string name="stage_round_1">Раунд 1</string>
+    <string name="stage_group_stage">Групповой этап</string>
+    <string name="stage_preliminary_round">Предварительный раунд</string>
+    <string name="stage_qualification">Квалификация</string>
+    <string name="stage_qualification_round_1">Квалификационный раунд 1</string>
+    <string name="stage_qualification_round_2">Квалификационный раунд 2</string>
+    <string name="stage_qualification_round_3">Квалификационный раунд 3</string>
+    <string name="stage_playoff_round_1">Плей-офф раунд 1</string>
+    <string name="stage_playoff_round_2">Плей-офф раунд 2</string>
+    <string name="stage_playoffs">Плей-офф</string>
+    <string name="stage_regular_season">Регулярный сезон</string>
+    <string name="stage_clausura">Клаусура</string>
+    <string name="stage_apertura">Апертура</string>
+    <string name="stage_championship">Чемпионат</string>
+    <string name="stage_relegation">Вылет</string>
+    <string name="stage_relegation_round">Раунд на вылет</string>
+
+    <!-- Match Statuses -->
+    <string name="match_status_scheduled">Запланирован</string>
+    <string name="match_status_live">Live</string>
+    <string name="match_status_in_play">В игре</string>
+    <string name="match_status_paused">Пауза</string>
+    <string name="match_status_finished">Завершён</string>
+    <string name="match_status_postponed">Перенесён</string>
+    <string name="match_status_suspended">Приостановлен</string>
+    <string name="match_status_cancelled">Отменён</string>
+
+    <!-- Tournament Type -->
+    <string name="tournament_type_league">Лига</string>
+    <string name="tournament_type_league_cup">Кубок лиги</string>
+    <string name="tournament_type_cup">Кубок</string>
+    <string name="tournament_type_playoffs">Плей-офф</string>
+
+    <!-- Groups Type -->
+    <string name="group_a">Группа A</string>
+    <string name="group_b">Группа B</string>
+    <string name="group_c">Группа C</string>
+    <string name="group_d">Группа D</string>
+    <string name="group_e">Группа E</string>
+    <string name="group_f">Группа F</string>
+    <string name="group_g">Группа G</string>
+    <string name="group_h">Группа H</string>
+    <string name="group_i">Группа I</string>
+    <string name="group_j">Группа J</string>
+    <string name="group_k">Группа K</string>
+    <string name="group_l">Группа L</string>
+
+    <!-- Result Type -->
+    <string name="winner_home_team">Хозяева</string>
+    <string name="winner_away_team">Гости</string>
+    <string name="winner_draw">Ничья</string>
 </resources>

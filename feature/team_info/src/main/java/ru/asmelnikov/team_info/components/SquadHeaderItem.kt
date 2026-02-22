@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.SquadByPosition
@@ -35,7 +36,7 @@ fun SquadHeaderItem(
                 horizontal = MaterialTheme.dimens.small1,
                 vertical = MaterialTheme.dimens.extraSmall1
             ),
-            text = squadByPosition.position,
+            text = stringResource(squadByPosition.position.stringResId),
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.labelMedium,
             maxLines = 1,

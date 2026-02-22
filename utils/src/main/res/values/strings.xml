@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">GoalPulse</string>
+
+    <!-- Errors -->
     <string name="http_400_errors">Incorrect request.</string>
     <string name="http_403_errors">"Oops! You don't have access to the requested resource. Please check your permissions."</string>
     <string name="http_429_errors">The request limit has been exceeded, try again in a minute.</string>
@@ -8,4 +10,86 @@
     <string name="http_missing_error">Response missing connection, please repeat later.</string>
     <string name="http_network_error">Network error, please repeat later.</string>
     <string name="http_unknown_error">Something went wrong… %1$s</string>
+
+    <!-- Position Type -->
+    <string name="position_goalkeeper">Goalkeeper</string>
+    <string name="position_defence">Defence</string>
+    <string name="position_center_back">Centre-Back</string>
+    <string name="position_left_back">Left-Back</string>
+    <string name="position_right_back">Right-Back</string>
+    <string name="position_defensive_midfield">Defensive Midfield</string>
+    <string name="position_central_midfield">Central Midfield</string>
+    <string name="position_attacking_midfield">Attacking Midfield</string>
+    <string name="position_right_midfield">Right Midfield</string>
+    <string name="position_left_midfield">Left Midfield</string>
+    <string name="position_midfield">Midfield</string>
+    <string name="position_left_winger">Left Winger</string>
+    <string name="position_right_winger">Right Winger</string>
+    <string name="position_offence">Offence</string>
+    <string name="position_centre_forward">Centre-Forward</string>
+    <string name="non">Non</string>
+
+    <!-- Stage Type -->
+    <string name="stage_league">League Stage</string>
+    <string name="stage_final">Final</string>
+    <string name="stage_third_place">Third Place</string>
+    <string name="stage_semi_finals">Semi-finals</string>
+    <string name="stage_quarter_finals">Quarter-finals</string>
+    <string name="stage_last_16">Last 16</string>
+    <string name="stage_last_32">Last 32</string>
+    <string name="stage_last_64">Last 64</string>
+    <string name="stage_round_4">Round 4</string>
+    <string name="stage_round_3">Round 3</string>
+    <string name="stage_round_2">Round 2</string>
+    <string name="stage_round_1">Round 1</string>
+    <string name="stage_group_stage">Group Stage</string>
+    <string name="stage_preliminary_round">Preliminary Round</string>
+    <string name="stage_qualification">Qualification</string>
+    <string name="stage_qualification_round_1">Qualification Round 1</string>
+    <string name="stage_qualification_round_2">Qualification Round 2</string>
+    <string name="stage_qualification_round_3">Qualification Round 3</string>
+    <string name="stage_playoff_round_1">Playoff Round 1</string>
+    <string name="stage_playoff_round_2">Playoff Round 2</string>
+    <string name="stage_playoffs">Playoffs</string>
+    <string name="stage_regular_season">Regular Season</string>
+    <string name="stage_clausura">Clausura</string>
+    <string name="stage_apertura">Apertura</string>
+    <string name="stage_championship">Championship</string>
+    <string name="stage_relegation">Relegation</string>
+    <string name="stage_relegation_round">Relegation Round</string>
+
+    <!-- Match Statuses -->
+    <string name="match_status_scheduled">Scheduled</string>
+    <string name="match_status_live">Live</string>
+    <string name="match_status_in_play">In Play</string>
+    <string name="match_status_paused">Paused</string>
+    <string name="match_status_finished">Finished</string>
+    <string name="match_status_postponed">Postponed</string>
+    <string name="match_status_suspended">Suspended</string>
+    <string name="match_status_cancelled">Cancelled</string>
+
+    <!-- Tournament Type -->
+    <string name="tournament_type_league">League</string>
+    <string name="tournament_type_league_cup">League Cup</string>
+    <string name="tournament_type_cup">Cup</string>
+    <string name="tournament_type_playoffs">Playoffs</string>
+
+    <!-- Groups Type -->
+    <string name="group_a">Group A</string>
+    <string name="group_b">Group B</string>
+    <string name="group_c">Group C</string>
+    <string name="group_d">Group D</string>
+    <string name="group_e">Group E</string>
+    <string name="group_f">Group F</string>
+    <string name="group_g">Group G</string>
+    <string name="group_h">Group H</string>
+    <string name="group_i">Group I</string>
+    <string name="group_j">Group J</string>
+    <string name="group_k">Group K</string>
+    <string name="group_l">Group L</string>
+
+    <!-- Result Type -->
+    <string name="winner_home_team">Home Team</string>
+    <string name="winner_away_team">Away Team</string>
+    <string name="winner_draw">Draw</string>
 </resources>

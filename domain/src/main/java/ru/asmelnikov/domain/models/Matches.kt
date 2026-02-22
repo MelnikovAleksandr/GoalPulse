@@ -2,6 +2,7 @@ package ru.asmelnikov.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.UUID
 
 @Parcelize
 data class Matches(
@@ -12,56 +13,56 @@ data class Matches(
 
 @Parcelize
 data class MatchesByTour(
-    val matchday: Int,
-    val seasonType: String,
-    val stage: String?,
-    val matches: List<Match>
+    val matchDay: Int = 0,
+    val seasonType: TournamentType = TournamentType.NON,
+    val stage: Stage = Stage.NON,
+    val matches: List<Match> = emptyList()
 ) : Parcelable
 
 @Parcelize
 data class Match(
-    val area: Area,
-    val competition: Competition,
-    val awayTeam: MatchTeam,
-    val group: String,
-    val homeTeam: MatchTeam,
-    val id: Int,
-    val matchDay: Int,
-    val referees: List<Referee>,
-    val score: Score,
-    val stage: String,
-    val status: String,
-    val utcDate: String,
-    val bigDate: String
+    val id: Int = UUID.randomUUID().hashCode(),
+    val area: Area = Area(),
+    val competition: Competition = Competition(),
+    val awayTeam: MatchTeam = MatchTeam(),
+    val group: Group = Group.NON,
+    val homeTeam: MatchTeam = MatchTeam(),
+    val matchDay: Int = 0,
+    val referees: List<Referee> = emptyList(),
+    val score: Score = Score(),
+    val stage: Stage = Stage.NON,
+    val status: MatchStatus = MatchStatus.NON,
+    val utcDate: String = "",
+    val bigDate: String = ""
 ) : Parcelable
 
 @Parcelize
 data class MatchTeam(
-    val crest: String,
-    val id: Int,
-    val name: String,
-    val shortName: String,
-    val tla: String
+    val id: Int = UUID.randomUUID().hashCode(),
+    val crest: String = "",
+    val name: String = "",
+    val shortName: String = "",
+    val tla: String = ""
 ) : Parcelable
 
 @Parcelize
 data class Referee(
-    val id: Int,
-    val name: String,
-    val nationality: String,
-    val type: String
+    val id: Int = UUID.randomUUID().hashCode(),
+    val name: String = "",
+    val nationality: String = "",
+    val type: String = ""
 ) : Parcelable
 
 @Parcelize
 data class Score(
-    val duration: String,
-    val fullTime: Time,
-    val halfTime: Time,
-    val winner: String
+    val duration: String = "",
+    val fullTime: Time = Time(),
+    val halfTime: Time = Time(),
+    val winner: Winner = Winner.NON
 ) : Parcelable
 
 @Parcelize
 data class Time(
-    val away: Int,
-    val home: Int
+    val away: Int = 0,
+    val home: Int = 0
 ) : Parcelable

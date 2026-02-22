@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="http_400_errors">Неверный запрос.</string>
+    <string name="http_403_errors">"Ой! У вас нет доступа к запрошенному ресурсу. Пожалуйста, проверьте свои разрешения."</string>
+    <string name="http_429_errors">Превышен лимит запросов, повторите через минуту.</string>
+    <string name="http_500_errors">Сервер не отвечает.</string>
+    <string name="http_timeout_error">Истекло время ожидания ответа, повторите попытку позже.</string>
+    <string name="http_missing_error">Отсутствует соединение для ответа, повторите попытку позже.</string>
+    <string name="http_network_error">Ошибка сети, повторите попытку позже.</string>
+    <string name="http_unknown_error">Что то пошло не так… %1$s</string>
+</resources>

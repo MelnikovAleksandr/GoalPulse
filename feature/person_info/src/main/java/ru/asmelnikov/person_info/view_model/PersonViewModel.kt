@@ -42,12 +42,12 @@ class PersonViewModel(
             }
 
             is Resource.Error -> {
-                handleError(person.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                handleError(person.httpErrors)
             }
         }
     }
 
-    private fun handleError(error: ErrorsTypesHttp) = intent {
+    private fun handleError(error: ErrorsTypesHttp?) = intent {
         reduce {
             state.copy(
                 isLoading = false

@@ -1,6 +1,6 @@
 package ru.asmelnikov.utils
 
-fun ErrorsTypesHttp.getErrorMessage(stringResourceProvider: StringResourceProvider): String {
+fun ErrorsTypesHttp?.getErrorMessage(stringResourceProvider: StringResourceProvider): String {
     return when (this) {
         is ErrorsTypesHttp.Https400Errors -> {
             when (this.errorCode) {
@@ -38,7 +38,12 @@ fun ErrorsTypesHttp.getErrorMessage(stringResourceProvider: StringResourceProvid
             )
         }
 
-        else -> {
+        is ErrorsTypesHttp.UnknownError -> {
+            stringResourceProvider.getString(
+                R.string.http_unknown_error, this.message ?: ""
+            )
+        }
+        null -> {
             stringResourceProvider.getString(
                 R.string.http_unknown_error
             )

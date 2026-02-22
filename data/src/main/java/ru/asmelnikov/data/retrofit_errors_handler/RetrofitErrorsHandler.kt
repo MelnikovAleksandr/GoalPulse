@@ -3,10 +3,11 @@ package ru.asmelnikov.data.retrofit_errors_handler
 import retrofit2.Response
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.io.IOException
 import java.net.ConnectException
+import java.net.HttpRetryException
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 interface RetrofitErrorsHandler {
     suspend fun <T> executeSafely(
@@ -29,7 +30,7 @@ interface RetrofitErrorsHandler {
                         Resource.Error(httpErrors = ErrorsTypesHttp.TimeoutException())
                     }
 
-                    is IOException -> {
+                    is UnknownHostException, is HttpRetryException -> {
                         Resource.Error(httpErrors = ErrorsTypesHttp.NetworkError(message = e.message))
                     }
 

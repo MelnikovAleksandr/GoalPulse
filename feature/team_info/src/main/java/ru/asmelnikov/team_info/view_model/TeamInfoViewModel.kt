@@ -54,7 +54,12 @@ class TeamInfoViewModel(
             }
 
             is Resource.Error -> {
-                handleError(news.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isNewsLoading = false
+                    )
+                }
+                handleError(news.httpErrors)
             }
         }
     }
@@ -83,7 +88,12 @@ class TeamInfoViewModel(
             }
 
             is Resource.Error -> {
-                handleError(head2head.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isHead2headLoading = false
+                    )
+                }
+                handleError(head2head.httpErrors)
             }
         }
     }
@@ -111,7 +121,12 @@ class TeamInfoViewModel(
             }
 
             is Resource.Error -> {
-                handleError(team.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isInfoLoading = false
+                    )
+                }
+                handleError(team.httpErrors)
             }
         }
     }
@@ -131,7 +146,12 @@ class TeamInfoViewModel(
             }
 
             is Resource.Error -> {
-                handleError(matches.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isMatchesLoading = false
+                    )
+                }
+                handleError(matches.httpErrors)
             }
         }
     }
@@ -186,16 +206,7 @@ class TeamInfoViewModel(
         }
     }
 
-    private fun handleError(error: ErrorsTypesHttp) = intent {
-        reduce {
-            state.copy(
-                isInfoLoading = false,
-                isMatchesLoading = false,
-                isHead2headLoading = false,
-                isNewsLoading = false
-            )
-        }
-
+    private fun handleError(error: ErrorsTypesHttp?) = intent {
         postSideEffect(
             TeamInfoSideEffects.Snackbar(
                 error.getErrorMessage(

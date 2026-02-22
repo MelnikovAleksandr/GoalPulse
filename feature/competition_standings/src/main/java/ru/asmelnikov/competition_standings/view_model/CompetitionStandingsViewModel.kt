@@ -56,7 +56,8 @@ class CompetitionStandingsViewModel(
             }
 
             is Resource.Error -> {
-                handleError(head2head.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce { state.copy(isHead2headLoading = false) }
+                handleError(head2head.httpErrors)
             }
         }
     }
@@ -84,7 +85,12 @@ class CompetitionStandingsViewModel(
             }
 
             is Resource.Error -> {
-                handleError(compsFromRemote.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isLoadingScorers = false
+                    )
+                }
+                handleError(compsFromRemote.httpErrors)
             }
         }
     }
@@ -104,7 +110,12 @@ class CompetitionStandingsViewModel(
             }
 
             is Resource.Error -> {
-                handleError(compsFromRemote.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isLoadingStandings = false
+                    )
+                }
+                handleError(compsFromRemote.httpErrors)
             }
         }
     }
@@ -124,7 +135,12 @@ class CompetitionStandingsViewModel(
             }
 
             is Resource.Error -> {
-                handleError(matchesFromRemote.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                reduce {
+                    state.copy(
+                        isLoadingMatches = false
+                    )
+                }
+                handleError(matchesFromRemote.httpErrors)
             }
         }
     }
@@ -172,16 +188,7 @@ class CompetitionStandingsViewModel(
         }
     }
 
-    private fun handleError(error: ErrorsTypesHttp) = intent {
-        reduce {
-            state.copy(
-                isLoadingStandings = false,
-                isLoadingScorers = false,
-                isLoadingMatches = false,
-                isHead2headLoading = false
-            )
-        }
-
+    private fun handleError(error: ErrorsTypesHttp?) = intent {
         postSideEffect(
             CompetitionStandingSideEffects.Snackbar(
                 error.getErrorMessage(

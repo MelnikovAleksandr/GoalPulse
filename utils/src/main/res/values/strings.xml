@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">GoalPulse</string>
-
+    <string name="app_name" translatable="false">GoalPulse</string>
     <string name="http_400_errors">Incorrect request.</string>
     <string name="http_403_errors">"Oops! You don't have access to the requested resource. Please check your permissions."</string>
     <string name="http_429_errors">The request limit has been exceeded, try again in a minute.</string>
@@ -8,6 +7,5 @@
     <string name="http_timeout_error">Response time out, please repeat later.</string>
     <string name="http_missing_error">Response missing connection, please repeat later.</string>
     <string name="http_network_error">Network error, please repeat later.</string>
-    <string name="http_unknown_error">Connection error, check internet connection and try again.</string>
-
+    <string name="http_unknown_error">Something went wrong… %1$s</string>
 </resources>

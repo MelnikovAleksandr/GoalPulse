@@ -37,7 +37,7 @@ class CompetitionsScreenViewModel(
             }
 
             is Resource.Error -> {
-                handleError(compsFromRemote.httpErrors ?: ErrorsTypesHttp.UnknownError())
+                handleError(compsFromRemote.httpErrors)
             }
         }
     }
@@ -55,16 +55,9 @@ class CompetitionsScreenViewModel(
         }
     }
 
-    private fun handleError(error: ErrorsTypesHttp) = intent {
+    private fun handleError(error: ErrorsTypesHttp?) = intent {
         reduce { state.copy(isLoading = false) }
-
-        postSideEffect(
-            CompetitionsScreenSideEffects.Snackbar(
-                error.getErrorMessage(
-                    stringResourceProvider
-                )
-            )
-        )
+        postSideEffect(CompetitionsScreenSideEffects.Snackbar(error.getErrorMessage(stringResourceProvider)))
     }
 
 }

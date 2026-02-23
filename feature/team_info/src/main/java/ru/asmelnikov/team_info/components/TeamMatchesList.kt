@@ -26,7 +26,6 @@ import ru.asmelnikov.utils.composables.LoadingGif
 import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TeamMatchesList(
     matchesCompleted: List<Match>,
@@ -75,7 +74,7 @@ fun TeamMatchesList(
                     if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
                 )
                 .fillMaxWidth()
-                .height(MaterialTheme.dimens.extraSmall1)
+                .height(dimens.extraSmall1)
         ) {
             if (isLoading) LinearProgressIndicator(
                 modifier = Modifier.fillMaxSize(),

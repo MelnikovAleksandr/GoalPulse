@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import ru.asmelnikov.goalpulse.navigation.NavGraph
-import ru.asmelnikov.goalpulse.ui.theme.GoalPulseTheme
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.composables.rememberAppState
 
 class MainActivity : ComponentActivity() {

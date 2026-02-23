@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.material.icons.core)
     implementation(libs.accompanist.swiperefresh)
     implementation(libs.androidx.palette.ktx)
+    implementation(libs.material3.window.size.class1)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

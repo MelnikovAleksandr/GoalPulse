@@ -1,17 +1,15 @@
-package ru.asmelnikov.goalpulse.ui.theme
+package ru.asmelnikov.utils.ui.theme
 
-import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import ru.asmelnikov.goalpulse.MainActivity
-import ru.asmelnikov.utils.ui.theme.*
-
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -78,11 +76,9 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun GoalPulseTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    activity: Activity = LocalContext.current as MainActivity,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -90,47 +86,53 @@ fun GoalPulseTheme(
         else -> LightColors
     }
 
-    val window = calculateWindowSizeClass(activity = activity)
-    val config = LocalConfiguration.current
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val config = LocalWindowInfo.current.containerDpSize
 
-    var typography = CompactTypography
-    var appDimens = CompactDimens
-    var shape = CompactShapes
+    val screenConfig = rememberScreenConfig(windowSizeClass, config)
 
-    when (window.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
-            if (config.screenWidthDp <= 360) {
-                appDimens = CompactSmallDimens
-                typography = CompactSmallTypography
-                shape = CompactShapes
-            } else if (config.screenWidthDp < 599) {
-                appDimens = CompactMediumDimens
-                typography = CompactMediumTypography
-                shape = CompactShapes
-            } else {
-                appDimens = CompactDimens
-                typography = CompactTypography
-                shape = CompactShapes
-            }
-        }
-        WindowWidthSizeClass.Medium -> {
-            appDimens = MediumDimens
-            typography = MediumTypography
-            shape = MediumShapes
-        }
-        else -> {
-            appDimens = ExpandedDimens
-            typography = ExpandedTypography
-            shape = ExpandedShapes
-        }
-    }
-
-    AppUtils(appDimens = appDimens) {
+    AppUtils(appDimens = screenConfig.dimens) {
         MaterialTheme(
             colorScheme = colorScheme,
-            shapes = shape,
-            typography = typography,
+            shapes = screenConfig.shapes,
+            typography = screenConfig.typography,
             content = content
         )
     }
 }
+
+@Composable
+private fun rememberScreenConfig(
+    windowSizeClass: WindowSizeClass,
+    containerSize: DpSize
+): ScreenConfig {
+    return remember(windowSizeClass, containerSize) {
+        val screenWidth = containerSize.width
+        when {
+            screenWidth >= 840.dp ->
+                ScreenConfig(ExpandedDimens, ExpandedTypography, ExpandedShapes)
+
+            screenWidth in 600.dp..839.dp ->
+                ScreenConfig(MediumDimens, MediumTypography, MediumShapes)
+
+            else -> {
+                when {
+                    screenWidth <= 360.dp ->
+                        ScreenConfig(CompactSmallDimens, CompactSmallTypography, CompactShapes)
+
+                    screenWidth < 600.dp ->
+                        ScreenConfig(CompactMediumDimens, CompactMediumTypography, CompactShapes)
+
+                    else ->
+                        ScreenConfig(CompactDimens, CompactTypography, CompactShapes)
+                }
+            }
+        }
+    }
+}
+
+private data class ScreenConfig(
+    val dimens: Dimens,
+    val typography: Typography,
+    val shapes: Shapes
+)

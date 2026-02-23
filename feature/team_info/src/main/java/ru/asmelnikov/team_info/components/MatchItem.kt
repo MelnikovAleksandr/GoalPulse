@@ -56,19 +56,19 @@ fun MatchItem(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = MaterialTheme.dimens.medium1),
+                .padding(top = dimens.medium1),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             SubComposeAsyncImageCommon(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                modifier = Modifier.padding(horizontal = dimens.small1),
                 imageUri = match.homeTeam.crest,
                 shape = RoundedCornerShape(0.dp),
-                size = MaterialTheme.dimens.medium4
+                size = dimens.medium4
             )
             if (isAhead) {
                 Text(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.medium1),
+                    modifier = Modifier.padding(horizontal = dimens.medium1),
                     text = match.bigDate,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
@@ -79,14 +79,14 @@ fun MatchItem(
                 ScoreItem(teamId, match)
             }
             SubComposeAsyncImageCommon(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                modifier = Modifier.padding(horizontal = dimens.small1),
                 imageUri = match.awayTeam.crest,
                 shape = RoundedCornerShape(0.dp),
-                size = MaterialTheme.dimens.medium4
+                size = dimens.medium4
             )
         }
         Text(
-            modifier = modifier.padding(top = MaterialTheme.dimens.small3),
+            modifier = modifier.padding(top = dimens.small3),
             text = "${match.homeTeam.shortName} - ${match.awayTeam.shortName}",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
@@ -94,7 +94,7 @@ fun MatchItem(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = modifier.padding(bottom = MaterialTheme.dimens.medium1),
+            modifier = modifier.padding(bottom = dimens.medium1),
             text = "${match.utcDate} - ${match.area.name}. ${match.competition.name}",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
@@ -109,7 +109,7 @@ fun MatchItem(
                 LinearProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(MaterialTheme.dimens.extraSmall1),
+                        .height(dimens.extraSmall1),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -149,13 +149,13 @@ fun ScoreItem(
     }
 
     Card(
-        modifier = Modifier.padding(horizontal = MaterialTheme.dimens.medium1),
+        modifier = Modifier.padding(horizontal = dimens.medium1),
         colors = CardDefaults.cardColors(
             containerColor = resultColor
         ),
     ) {
         Row(
-            modifier = Modifier.padding(MaterialTheme.dimens.small1),
+            modifier = Modifier.padding(dimens.small1),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -176,7 +176,7 @@ fun Head2headView(head2head: Head2head) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium3)
+            .height(dimens.medium3)
     ) {
         Row(
             modifier = Modifier.fillMaxSize()

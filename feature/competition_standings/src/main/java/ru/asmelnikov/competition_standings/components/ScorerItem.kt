@@ -40,7 +40,7 @@ fun ScorerItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium4)
+            .height(dimens.medium4)
             .clickable {
                 onPersonClick(scorer.player.id)
             },
@@ -51,7 +51,7 @@ fun ScorerItem(
                 .fillMaxHeight()
                 .weight(dataWeight)
                 .rightBorder(
-                    strokeWidth = MaterialTheme.dimens.borderSize,
+                    strokeWidth = dimens.borderSize,
                     color = MaterialTheme.colorScheme.primary
                 )
         ) {
@@ -69,17 +69,17 @@ fun ScorerItem(
                 .fillMaxHeight()
                 .weight(0.5f)
                 .rightBorder(
-                    strokeWidth = MaterialTheme.dimens.borderSize,
+                    strokeWidth = dimens.borderSize,
                     color = MaterialTheme.colorScheme.primary
                 ),
             contentAlignment = Alignment.CenterStart
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SubComposeAsyncImageCommon(
-                    modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                    modifier = Modifier.padding(horizontal = dimens.small1),
                     imageUri = scorer.team.crest,
                     shape = RoundedCornerShape(0.dp),
-                    size = MaterialTheme.dimens.medium2
+                    size = dimens.medium2
                 )
 
                 Column {
@@ -107,7 +107,7 @@ fun ScorerItem(
                     .fillMaxHeight()
                     .weight(dataWeight)
                     .rightBorder(
-                        strokeWidth = MaterialTheme.dimens.borderSize,
+                        strokeWidth = dimens.borderSize,
                         color = MaterialTheme.colorScheme.primary
                     )
             ) {
@@ -133,7 +133,7 @@ fun ScorerItemEmpty(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium4)
+            .height(dimens.medium4)
             .clickable { },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -146,7 +146,7 @@ fun ScorerItemEmpty(
                             .fillMaxHeight()
                             .weight(0.5f)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             ),
                         contentAlignment = Alignment.CenterStart
@@ -154,7 +154,7 @@ fun ScorerItemEmpty(
                         Row {
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = MaterialTheme.dimens.small1),
+                                modifier = Modifier.padding(start = dimens.small1),
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.labelLarge
                             )
@@ -169,7 +169,7 @@ fun ScorerItemEmpty(
                             .fillMaxHeight()
                             .weight(dataWeight)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             )
                     ) {
@@ -199,7 +199,7 @@ fun BottomScorerItem() {
             }
             "$route $secondRoute"
         }.joinToString(" "),
-        modifier = Modifier.padding(MaterialTheme.dimens.small1),
+        modifier = Modifier.padding(dimens.small1),
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.secondary

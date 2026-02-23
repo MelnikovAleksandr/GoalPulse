@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.Squad
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SquadItem(
     squad: Squad,
@@ -34,7 +33,7 @@ fun SquadItem(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(MaterialTheme.dimens.small1)
+                .padding(dimens.small1)
                 .basicMarquee(iterations = Int.MAX_VALUE),
             text = squad.name,
             textAlign = TextAlign.Start,
@@ -45,7 +44,7 @@ fun SquadItem(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(MaterialTheme.dimens.small1),
+                .padding(dimens.small1),
             text = squad.nationality,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
@@ -55,7 +54,7 @@ fun SquadItem(
         Text(
             modifier = Modifier
                 .weight(0.5f)
-                .padding(MaterialTheme.dimens.small1),
+                .padding(dimens.small1),
             text = "${squad.age} y.o.",
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,

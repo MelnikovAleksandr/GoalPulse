@@ -33,8 +33,8 @@ fun SquadHeaderItem(
     ) {
         Text(
             modifier = Modifier.padding(
-                horizontal = MaterialTheme.dimens.small1,
-                vertical = MaterialTheme.dimens.extraSmall1
+                horizontal = dimens.small1,
+                vertical = dimens.extraSmall1
             ),
             text = stringResource(squadByPosition.position.stringResId),
             textAlign = TextAlign.Start,
@@ -53,8 +53,8 @@ fun SquadHeaderItem(
             Text(
                 modifier = Modifier
                     .padding(
-                        horizontal = MaterialTheme.dimens.small1,
-                        vertical = MaterialTheme.dimens.extraSmall1
+                        horizontal = dimens.small1,
+                        vertical = dimens.extraSmall1
                     )
                     .weight(1f),
                 text = "Name",
@@ -67,8 +67,8 @@ fun SquadHeaderItem(
             Text(
                 modifier = Modifier
                     .padding(
-                        horizontal = MaterialTheme.dimens.small1,
-                        vertical = MaterialTheme.dimens.extraSmall1
+                        horizontal = dimens.small1,
+                        vertical = dimens.extraSmall1
                     )
                     .weight(1f),
                 text = "Nationality",
@@ -81,8 +81,8 @@ fun SquadHeaderItem(
             Text(
                 modifier = Modifier
                     .padding(
-                        horizontal = MaterialTheme.dimens.small1,
-                        vertical = MaterialTheme.dimens.extraSmall1
+                        horizontal = dimens.small1,
+                        vertical = dimens.extraSmall1
                     )
                     .weight(0.5f),
                 text = "Age",

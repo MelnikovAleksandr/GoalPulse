@@ -30,7 +30,7 @@ val CompactSmallDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 60.dp
+    large = 80.dp
 )
 
 val CompactMediumDimens = Dimens(
@@ -43,7 +43,7 @@ val CompactMediumDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 60.dp
+    large = 80.dp
 )
 
 val CompactDimens = Dimens(
@@ -56,7 +56,7 @@ val CompactDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 60.dp
+    large = 80.dp
 )
 
 val MediumDimens = Dimens(
@@ -70,7 +70,7 @@ val MediumDimens = Dimens(
     medium2 = 32.dp,
     medium3 = 40.dp,
     medium4 = 48.dp,
-    large = 80.dp,
+    large = 100.dp,
     champLogoDefaultSize = 100.dp,
     emptyContentImageSize = 300.dp,
     mainGifHeight = 320.dp
@@ -87,7 +87,7 @@ val ExpandedDimens = Dimens(
     medium2 = 32.dp,
     medium3 = 40.dp,
     medium4 = 48.dp,
-    large = 80.dp,
+    large = 100.dp,
     champLogoDefaultSize = 140.dp,
     emptyContentImageSize = 360.dp,
     mainGifHeight = 400.dp

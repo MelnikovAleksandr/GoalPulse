@@ -1,7 +1,7 @@
 package ru.asmelnikov.team_info.di
 
 import androidx.lifecycle.SavedStateHandle
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ru.asmelnikov.team_info.view_model.TeamInfoViewModel
 

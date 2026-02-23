@@ -171,7 +171,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                 SubComposeAsyncImageCommon(
                     imageUri = competitionStandings?.area?.flag ?: "",
                     shape = RoundedCornerShape(0.dp),
-                    size = MaterialTheme.dimens.emptyContentImageSize,
+                    size = dimens.emptyContentImageSize,
                     alpha = state.toolbarState.progress,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -184,7 +184,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             verticalArrangement = Arrangement.Center
                         ) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(MaterialTheme.dimens.large)
+                                modifier = Modifier.size(dimens.large)
                             )
                         }
                     }
@@ -193,8 +193,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                 Box(
                     modifier = Modifier
                         .padding(
-                            horizontal = MaterialTheme.dimens.small1,
-                            vertical = MaterialTheme.dimens.medium2
+                            horizontal = dimens.small1,
+                            vertical = dimens.medium2
                         )
                         .road(
                             whenCollapsed = Alignment.TopEnd,
@@ -225,8 +225,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                     fontSize = textSize,
                     modifier = Modifier
                         .padding(
-                            bottom = MaterialTheme.dimens.medium1,
-                            top = MaterialTheme.dimens.medium3
+                            bottom = dimens.medium1,
+                            top = dimens.medium3
                         )
                         .road(
                             whenCollapsed = Alignment.TopCenter,
@@ -291,7 +291,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
         IconButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = MaterialTheme.dimens.medium1), onClick = onBackClick
+                .padding(top = dimens.medium1), onClick = onBackClick
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,

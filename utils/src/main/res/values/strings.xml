@@ -92,4 +92,11 @@
     <string name="winner_home_team">Home Team</string>
     <string name="winner_away_team">Away Team</string>
     <string name="winner_draw">Draw</string>
+
+    <!-- Competitions Screen -->
+    <string name="available_competitions">Available competitions</string>
+    <string name="goal_pulse">Goal pulse!</string>
+    <string name="current_match_day">Current match day</string>
+    <string name="label_start_date">Start date</string>
+    <string name="label_end_date">End date</string>
 </resources>

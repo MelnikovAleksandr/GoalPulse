@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +38,7 @@ fun ShimmerListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(MaterialTheme.dimens.medium2),
+                .padding(dimens.medium2),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -47,7 +46,7 @@ fun ShimmerListItem(
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(MaterialTheme.dimens.champLogoDefaultSize)
+                    .size(dimens.champLogoDefaultSize)
                     .aspectRatio(1f)
                     .shimmerEffect()
             )
@@ -63,7 +62,7 @@ fun ShimmerListItem(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.7f)
-                            .height(MaterialTheme.dimens.medium1)
+                            .height(dimens.medium1)
                             .shimmerEffect()
                     )
 
@@ -71,7 +70,7 @@ fun ShimmerListItem(
 
                     Box(
                         modifier = Modifier
-                            .size(MaterialTheme.dimens.medium1)
+                            .size(dimens.medium1)
                             .clip(CircleShape)
                             .shimmerEffect()
                     )
@@ -80,19 +79,19 @@ fun ShimmerListItem(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
-                        .height(MaterialTheme.dimens.medium1)
+                        .height(dimens.medium1)
                         .shimmerEffect()
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
-                        .height(MaterialTheme.dimens.medium1)
+                        .height(dimens.medium1)
                         .shimmerEffect()
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
-                        .height(MaterialTheme.dimens.medium1)
+                        .height(dimens.medium1)
                         .shimmerEffect()
                 )
             }

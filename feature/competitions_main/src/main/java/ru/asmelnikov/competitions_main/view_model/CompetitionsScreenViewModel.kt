@@ -29,11 +29,7 @@ class CompetitionsScreenViewModel(
         reduce { state.copy(isLoading = true) }
         when (val compsFromRemote = footballRepository.getAllCompetitionsFromRemoteToLocal()) {
             is Resource.Success -> {
-                reduce {
-                    state.copy(
-                        isLoading = false
-                    )
-                }
+                reduce { state.copy(isLoading = false) }
             }
 
             is Resource.Error -> {
@@ -49,8 +45,7 @@ class CompetitionsScreenViewModel(
     private fun collectCompetitionsFlowFromLocal() = intent(registerIdling = false) {
         repeatOnSubscription {
             footballRepository.getAllCompetitionsFlowFromLocal().collect { comps ->
-                if (comps.isNotEmpty())
-                    reduce { state.copy(comps = comps) }
+                reduce { state.copy(comps = comps) }
             }
         }
     }

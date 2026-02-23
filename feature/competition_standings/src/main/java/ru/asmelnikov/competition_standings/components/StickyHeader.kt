@@ -35,12 +35,12 @@ fun StickyHeader(
         modifier = modifier
             .background(MaterialTheme.colorScheme.secondary)
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium3),
+            .height(dimens.medium3),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
         Text(
-            modifier = Modifier.padding(start = MaterialTheme.dimens.small3),
+            modifier = Modifier.padding(start = dimens.small3),
             text = text,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelMedium,

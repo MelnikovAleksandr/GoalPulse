@@ -1,12 +1,13 @@
 package ru.asmelnikov.utils.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -19,15 +20,24 @@ import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun EmptyContent(
+    withScroll: Boolean = false,
     onReloadClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .then(
+                if (withScroll) {
+                    Modifier.verticalScroll(rememberScrollState())
+                } else {
+                    Modifier
+                }
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.large))
+        Spacer(modifier = Modifier.height(dimens.large))
         Image(
-            modifier = Modifier.size(MaterialTheme.dimens.emptyContentImageSize),
+            modifier = Modifier.size(dimens.emptyContentImageSize),
             painter = painterResource(id = R.drawable.page_is_empty),
             contentDescription = null
         )

@@ -22,7 +22,7 @@ fun CoachItem(
         .fillMaxWidth()
         .clickable { }) {
         Text(
-            modifier = Modifier.padding(MaterialTheme.dimens.small3),
+            modifier = Modifier.padding(dimens.small3),
             text = "Manager",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
@@ -31,7 +31,7 @@ fun CoachItem(
         )
         Divider(color = MaterialTheme.colorScheme.primary)
         Text(
-            modifier = Modifier.padding(MaterialTheme.dimens.small3),
+            modifier = Modifier.padding(dimens.small3),
             text = coach.name,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,

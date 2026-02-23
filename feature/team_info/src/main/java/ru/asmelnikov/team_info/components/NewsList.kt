@@ -40,7 +40,6 @@ import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.composables.shimmerEffect
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NewsList(
     news: News,
@@ -54,8 +53,8 @@ fun NewsList(
         else -> {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1),
-                contentPadding = PaddingValues(all = MaterialTheme.dimens.small1)
+                verticalArrangement = Arrangement.spacedBy(dimens.small1),
+                contentPadding = PaddingValues(all = dimens.small1)
             ) {
                 item {
                     Text(
@@ -102,13 +101,13 @@ fun ArticleItem(
             modifier = Modifier,
             imageUri = article.urlToImage,
             shape = MaterialTheme.shapes.medium,
-            size = MaterialTheme.dimens.champLogoDefaultSize
+            size = dimens.champLogoDefaultSize
         )
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.dimens.small1)
-                .height(MaterialTheme.dimens.champLogoDefaultSize)
+                .padding(horizontal = dimens.small1)
+                .height(dimens.champLogoDefaultSize)
                 .background(Color.Transparent)
         ) {
             Text(
@@ -124,14 +123,14 @@ fun ArticleItem(
                     text = article.source.name,
                     style = MaterialTheme.typography.labelSmall
                 )
-                Spacer(modifier = Modifier.width(MaterialTheme.dimens.extraSmall1))
+                Spacer(modifier = Modifier.width(dimens.extraSmall1))
                 Icon(
                     painter = painterResource(id = R.drawable.ic_time),
                     contentDescription = null,
-                    modifier = Modifier.size(MaterialTheme.dimens.small3),
+                    modifier = Modifier.size(dimens.small3),
                     tint = MaterialTheme.colorScheme.secondary
                 )
-                Spacer(modifier = Modifier.width(MaterialTheme.dimens.extraSmall1))
+                Spacer(modifier = Modifier.width(dimens.extraSmall1))
                 Text(
                     text = article.publishedAt,
                     style = MaterialTheme.typography.labelSmall
@@ -148,21 +147,21 @@ fun ArticleCardShimmerEffect(modifier: Modifier = Modifier) {
     ) {
         Box(
             modifier = Modifier
-                .size(MaterialTheme.dimens.champLogoDefaultSize)
+                .size(dimens.champLogoDefaultSize)
                 .clip(MaterialTheme.shapes.medium)
                 .shimmerEffect()
         )
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.dimens.extraSmall1)
-                .height(MaterialTheme.dimens.champLogoDefaultSize)
+                .padding(horizontal = dimens.extraSmall1)
+                .height(dimens.champLogoDefaultSize)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(30.dp)
-                    .padding(horizontal = MaterialTheme.dimens.small3)
+                    .padding(horizontal = dimens.small3)
                     .shimmerEffect()
             )
             Row(
@@ -171,7 +170,7 @@ fun ArticleCardShimmerEffect(modifier: Modifier = Modifier) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
-                        .padding(horizontal = MaterialTheme.dimens.small3)
+                        .padding(horizontal = dimens.small3)
                         .height(15.dp)
                         .shimmerEffect()
                 )
@@ -182,10 +181,10 @@ fun ArticleCardShimmerEffect(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ShimmerEffect() {
-    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.small1)) {
+    Column(verticalArrangement = Arrangement.spacedBy(dimens.small1)) {
         repeat(10) {
             ArticleCardShimmerEffect(
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1)
+                modifier = Modifier.padding(horizontal = dimens.small1)
             )
         }
     }

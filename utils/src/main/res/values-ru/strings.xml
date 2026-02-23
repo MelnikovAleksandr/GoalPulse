@@ -91,4 +91,11 @@
     <string name="winner_home_team">Хозяева</string>
     <string name="winner_away_team">Гости</string>
     <string name="winner_draw">Ничья</string>
+
+    <!-- Competitions Screen -->
+    <string name="available_competitions">Доступные соревнования</string>
+    <string name="goal_pulse">Голевой пульс!</string>
+    <string name="current_match_day">Текущий игровой день</string>
+    <string name="label_start_date">Дата начала</string>
+    <string name="label_end_date">Дата окончания</string>
 </resources>

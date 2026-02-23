@@ -1,6 +1,5 @@
 package ru.asmelnikov.utils.ui.theme
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -12,11 +11,11 @@ fun AppUtils(
     content: @Composable () -> Unit
 ) {
 
-    val appDimens = remember {
+    val dimens = remember {
         appDimens
     }
 
-    CompositionLocalProvider(LocalAppDimens provides appDimens) {
+    CompositionLocalProvider(LocalAppDimens provides dimens) {
         content()
     }
 
@@ -26,6 +25,6 @@ val LocalAppDimens = compositionLocalOf {
     CompactDimens
 }
 
-val MaterialTheme.dimens
+val dimens
     @Composable
     get() = LocalAppDimens.current

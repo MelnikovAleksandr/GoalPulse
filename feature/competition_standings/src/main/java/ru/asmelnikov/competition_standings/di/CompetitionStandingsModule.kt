@@ -1,7 +1,7 @@
 package ru.asmelnikov.competition_standings.di
 
 import androidx.lifecycle.SavedStateHandle
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ru.asmelnikov.competition_standings.view_model.CompetitionStandingsViewModel
 

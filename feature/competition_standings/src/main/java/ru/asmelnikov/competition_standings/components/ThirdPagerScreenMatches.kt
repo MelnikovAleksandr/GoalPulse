@@ -23,7 +23,6 @@ import ru.asmelnikov.utils.composables.LoadingGif
 import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ThirdPagerScreenMatches(
     matchesCompleted: List<MatchesByTour>,
@@ -49,7 +48,7 @@ fun ThirdPagerScreenMatches(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(MaterialTheme.dimens.extraSmall1)
+                .height(dimens.extraSmall1)
         ) {
             if (isLoadingMatches) LinearProgressIndicator(
                 modifier = Modifier.fillMaxSize(),

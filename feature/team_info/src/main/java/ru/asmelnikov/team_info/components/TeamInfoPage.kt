@@ -72,7 +72,7 @@ fun TeamInfoPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.small1),
+                        .padding(dimens.small1),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -85,13 +85,13 @@ fun TeamInfoPage(
                     SubComposeAsyncImageCommon(
                         imageUri = teamInfo.area.flag.ifBlank { R.drawable.unknown_flag },
                         shape = CircleShape,
-                        size = MaterialTheme.dimens.medium2
+                        size = dimens.medium2
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.small1),
+                        .padding(dimens.small1),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -113,7 +113,7 @@ fun TeamInfoPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.small1),
+                        .padding(dimens.small1),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -136,7 +136,7 @@ fun TeamInfoPage(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(MaterialTheme.dimens.small1),
+                        .padding(dimens.small1),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
@@ -158,7 +158,7 @@ fun TeamInfoPage(
 
                 Text(
                     modifier = Modifier
-                        .padding(MaterialTheme.dimens.small1)
+                        .padding(dimens.small1)
                         .clickable {
                             Intent(Intent.ACTION_VIEW).also {
                                 it.data = Uri.parse(teamInfo.website)

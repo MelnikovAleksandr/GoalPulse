@@ -197,8 +197,8 @@ fun TeamInfoScreenContent(
                 Box(
                     modifier = Modifier
                         .padding(
-                            horizontal = MaterialTheme.dimens.small1,
-                            vertical = MaterialTheme.dimens.medium2
+                            horizontal = dimens.small1,
+                            vertical = dimens.medium2
                         )
                         .road(
                             whenCollapsed = Alignment.TopEnd,
@@ -223,8 +223,8 @@ fun TeamInfoScreenContent(
                     fontSize = textSize,
                     modifier = Modifier
                         .padding(
-                            bottom = MaterialTheme.dimens.medium1,
-                            top = MaterialTheme.dimens.medium3
+                            bottom = dimens.medium1,
+                            top = dimens.medium3
                         )
                         .road(
                             whenCollapsed = Alignment.TopCenter,
@@ -244,7 +244,7 @@ fun TeamInfoScreenContent(
                             )
                         )
                         .fillMaxWidth()
-                        .height(MaterialTheme.dimens.extraSmall1)
+                        .height(dimens.extraSmall1)
                 ) {
                     if (isLoading) LinearProgressIndicator(
                         modifier = Modifier.fillMaxSize(),
@@ -323,7 +323,7 @@ fun TeamInfoScreenContent(
         IconButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = MaterialTheme.dimens.medium1), onClick = onBackClick
+                .padding(top = dimens.medium1), onClick = onBackClick
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,

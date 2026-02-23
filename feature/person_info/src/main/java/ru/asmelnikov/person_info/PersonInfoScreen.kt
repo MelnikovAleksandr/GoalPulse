@@ -106,7 +106,7 @@ fun PersonInfoContent(
                 Text(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = MaterialTheme.dimens.extraSmall1),
+                        .padding(bottom = dimens.extraSmall1),
                     text = if (person.shirtNumber != -1) person.shirtNumber.toString() else "",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineLarge,
@@ -118,7 +118,7 @@ fun PersonInfoContent(
                 SubComposeAsyncImageCommon(
                     imageUri = person.currentTeam.crest,
                     shape = shape,
-                    size = MaterialTheme.dimens.medium4,
+                    size = dimens.medium4,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(start = 120.dp),
@@ -129,7 +129,7 @@ fun PersonInfoContent(
                             verticalArrangement = Arrangement.Center
                         ) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(MaterialTheme.dimens.large)
+                                modifier = Modifier.size(dimens.large)
                             )
                         }
                     }
@@ -138,7 +138,7 @@ fun PersonInfoContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = MaterialTheme.dimens.small3),
+                    .padding(horizontal = dimens.small3),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(

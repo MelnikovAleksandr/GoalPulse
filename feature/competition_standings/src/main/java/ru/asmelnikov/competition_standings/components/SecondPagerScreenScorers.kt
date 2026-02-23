@@ -18,7 +18,6 @@ import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingGif
 import ru.asmelnikov.utils.ui.theme.dimens
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SecondPagerScreenScorers(
     scorers: List<Scorer>,
@@ -32,7 +31,7 @@ fun SecondPagerScreenScorers(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(MaterialTheme.dimens.extraSmall1)
+                .height(dimens.extraSmall1)
         ) {
             if (isLoadingScorers) LinearProgressIndicator(
                 modifier = Modifier.fillMaxSize(),

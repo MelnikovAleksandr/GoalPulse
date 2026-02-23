@@ -51,7 +51,7 @@ fun StandingItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium4)
+            .height(dimens.medium4)
             .clickable {
                 onTeamClick(table.team.id)
             },
@@ -65,17 +65,17 @@ fun StandingItem(
                             .fillMaxHeight()
                             .weight(0.37f)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             ),
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Row {
                             SubComposeAsyncImageCommon(
-                                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.small1),
+                                modifier = Modifier.padding(horizontal = dimens.small1),
                                 imageUri = table.team.crest,
                                 shape = RoundedCornerShape(0.dp),
-                                size = MaterialTheme.dimens.medium2
+                                size = dimens.medium2
                             )
 
                             Text(
@@ -97,7 +97,7 @@ fun StandingItem(
                             .weight(dataWeight)
                             .leftRoundedBorder(color = if (index == 0) firstBoxColor else Color.Transparent)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             )
                     ) {
@@ -126,7 +126,7 @@ fun StandingTopItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(MaterialTheme.dimens.medium4),
+            .height(dimens.medium4),
         verticalAlignment = Alignment.CenterVertically
     ) {
         topListRow.forEachIndexed { index, item ->
@@ -137,14 +137,14 @@ fun StandingTopItem(
                             .fillMaxHeight()
                             .weight(0.37f)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             )
                     ) {
                         Text(
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
-                                .padding(start = MaterialTheme.dimens.small1),
+                                .padding(start = dimens.small1),
                             text = tableName,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelLarge
@@ -158,7 +158,7 @@ fun StandingTopItem(
                             .fillMaxHeight()
                             .weight(dataWeight)
                             .rightBorder(
-                                strokeWidth = MaterialTheme.dimens.borderSize,
+                                strokeWidth = dimens.borderSize,
                                 color = MaterialTheme.colorScheme.primary
                             )
                     ) {
@@ -192,7 +192,7 @@ fun BottomStandingItem() {
             }
             "$route $secondRoute"
         }.joinToString(" "),
-        modifier = Modifier.padding(MaterialTheme.dimens.small1),
+        modifier = Modifier.padding(dimens.small1),
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.secondary

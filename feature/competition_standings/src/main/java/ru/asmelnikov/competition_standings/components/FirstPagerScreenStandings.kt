@@ -36,7 +36,7 @@ fun FirstPagerScreenStandings(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(MaterialTheme.dimens.extraSmall1)
+                .height(dimens.extraSmall1)
         ) {
             if (isLoading) LinearProgressIndicator(
                 modifier = Modifier.fillMaxSize(),

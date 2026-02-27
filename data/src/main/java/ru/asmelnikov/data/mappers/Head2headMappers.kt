@@ -1,13 +1,11 @@
 package ru.asmelnikov.data.mappers
 
 import ru.asmelnikov.data.models.AggregatesDTO
-import ru.asmelnikov.data.models.AwayTeamH2HDTO
 import ru.asmelnikov.data.models.Head2headDTO
-import ru.asmelnikov.data.models.HomeTeamH2HDTO
+import ru.asmelnikov.data.models.TeamH2HDTO
 import ru.asmelnikov.domain.models.Aggregates
-import ru.asmelnikov.domain.models.AwayTeamH2H
 import ru.asmelnikov.domain.models.Head2head
-import ru.asmelnikov.domain.models.HomeTeamH2H
+import ru.asmelnikov.domain.models.TeamH2H
 
 fun Head2headDTO.toHead2head(id: Int): Head2head {
     return Head2head(
@@ -40,23 +38,14 @@ fun AggregatesDTO?.toAggregates(): Aggregates {
         homeWinsPercentage = homeWinsPercentage ?: -1f,
         awayWinsPercentage = awayWinsPercentage ?: -1f,
         drawsPercentage = drawsPercentage ?: -1f,
-        awayTeam = this?.awayTeam.toAwayTeamH2H(),
-        homeTeam = this?.homeTeam.toHomeTeamH2H()
+        awayTeam = this?.awayTeam.toTeamH2H(),
+        homeTeam = this?.homeTeam.toTeamH2H()
     )
 }
 
-fun AwayTeamH2HDTO?.toAwayTeamH2H(): AwayTeamH2H {
-    return AwayTeamH2H(
-        draws = this?.draws ?: -1,
-        id = this?.id ?: -1,
-        losses = this?.losses ?: -1,
-        name = this?.name ?: "",
-        wins = this?.wins ?: -1
-    )
-}
 
-fun HomeTeamH2HDTO?.toHomeTeamH2H(): HomeTeamH2H {
-    return HomeTeamH2H(
+fun TeamH2HDTO?.toTeamH2H(): TeamH2H {
+    return TeamH2H(
         draws = this?.draws ?: -1,
         id = this?.id ?: -1,
         losses = this?.losses ?: -1,

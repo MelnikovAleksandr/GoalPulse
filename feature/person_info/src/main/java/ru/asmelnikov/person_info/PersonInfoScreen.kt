@@ -35,7 +35,7 @@ import ru.asmelnikov.person_info.view_model.PersonSideEffects
 import ru.asmelnikov.person_info.view_model.PersonViewModel
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.navigation.popUp
@@ -92,7 +92,7 @@ fun PersonInfoContent(
     ) {
 
         if (isLoading) {
-            LoadingGif()
+            LoadingBall()
         } else if (person.name.isBlank()) {
             EmptyContent(onReloadClick = onReload)
         } else {

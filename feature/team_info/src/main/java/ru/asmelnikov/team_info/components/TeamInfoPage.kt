@@ -24,7 +24,7 @@ import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.domain.models.TeamInfo
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.dimens
 
@@ -52,7 +52,7 @@ fun TeamInfoPage(
     val context = LocalContext.current
 
     when {
-        isLoading && teamInfo.id.isBlank() -> LoadingGif()
+        isLoading && teamInfo.id.isBlank() -> LoadingBall()
         !isLoading && teamInfo.id.isBlank() -> EmptyContent(
             onReloadClick = onReloadClick
         )

@@ -1,27 +1,24 @@
 package ru.asmelnikov.competition_standings
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,9 +27,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
@@ -43,25 +39,31 @@ import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competition_standings.components.FirstPagerScreenStandings
 import ru.asmelnikov.competition_standings.components.SecondPagerScreenScorers
+import ru.asmelnikov.competition_standings.components.TabsStandings
 import ru.asmelnikov.competition_standings.components.ThirdPagerScreenMatches
+import ru.asmelnikov.competition_standings.components.Toolbar
 import ru.asmelnikov.competition_standings.view_model.CompetitionStandingSideEffects
 import ru.asmelnikov.competition_standings.view_model.CompetitionStandingsViewModel
 import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.Scorer
+import ru.asmelnikov.domain.models.getMockMatches
+import ru.asmelnikov.domain.models.getMockScorers
+import ru.asmelnikov.domain.models.getMockStandings
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.PagerTabRow
-import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
+import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
-import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 
 @Composable
 fun SharedTransitionScope.CompetitionStandingsScreen(
     appState: MainAppState,
     compId: String,
+    compUrl: String,
     showSnackbar: (
         String,
         SnackbarDuration,
@@ -69,7 +71,12 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
         actionPerformed: () -> Unit
     ) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: CompetitionStandingsViewModel = koinViewModel(parameters = { parametersOf(compId) })
+    viewModel: CompetitionStandingsViewModel = koinViewModel(parameters = {
+        parametersOf(
+            compId,
+            compUrl
+        )
+    })
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()
@@ -87,6 +94,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
             is CompetitionStandingSideEffects.OnTeamInfoNavigate -> {
                 appState.navigate(route = Routes.Team(it.teamId))
             }
+
             is CompetitionStandingSideEffects.OnPersonInfoNavigate -> {
                 appState.navigate(route = Routes.Person(it.personId))
             }
@@ -94,6 +102,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
     }
 
     CompetitionStandingsContent(
+        compUrl = state.compUrl,
         competitionStandings = state.competitionStandings,
         onBackClick = viewModel::onBackClick,
         isLoadingStandings = state.isLoadingStandings,
@@ -115,9 +124,11 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
     )
 }
 
+
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun SharedTransitionScope.CompetitionStandingsContent(
+    compUrl: String,
     competitionStandings: CompetitionStandings?,
     onBackClick: () -> Unit,
     isLoadingStandings: Boolean,
@@ -139,165 +150,173 @@ fun SharedTransitionScope.CompetitionStandingsContent(
 ) {
 
     val configuration = LocalConfiguration.current
-
     val scope = rememberCoroutineScope()
-
     val pagerState = rememberPagerState(
         initialPage = 0,
-    ) {
-        3
-    }
-    val orientation =
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) "LANDSCAPE" else "PORTRAIT"
-
-    Box {
-
-        val state = rememberCollapsingToolbarScaffoldState()
-
-        LaunchedEffect(key1 = orientation) {
-            if (orientation == "LANDSCAPE")
-                state.toolbarState.collapse()
+        pageCount = { TabsStandings.entries.count() }
+    )
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
+    LaunchedEffect(key1 = configuration.orientation) {
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            collapsingState.toolbarState.collapse()
         }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
 
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
-            state = state,
-            enabled = orientation == "PORTRAIT",
+            state = collapsingState,
+            enabled = isPortrait(),
             scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
             toolbar = {
-                val progress = state.toolbarState.progress
-                val textSize = (18 + (18 * progress)).sp
-
-                SubComposeAsyncImageCommon(
-                    imageUri = competitionStandings?.area?.flag ?: "",
-                    shape = RoundedCornerShape(0.dp),
-                    size = dimens.emptyContentImageSize,
-                    alpha = state.toolbarState.progress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .parallax()
-                        .pin(),
-                    loading = {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(dimens.large)
-                            )
-                        }
-                    }
+                Toolbar(
+                    collapsingState = collapsingState,
+                    areaUrl = competitionStandings?.area?.flag ?: "",
+                    compUrl = compUrl,
+                    compName = competitionStandings?.competition?.name ?: "",
+                    sharedTransitionScope = this@CompetitionStandingsContent,
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
+            },
+            body = {
+                Column(modifier = Modifier.fillMaxSize()) {
 
-                Box(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = dimens.small1,
-                            vertical = dimens.medium2
-                        )
-                        .road(
-                            whenCollapsed = Alignment.TopEnd,
-                            whenExpanded = Alignment.Center
-                        )
-                ) {
-
-                    val imgSize = (40 + (100 * progress)).dp
-
-                    SubComposeAsyncImageCommon(
-                        modifier = Modifier.sharedElement(
-                            rememberSharedContentState(key = competitionStandings?.competition?.emblem ?: ""),
-                            animatedVisibilityScope = animatedVisibilityScope,
-                            boundsTransform = { _, _ ->
-                                tween(durationMillis = 1000)
-                            }
-                        ),
-                        imageUri = competitionStandings?.competition?.emblem ?: "",
-                        shape = RoundedCornerShape(0.dp),
-                        size = imgSize
+                    PagerTabRow(
+                        tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) },
+                        selectedIndex = pagerState.currentPage,
+                        modifier = Modifier.fillMaxWidth(),
+                        onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } }
                     )
-                }
 
-                Text(
-                    text = competitionStandings?.competition?.name ?: "",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = textSize,
-                    modifier = Modifier
-                        .padding(
-                            bottom = dimens.medium1,
-                            top = dimens.medium3
-                        )
-                        .road(
-                            whenCollapsed = Alignment.TopCenter,
-                            whenExpanded = Alignment.BottomCenter
-                        )
-                )
+                    HorizontalPager(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = pagerState,
+                        beyondViewportPageCount = 1,
+                        verticalAlignment = Alignment.Top
+                    ) { page ->
+                        when (page) {
+                            0 -> {
+                                FirstPagerScreenStandings(
+                                    competitionStandings = competitionStandings,
+                                    isLoading = isLoadingStandings,
+                                    onTeamClick = onTeamClick,
+                                    onReloadClick = onReloadStandingsClick
+                                )
+                            }
 
-            }) {
+                            1 -> {
+                                SecondPagerScreenScorers(
+                                    scorers = scorers,
+                                    isLoadingScorers = isLoadingScorers,
+                                    onReloadClick = onReloadScorersClick,
+                                    onPersonClick = onPersonClick
+                                )
+                            }
 
-            Column(modifier = Modifier.fillMaxSize()) {
-
-                PagerTabRow(
-                    tabTitles = listOf("Standings", "Scorers", "Matches"),
-                    selectedIndex = pagerState.currentPage,
-                    modifier = Modifier.fillMaxWidth(),
-                    onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                    pagerState = pagerState
-                )
-
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    state = pagerState,
-                    beyondViewportPageCount = 2,
-                    verticalAlignment = Alignment.Top
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            FirstPagerScreenStandings(
-                                competitionStandings = competitionStandings,
-                                isLoading = isLoadingStandings,
-                                onTeamClick = onTeamClick,
-                                onReloadClick = onReloadStandingsClick
-                            )
-                        }
-
-                        1 -> {
-                            SecondPagerScreenScorers(
-                                scorers = scorers,
-                                isLoadingScorers = isLoadingScorers,
-                                onReloadClick = onReloadScorersClick,
-                                onPersonClick = onPersonClick
-                            )
-                        }
-
-                        2 -> {
-                            ThirdPagerScreenMatches(
-                                matchesCompleted = matchesCompleted,
-                                matchesAhead = matchesAhead,
-                                isLoadingMatches = isLoadingMatches,
-                                expandedItemId = expandedItemId,
-                                onMatchItemClick = onMatchItemClick,
-                                head2head = head2head,
-                                isHead2headLoading = isHead2headLoading,
-                                onReloadClick = onReloadMatchesClick
-                            )
+                            2 -> {
+                                ThirdPagerScreenMatches(
+                                    matchesCompleted = matchesCompleted,
+                                    matchesAhead = matchesAhead,
+                                    isLoadingMatches = isLoadingMatches,
+                                    expandedItemId = expandedItemId,
+                                    onMatchItemClick = onMatchItemClick,
+                                    head2head = head2head,
+                                    isHead2headLoading = isHead2headLoading,
+                                    onReloadClick = onReloadMatchesClick
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
+        )
         IconButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = dimens.medium1), onClick = onBackClick
+                .systemBarsPadding(),
+            onClick = onBackClick
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun StandingsPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionStandingsContent(
+                    compUrl = "123",
+                    competitionStandings = getMockStandings(),
+                    onBackClick = {},
+                    isLoadingStandings = false,
+                    scorers = getMockScorers(),
+                    isLoadingScorers = false,
+                    matchesCompleted = getMockMatches().matchesByTourCompleted,
+                    matchesAhead = getMockMatches().matchesByTourAhead,
+                    isLoadingMatches = false,
+                    expandedItemId = -1,
+                    onMatchItemClick = {},
+                    isHead2headLoading = false,
+                    onTeamClick = {},
+                    onReloadStandingsClick = {},
+                    onReloadScorersClick = {},
+                    onReloadMatchesClick = {},
+                    onPersonClick = {},
+                    animatedVisibilityScope = this
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun StandingsPreview2() {
+    GoalPulseTheme(darkTheme = false) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionStandingsContent(
+                    compUrl = "123",
+                    competitionStandings = getMockStandings(),
+                    onBackClick = {},
+                    isLoadingStandings = false,
+                    scorers = getMockScorers(),
+                    isLoadingScorers = false,
+                    matchesCompleted = getMockMatches().matchesByTourCompleted,
+                    matchesAhead = getMockMatches().matchesByTourAhead,
+                    isLoadingMatches = false,
+                    expandedItemId = -1,
+                    onMatchItemClick = {},
+                    isHead2headLoading = false,
+                    onTeamClick = {},
+                    onReloadStandingsClick = {},
+                    onReloadScorersClick = {},
+                    onReloadMatchesClick = {},
+                    onPersonClick = {},
+                    animatedVisibilityScope = this
+                )
+            }
         }
     }
 }

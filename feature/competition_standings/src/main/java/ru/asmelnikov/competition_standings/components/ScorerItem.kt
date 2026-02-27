@@ -1,5 +1,7 @@
 package ru.asmelnikov.competition_standings.components
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,14 +14,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Scorer
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.R
 
 @Composable
 fun ScorerItem(
@@ -30,12 +35,14 @@ fun ScorerItem(
     onPersonClick: (Int) -> Unit
 ) {
 
-    val itemsRow = listOf(
-        scorer.playedMatches.toString(),
-        scorer.goals.toString(),
-        scorer.assists.toString(),
-        scorer.penalties.toString()
-    )
+    val itemsRow = remember {
+        listOf(
+            scorer.playedMatches.toString(),
+            scorer.goals.toString(),
+            scorer.assists.toString(),
+            scorer.penalties.toString()
+        )
+    }
 
     Row(
         modifier = modifier
@@ -59,7 +66,8 @@ fun ScorerItem(
                 modifier = Modifier.align(Alignment.Center),
                 text = index.toString(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
 
@@ -88,7 +96,8 @@ fun ScorerItem(
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
                         text = scorer.team.shortName,
@@ -115,14 +124,13 @@ fun ScorerItem(
                     modifier = Modifier.align(Alignment.Center),
                     text = it,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
     }
 }
-
-private val topItemsRow = listOf("№", "Name", "M", "G", "A", "P")
 
 @Composable
 fun ScorerItemEmpty(
@@ -133,12 +141,12 @@ fun ScorerItemEmpty(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(dimens.medium4)
-            .clickable { },
+            .background(MaterialTheme.colorScheme.background)
+            .height(dimens.medium4),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        topItemsRow.forEachIndexed { index, item ->
+        TopPlayersColumn.entries.forEachIndexed { index, item ->
             when (index) {
                 1 -> {
                     Box(
@@ -153,10 +161,11 @@ fun ScorerItemEmpty(
                     ) {
                         Row {
                             Text(
-                                text = item,
+                                text = stringResource(item.titleResId),
                                 modifier = Modifier.padding(start = dimens.small1),
                                 textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
 
@@ -175,9 +184,10 @@ fun ScorerItemEmpty(
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = item,
+                            text = stringResource(item.titleResId),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -189,19 +199,45 @@ fun ScorerItemEmpty(
 @Composable
 fun BottomScorerItem() {
     Text(
-        text = topItemsRow.drop(2).mapIndexed { index, route ->
-            val secondRoute: String = when (index) {
-                0 -> " - matches, "
-                1 -> " - goals, "
-                2 -> " - assists, "
-                3 -> " - penalties."
-                else -> ""
+        text = buildString {
+            TopPlayersColumn.entries.drop(2).forEach { column ->
+                append("${stringResource(column.titleResId)} ")
+                append("${stringResource(column.descriptionResId)} ")
             }
-            "$route $secondRoute"
-        }.joinToString(" "),
+        },
         modifier = Modifier.padding(dimens.small1),
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.labelSmall,
         color = MaterialTheme.colorScheme.secondary
+    )
+}
+
+enum class TopPlayersColumn(
+    @StringRes val titleResId: Int,
+    @StringRes val descriptionResId: Int
+) {
+    POSITION(
+        titleResId = R.string.top_players_column_position,
+        descriptionResId = R.string.top_players_description_position
+    ),
+    NAME(
+        titleResId = R.string.top_players_column_name,
+        descriptionResId = R.string.top_players_description_name
+    ),
+    MATCHES(
+        titleResId = R.string.top_players_column_matches,
+        descriptionResId = R.string.top_players_description_matches
+    ),
+    GOALS(
+        titleResId = R.string.top_players_column_goals,
+        descriptionResId = R.string.top_players_description_goals
+    ),
+    ASSISTS(
+        titleResId = R.string.top_players_column_assists,
+        descriptionResId = R.string.top_players_description_assists
+    ),
+    PENALTIES(
+        titleResId = R.string.top_players_column_penalties,
+        descriptionResId = R.string.top_players_description_penalties
     )
 }

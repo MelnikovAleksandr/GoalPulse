@@ -15,6 +15,7 @@ class CompetitionStandingsViewModel(
     private val standingsRepository: CompetitionStandingsRepository,
     private val stringResourceProvider: StringResourceProvider,
     private val compId: String,
+    private val compUrl: String,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(),
     ContainerHost<CompetitionStandingsState, CompetitionStandingSideEffects> {
@@ -23,7 +24,7 @@ class CompetitionStandingsViewModel(
         initialState = CompetitionStandingsState(),
         savedStateHandle = savedStateHandle
     ) {
-        reduce { state.copy(compId = compId) }
+        reduce { state.copy(compId = compId, compUrl = compUrl) }
         collectStandingsFlowFromLocal()
         collectScorersFlowFromLocal()
         collectMatchesFlowFromLocal()
@@ -150,40 +151,33 @@ class CompetitionStandingsViewModel(
     }
 
 
-    private fun collectStandingsFlowFromLocal() = intent(registerIdling = false) {
-        repeatOnSubscription {
-            standingsRepository.getStandingsFlowFromLocalById(state.compId).collect { standings ->
-                reduce {
-                    state.copy(
-                        competitionStandings = standings
-                    )
-                }
+    private fun collectStandingsFlowFromLocal() = intent {
+        standingsRepository.getStandingsFlowFromLocalById(state.compId).collect { standings ->
+            reduce {
+                state.copy(
+                    competitionStandings = standings
+                )
             }
         }
     }
 
-    private fun collectScorersFlowFromLocal() = intent(registerIdling = false) {
-        repeatOnSubscription {
-            standingsRepository.getScorersFlowFromLocal(state.compId).collect { scorers ->
-                reduce {
-                    state.copy(
-                        scorers = scorers?.scorers ?: emptyList(),
-                        currentSeasonScorers = scorers?.season?.startDateEndDate ?: ""
-                    )
-                }
+    private fun collectScorersFlowFromLocal() = intent {
+        standingsRepository.getScorersFlowFromLocal(state.compId).collect { scorers ->
+            reduce {
+                state.copy(
+                    scorers = scorers?.scorers ?: emptyList()
+                )
             }
         }
     }
 
-    private fun collectMatchesFlowFromLocal() = intent(registerIdling = false) {
-        repeatOnSubscription {
-            standingsRepository.getAllMatchesFlowFromLocal(state.compId).collect { matches ->
-                reduce {
-                    state.copy(
-                        matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
-                        matchesAhead = matches?.matchesByTourAhead ?: emptyList()
-                    )
-                }
+    private fun collectMatchesFlowFromLocal() = intent {
+        standingsRepository.getAllMatchesFlowFromLocal(state.compId).collect { matches ->
+            reduce {
+                state.copy(
+                    matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
+                    matchesAhead = matches?.matchesByTourAhead ?: emptyList()
+                )
             }
         }
     }

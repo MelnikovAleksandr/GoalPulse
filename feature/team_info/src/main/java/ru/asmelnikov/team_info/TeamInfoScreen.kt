@@ -260,7 +260,6 @@ fun TeamInfoScreenContent(
                     selectedIndex = pagerState.currentPage,
                     modifier = Modifier.fillMaxWidth(),
                     onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                    pagerState = pagerState,
                     containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else Color(
                         parseColor(vibrant)
                     )

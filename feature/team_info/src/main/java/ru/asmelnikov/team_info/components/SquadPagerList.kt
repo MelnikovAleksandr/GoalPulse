@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import ru.asmelnikov.domain.models.TeamInfo
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,7 +40,7 @@ fun SquadPagerList(
         listOf(stickyHeaderColor.copy(alpha = 0.5f), itemColor.copy(alpha = 0.5f))
 
     when {
-        isLoading && teamInfo.squadByPosition.isEmpty() -> LoadingGif()
+        isLoading && teamInfo.squadByPosition.isEmpty() -> LoadingBall()
         !isLoading && teamInfo.squadByPosition.isEmpty() -> EmptyContent(
             onReloadClick = onReloadClick
         )

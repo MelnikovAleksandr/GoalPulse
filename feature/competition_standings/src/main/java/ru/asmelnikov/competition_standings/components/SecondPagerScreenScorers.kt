@@ -1,6 +1,8 @@
 package ru.asmelnikov.competition_standings.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,14 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import ru.asmelnikov.domain.models.Scorer
+import ru.asmelnikov.domain.models.getMockScorers
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -28,44 +33,79 @@ fun SecondPagerScreenScorers(
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimens.extraSmall1)
-        ) {
-            if (isLoadingScorers) LinearProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
+        AnimatedVisibility(visible = isLoadingScorers) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimens.extraSmall1),
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        when {
-            isLoadingScorers && scorers.isEmpty() -> LoadingGif()
-            !isLoadingScorers && scorers.isEmpty() -> EmptyContent(onReloadClick = onReloadClick)
-            else -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    item {
-                        Divider(color = MaterialTheme.colorScheme.primary)
-                        ScorerItemEmpty()
-                        Divider(color = MaterialTheme.colorScheme.primary)
-                    }
-                    itemsIndexed(
-                        items = scorers,
-                        key = { _, scorer -> scorer.player.id }) { index, scorer ->
-                        ScorerItem(
-                            modifier = Modifier.animateItem(),
-                            scorer = scorer,
-                            index = index + 1,
-                            onPersonClick = onPersonClick
-                        )
-                        Divider(color = MaterialTheme.colorScheme.primary)
-                    }
-                    item {
-                        BottomScorerItem()
+
+        AnimatedContent(targetState = scorers.isEmpty()) { emptyData ->
+            when {
+                isLoadingScorers && emptyData -> LoadingBall()
+                !isLoadingScorers && emptyData -> EmptyContent(onReloadClick = onReloadClick)
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        stickyHeader {
+                            HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                            ScorerItemEmpty()
+                            HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                        }
+                        itemsIndexed(
+                            items = scorers,
+                            key = { _, scorer -> scorer.player.id }) { index, scorer ->
+                            ScorerItem(
+                                modifier = Modifier.animateItem(),
+                                scorer = scorer,
+                                index = index + 1,
+                                onPersonClick = onPersonClick
+                            )
+                            HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                        }
+                        item {
+                            BottomScorerItem()
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun ScorersPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)) {
+            SecondPagerScreenScorers(
+                scorers = getMockScorers(),
+                isLoadingScorers = false,
+                onReloadClick = {},
+                onPersonClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun ScorersPreview2() {
+    GoalPulseTheme {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)) {
+            SecondPagerScreenScorers(
+                scorers = getMockScorers(),
+                isLoadingScorers = false,
+                onReloadClick = {},
+                onPersonClick = {}
+            )
         }
     }
 }

@@ -1,5 +1,7 @@
 package ru.asmelnikov.competition_standings.components
 
+import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -19,6 +22,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -26,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Table
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.R
 
 @Composable
 fun StandingItem(
@@ -36,23 +41,25 @@ fun StandingItem(
     onTeamClick: (Int) -> Unit
 ) {
 
-    val itemsRow = listOf(
-        table.position.toString(),
-        "",
-        table.playedGames.toString(),
-        table.won.toString(),
-        table.draw.toString(),
-        table.lost.toString(),
-        table.goalsFor.toString(),
-        table.goalsAgainst.toString(),
-        table.points.toString()
-    )
+    val itemsRow = remember {
+        listOf(
+            table.position.toString(),
+            "",
+            table.playedGames.toString(),
+            table.won.toString(),
+            table.draw.toString(),
+            table.lost.toString(),
+            table.goalsFor.toString(),
+            table.goalsAgainst.toString(),
+            table.points.toString()
+        )
+    }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(dimens.medium4)
-            .clickable {
+            .clickable(enabled = table.team.name.isNotEmpty()) {
                 onTeamClick(table.team.id)
             },
         verticalAlignment = Alignment.CenterVertically
@@ -83,7 +90,8 @@ fun StandingItem(
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.labelMedium,
                                 maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
 
@@ -105,7 +113,8 @@ fun StandingItem(
                             modifier = Modifier.align(Alignment.Center),
                             text = item,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelMedium
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -114,22 +123,21 @@ fun StandingItem(
     }
 }
 
-private val topListRow = listOf("№", "Team", "M", "W", "D", "L", "GF", "GA", "P")
-
 @Composable
 fun StandingTopItem(
     modifier: Modifier = Modifier,
-    tableName: String = "Team",
+    tableName: String,
     dataWeight: Float = 0.08f
 ) {
 
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .height(dimens.medium4),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        topListRow.forEachIndexed { index, item ->
+        TableColumn.entries.forEachIndexed { index, item ->
             when (index) {
                 1 -> {
                     Box(
@@ -147,7 +155,8 @@ fun StandingTopItem(
                                 .padding(start = dimens.small1),
                             text = tableName,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -164,9 +173,10 @@ fun StandingTopItem(
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
-                            text = item,
+                            text = stringResource(item.titleResId),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -179,19 +189,12 @@ fun StandingTopItem(
 @Composable
 fun BottomStandingItem() {
     Text(
-        text = topListRow.drop(2).mapIndexed { index, route ->
-            val secondRoute: String = when (index) {
-                0 -> " - matches, "
-                1 -> " - wins, "
-                2 -> " - draws, "
-                3 -> " - loses, "
-                4 -> " - goals for, "
-                5 -> " - goals against, "
-                6 -> " - points."
-                else -> ""
+        text = buildString {
+            TableColumn.entries.drop(2).forEach { column ->
+                append("${stringResource(column.titleResId)} ")
+                append("${stringResource(column.descriptionResId)} ")
             }
-            "$route $secondRoute"
-        }.joinToString(" "),
+        },
         modifier = Modifier.padding(dimens.small1),
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.labelSmall,
@@ -248,5 +251,47 @@ fun Modifier.leftRoundedBorder(
                 )
             }
         }
+    )
+}
+
+enum class TableColumn(
+    @StringRes val titleResId: Int,
+    @StringRes val descriptionResId: Int
+) {
+    POSITION(
+        titleResId = R.string.table_column_position,
+        descriptionResId = R.string.table_description_position
+    ),
+    TEAM(
+        titleResId = R.string.table_column_team,
+        descriptionResId = R.string.table_description_team
+    ),
+    MATCHES(
+        titleResId = R.string.table_column_matches,
+        descriptionResId = R.string.table_description_matches
+    ),
+    WINS(
+        titleResId = R.string.table_column_wins,
+        descriptionResId = R.string.table_description_wins
+    ),
+    DRAWS(
+        titleResId = R.string.table_column_draws,
+        descriptionResId = R.string.table_description_draws
+    ),
+    LOSSES(
+        titleResId = R.string.table_column_losses,
+        descriptionResId = R.string.table_description_losses
+    ),
+    GOALS_FOR(
+        titleResId = R.string.table_column_goals_for,
+        descriptionResId = R.string.table_description_goals_for
+    ),
+    GOALS_AGAINST(
+        titleResId = R.string.table_column_goals_against,
+        descriptionResId = R.string.table_description_goals_against
+    ),
+    POINTS(
+        titleResId = R.string.table_column_points,
+        descriptionResId = R.string.table_description_points
     )
 }

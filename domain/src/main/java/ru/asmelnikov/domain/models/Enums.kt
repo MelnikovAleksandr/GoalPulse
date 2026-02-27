@@ -43,6 +43,7 @@ enum class Stage(@StringRes val stringResId: Int) {
 
 enum class MatchStatus(@StringRes val stringResId: Int) {
     SCHEDULED(R.string.match_status_scheduled),
+    TIMED(R.string.match_status_scheduled),
     LIVE(R.string.match_status_live),
     IN_PLAY(R.string.match_status_in_play),
     PAUSED(R.string.match_status_paused),
@@ -111,7 +112,7 @@ enum class Group(@StringRes val stringResId: Int) {
     GROUP_J(R.string.group_j),
     GROUP_K(R.string.group_k),
     GROUP_L(R.string.group_l),
-    NON(R.string.non);
+    NON(R.string.header_team);
 
     companion object {
         fun safeValueOf(value: String): Group {

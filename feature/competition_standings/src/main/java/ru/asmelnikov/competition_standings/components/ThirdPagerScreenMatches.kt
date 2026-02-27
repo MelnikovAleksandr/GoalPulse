@@ -1,8 +1,8 @@
 package ru.asmelnikov.competition_standings.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,15 +12,22 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.MatchesByTour
+import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.PagerTabRow
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -37,79 +44,67 @@ fun ThirdPagerScreenMatches(
 
     val scope = rememberCoroutineScope()
 
+    val tabListState by remember(matchesCompleted, matchesAhead) {
+        mutableStateOf(
+            buildList {
+                if (matchesCompleted.isNotEmpty()) add(TabsMatches.Completed)
+                if (matchesAhead.isNotEmpty()) add(TabsMatches.Ahead)
+            }
+        )
+    }
+
     val pagerState = rememberPagerState(
         initialPage = 0,
     ) {
-        2
+        tabListState.count()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimens.extraSmall1)
-        ) {
-            if (isLoadingMatches) LinearProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
+        AnimatedVisibility(visible = isLoadingMatches) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimens.extraSmall1),
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        when {
-            isLoadingMatches && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> LoadingGif()
-            !isLoadingMatches && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> EmptyContent(onReloadClick = onReloadClick)
-            else -> {
 
-                AnimatedVisibility(
-                    visible = matchesAhead.isEmpty() && matchesCompleted.isNotEmpty(),
-                ) {
-                    MatchList(
-                        matchesCompleted,
-                        matchesAhead,
-                        isAhead = false,
-                        expandedItemId = expandedItemId,
-                        onMatchItemClick = onMatchItemClick,
-                        head2head = head2head,
-                        isHead2headLoading = isHead2headLoading
-                    )
-                }
-                AnimatedVisibility(
-                    visible = matchesAhead.isNotEmpty() && matchesCompleted.isEmpty(),
-                ) {
-                    MatchList(
-                        matchesCompleted,
-                        matchesAhead,
-                        isAhead = true,
-                        expandedItemId = expandedItemId,
-                        onMatchItemClick = onMatchItemClick,
-                        head2head = head2head,
-                        isHead2headLoading = isHead2headLoading
-                    )
-                }
-                AnimatedVisibility(
-                    visible = matchesAhead.isNotEmpty() && matchesCompleted.isNotEmpty(),
-                ) {
+        AnimatedContent(targetState = matchesCompleted.isEmpty() && matchesAhead.isEmpty()) { emptyData ->
+            when {
+                isLoadingMatches && emptyData -> LoadingBall()
+                !isLoadingMatches && emptyData -> EmptyContent(onReloadClick = onReloadClick)
+                else -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        PagerTabRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            tabTitles = listOf("Completed", "Ahead"),
-                            selectedIndex = pagerState.currentPage,
-                            onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                            pagerState = pagerState
-                        )
+
+                        AnimatedVisibility(visible = tabListState.count() > 1) {
+                            PagerTabRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                tabTitles = tabListState.map { stringResource(it.stringResId) },
+                                selectedIndex = pagerState.currentPage,
+                                onTabSelected = {
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(
+                                            it
+                                        )
+                                    }
+                                }
+                            )
+                        }
 
                         HorizontalPager(
                             modifier = Modifier
                                 .fillMaxSize(),
                             state = pagerState,
-                            beyondViewportPageCount = 2,
+                            beyondViewportPageCount = 1,
                             verticalAlignment = Alignment.Top
                         ) { page ->
-                            when (page) {
-                                0 -> {
+                            when (tabListState[page]) {
+                                TabsMatches.Completed -> {
                                     MatchList(
-                                        matchesCompleted,
-                                        matchesAhead,
+                                        matches = matchesCompleted,
                                         isAhead = false,
                                         expandedItemId = expandedItemId,
                                         onMatchItemClick = onMatchItemClick,
@@ -117,11 +112,9 @@ fun ThirdPagerScreenMatches(
                                         isHead2headLoading = isHead2headLoading
                                     )
                                 }
-
-                                1 -> {
+                                TabsMatches.Ahead -> {
                                     MatchList(
-                                        matchesCompleted,
-                                        matchesAhead,
+                                        matches = matchesAhead,
                                         isAhead = true,
                                         expandedItemId = expandedItemId,
                                         onMatchItemClick = onMatchItemClick,
@@ -135,5 +128,53 @@ fun ThirdPagerScreenMatches(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        ThirdPagerScreenMatches(
+            matchesCompleted = getMockMatches().matchesByTourCompleted,
+            matchesAhead = getMockMatches().matchesByTourAhead,
+            isLoadingMatches = false,
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview2() {
+    GoalPulseTheme {
+        ThirdPagerScreenMatches(
+            matchesCompleted = getMockMatches().matchesByTourCompleted,
+            matchesAhead = emptyList(),
+            isLoadingMatches = false,
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview3() {
+    GoalPulseTheme(darkTheme = true) {
+        ThirdPagerScreenMatches(
+            matchesCompleted = emptyList(),
+            matchesAhead = getMockMatches().matchesByTourAhead,
+            isLoadingMatches = false,
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {}
+        )
     }
 }

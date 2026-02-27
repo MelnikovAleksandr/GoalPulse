@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
@@ -80,7 +79,7 @@ fun SharedTransitionScope.CompetitionsScreen(
             ) {}
 
             is CompetitionsScreenSideEffects.OnCompetitionNavigate -> {
-                appState.navigate(route = Routes.Standings(it.compId))
+                appState.navigate(route = Routes.Standings(it.compId, it.compUrl))
             }
         }
     }
@@ -100,7 +99,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
     comps: List<Competition>,
     updateComps: () -> Unit,
     isLoading: Boolean,
-    onCompClick: (String) -> Unit,
+    onCompClick: (String, String) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
 
@@ -121,7 +120,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(dimens.large)
                     .pin()
             )
 
@@ -227,7 +226,7 @@ private fun CompetitionsScreenContentPreview1() {
                     comps = getMockCompetitionsList(),
                     updateComps = {},
                     isLoading = false,
-                    onCompClick = {},
+                    onCompClick = { _, _ -> },
                     animatedVisibilityScope = this
                 )
             }
@@ -249,7 +248,7 @@ private fun CompetitionsScreenContentPreview2() {
                     comps = emptyList(),
                     updateComps = {},
                     isLoading = true,
-                    onCompClick = {},
+                    onCompClick = { _, _ -> },
                     animatedVisibilityScope = this
                 )
             }
@@ -271,7 +270,7 @@ private fun CompetitionsScreenContentPreview3() {
                     comps = emptyList(),
                     updateComps = {},
                     isLoading = false,
-                    onCompClick = {},
+                    onCompClick = { _, _ -> },
                     animatedVisibilityScope = this
                 )
             }

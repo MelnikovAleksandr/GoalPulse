@@ -98,4 +98,47 @@
     <string name="current_match_day">Текущий игровой день</string>
     <string name="label_start_date">Дата начала</string>
     <string name="label_end_date">Дата окончания</string>
+
+    <!-- Standings Screen -->
+    <string name="tab_standings">Таблица</string>
+    <string name="tab_scorers">Бомбардиры</string>
+    <string name="tab_matches">Матчи</string>
+    <string name="header_team">Команда</string>
+    <string name="table_column_position">№</string>
+    <string name="table_column_team">Команда</string>
+    <string name="table_column_matches">И</string>
+    <string name="table_column_wins">В</string>
+    <string name="table_column_draws">Н</string>
+    <string name="table_column_losses">П</string>
+    <string name="table_column_goals_for">ЗМ</string>
+    <string name="table_column_goals_against">ПМ</string>
+    <string name="table_column_points">О</string>
+    <string name="table_description_matches"> - игры,</string>
+    <string name="table_description_wins"> - выигрыши,</string>
+    <string name="table_description_draws"> - ничьи,</string>
+    <string name="table_description_losses"> - поражения,</string>
+    <string name="table_description_goals_for"> - забито,</string>
+    <string name="table_description_goals_against"> - пропущено,</string>
+    <string name="table_description_points"> - очки.</string>
+    <string name="table_description_position"> - позиция</string>
+    <string name="table_description_team"> - команда</string>
+    <string name="top_players_column_position">№</string>
+    <string name="top_players_column_name">Игрок</string>
+    <string name="top_players_column_matches">И</string>
+    <string name="top_players_column_goals">Г</string>
+    <string name="top_players_column_assists">А</string>
+    <string name="top_players_column_penalties">П</string>
+    <string name="top_players_description_position"> - позиция</string>
+    <string name="top_players_description_name"> - имя</string>
+    <string name="top_players_description_matches"> - игры,</string>
+    <string name="top_players_description_goals"> - голы,</string>
+    <string name="top_players_description_assists"> - ассисты,</string>
+    <string name="top_players_description_penalties"> - пенальти.</string>
+    <string name="tab_matches_completed">Завершённые</string>
+    <string name="tab_matches_ahead">Предстоящие</string>
+    <string name="tour">тур</string>
+    <string name="first_match_no_statistics">Нет статистики, это первый матч.</string>
+    <string name="stat_home_wins_hyphen">Побед дома -</string>
+    <string name="stat_draws_hyphen">Ничьи -</string>
+    <string name="stat_away_wins_hyphen">Побед в гостях -</string>
 </resources>

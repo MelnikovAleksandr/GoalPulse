@@ -1,7 +1,6 @@
 package ru.asmelnikov.team_info.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.utils.composables.EmptyContent
-import ru.asmelnikov.utils.composables.LoadingGif
+import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.ui.theme.dimens
 
@@ -84,7 +83,7 @@ fun TeamMatchesList(
         }
 
         when {
-            isLoading && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> LoadingGif()
+            isLoading && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> LoadingBall()
             !isLoading && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> EmptyContent(
                 onReloadClick = onReloadClick
             )
@@ -128,7 +127,6 @@ fun TeamMatchesList(
                             tabTitles = listOf("Completed", "Ahead"),
                             selectedIndex = pagerState.currentPage,
                             onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                            pagerState = pagerState,
                             containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
 
                         )

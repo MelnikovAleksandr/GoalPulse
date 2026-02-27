@@ -38,11 +38,11 @@ class CompetitionsScreenViewModel(
         }
     }
 
-    fun onCompClick(compId: String) = intent {
-        postSideEffect(CompetitionsScreenSideEffects.OnCompetitionNavigate(compId = compId))
+    fun onCompClick(compId: String, compUrl: String) = intent {
+        postSideEffect(CompetitionsScreenSideEffects.OnCompetitionNavigate(compId = compId, compUrl = compUrl))
     }
 
-    private fun collectCompetitionsFlowFromLocal() = intent(registerIdling = false) {
+    private fun collectCompetitionsFlowFromLocal() = intent {
         repeatOnSubscription {
             footballRepository.getAllCompetitionsFlowFromLocal().collect { comps ->
                 reduce { state.copy(comps = comps) }

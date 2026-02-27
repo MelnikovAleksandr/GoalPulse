@@ -27,8 +27,8 @@ fun StickyHeader(
 
     val text = when {
         matchesByTour.matchDay == -1 -> stringResource(matchesByTour.matches.firstOrNull()?.stage?.stringResId ?: R.string.non)
-        matchesByTour.seasonType == TournamentType.CUP -> "${matchesByTour.matchDay} tour ${stringResource(matchesByTour.stage.stringResId)}"
-        else -> "${matchesByTour.matchDay} tour"
+        matchesByTour.seasonType == TournamentType.CUP -> "${matchesByTour.matchDay} ${stringResource(R.string.tour)} ${stringResource(matchesByTour.stage.stringResId)}"
+        else -> "${matchesByTour.matchDay} ${stringResource(R.string.tour)}"
     }
 
     Row(

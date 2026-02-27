@@ -8,7 +8,7 @@ sealed interface Routes : NavKey {
     data object Competitions : Routes
 
     @Serializable
-    data class Standings(val compId: String) : Routes
+    data class Standings(val compId: String, val compUrl: String) : Routes
 
     @Serializable
     data class Team(val teamId: String) : Routes

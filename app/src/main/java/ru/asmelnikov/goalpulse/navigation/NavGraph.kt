@@ -58,6 +58,7 @@ fun SharedTransitionScope.NavGraph(
                 CompetitionStandingsScreen(
                     appState = appState,
                     compId = it.compId,
+                    compUrl = it.compUrl,
                     showSnackbar = showSnackbar,
                     animatedVisibilityScope = LocalNavAnimatedContentScope.current
                 )

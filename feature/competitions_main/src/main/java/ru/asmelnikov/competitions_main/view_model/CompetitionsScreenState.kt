@@ -10,13 +10,13 @@ import ru.asmelnikov.domain.models.Competition
 @Parcelize
 data class CompetitionsScreenState(
     val comps: List<Competition> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = true
 ) : Parcelable
 
 sealed class CompetitionsScreenSideEffects {
     data class Snackbar(val text: String, val duration: SnackbarDuration = SnackbarDuration.Short) :
         CompetitionsScreenSideEffects()
 
-    data class OnCompetitionNavigate(val compId: String) :
+    data class OnCompetitionNavigate(val compId: String, val compUrl: String) :
         CompetitionsScreenSideEffects()
 }

@@ -99,4 +99,47 @@
     <string name="current_match_day">Current match day</string>
     <string name="label_start_date">Start date</string>
     <string name="label_end_date">End date</string>
+
+    <!-- Standings Screen -->
+    <string name="tab_standings">Standings</string>
+    <string name="tab_scorers">Scorers</string>
+    <string name="tab_matches">Matches</string>
+    <string name="header_team">Team</string>
+    <string name="table_column_position">№</string>
+    <string name="table_column_team">Team</string>
+    <string name="table_column_matches">M</string>
+    <string name="table_column_wins">W</string>
+    <string name="table_column_draws">D</string>
+    <string name="table_column_losses">L</string>
+    <string name="table_column_goals_for">GF</string>
+    <string name="table_column_goals_against">GA</string>
+    <string name="table_column_points">P</string>
+    <string name="table_description_matches"> - matches,</string>
+    <string name="table_description_wins"> - wins,</string>
+    <string name="table_description_draws"> - draws,</string>
+    <string name="table_description_losses"> - loses,</string>
+    <string name="table_description_goals_for"> - goals for,</string>
+    <string name="table_description_goals_against"> - goals against,</string>
+    <string name="table_description_points"> - points.</string>
+    <string name="table_description_position"> - position</string>
+    <string name="table_description_team"> - team</string>
+    <string name="top_players_column_position">№</string>
+    <string name="top_players_column_name">Name</string>
+    <string name="top_players_column_matches">M</string>
+    <string name="top_players_column_goals">G</string>
+    <string name="top_players_column_assists">A</string>
+    <string name="top_players_column_penalties">P</string>
+    <string name="top_players_description_position"> - position</string>
+    <string name="top_players_description_name"> - name</string>
+    <string name="top_players_description_matches"> - matches,</string>
+    <string name="top_players_description_goals"> - goals,</string>
+    <string name="top_players_description_assists"> - assists,</string>
+    <string name="top_players_description_penalties"> - penalties.</string>
+    <string name="tab_matches_completed">Completed</string>
+    <string name="tab_matches_ahead">Ahead</string>
+    <string name="tour">tour</string>
+    <string name="first_match_no_statistics">There are no statistics, this is the first match.</string>
+    <string name="stat_home_wins_hyphen">Home wins -</string>
+    <string name="stat_draws_hyphen">Draws -</string>
+    <string name="stat_away_wins_hyphen">Away wins -</string>
 </resources>

@@ -39,13 +39,13 @@ fun SharedTransitionScope.CompetitionItem(
     modifier: Modifier = Modifier,
     competition: Competition,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    onCompClick: (String) -> Unit
+    onCompClick: (String, String) -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                onCompClick(competition.id.toString())
+                onCompClick(competition.id.toString(), competition.emblem)
             },
         shape = RoundedCornerShape(0.dp),
     ) {
@@ -120,7 +120,7 @@ private fun CompetitionItemPreview() {
                 CompetitionItem(
                     competition = getMockCompetitionsList().first(),
                     animatedVisibilityScope = this,
-                    onCompClick = {}
+                    onCompClick = { _, _ -> }
                 )
             }
         }

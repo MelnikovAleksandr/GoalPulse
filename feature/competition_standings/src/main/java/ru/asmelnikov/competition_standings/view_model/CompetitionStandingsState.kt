@@ -13,14 +13,14 @@ import ru.asmelnikov.domain.models.Scorer
 @Parcelize
 data class CompetitionStandingsState(
     val compId: String = "",
+    val compUrl: String = "",
     val competitionStandings: CompetitionStandings? = null,
     val matchesCompleted: List<MatchesByTour> = emptyList(),
     val matchesAhead: List<MatchesByTour> = emptyList(),
-    val isLoadingStandings: Boolean = false,
-    val isLoadingScorers: Boolean = false,
-    val isLoadingMatches: Boolean = false,
+    val isLoadingStandings: Boolean = true,
+    val isLoadingScorers: Boolean = true,
+    val isLoadingMatches: Boolean = true,
     val scorers: List<Scorer> = emptyList(),
-    val currentSeasonScorers: String = "",
     val expandedItem: Int = -1,
     val head2head: Head2head = Head2head(),
     val isHead2headLoading: Boolean = false

@@ -1,5 +1,17 @@
 A simple Android application for displaying statistics of major football competitions.
 
+## 🚀 Recent Updates
+
+• Nav3 migration  
+• AndroidX Shared Transition  
+• TOMP dependency management  
+• New module structure  
+• Updated all dependencies  
+• Kotlin Realm migration  
+• Localization added  
+• Refactored data models  
+• Refactored Compose screens
+
 ## Content
 - [Technologies](#technologies)
 - [Usage](#usage)
@@ -7,24 +19,20 @@ A simple Android application for displaying statistics of major football competi
 - [Video](#video)
   
 ## Technologies
-- [Realm](https://realm.io/)
+- [Realm](https://github.com/realm/realm-kotlin)
 - [Koin](https://insert-koin.io/)
 - [Orbit MVI](https://orbit-mvi.org/)
 - [Compose](https://developer.android.com/jetpack/compose)
-- [Shared Elements](https://github.com/mxalbert1996/compose-shared-elements?tab=readme-ov-file)
 - [Collapsing Toolbar](https://github.com/onebone/compose-collapsing-toolbar)
 
 ## Usage
-To use the application, obtain keys from the resources and replace them in the file ru.asmelnikov.utils.Constants:
+To use the application, obtain keys from the resources and replace them in the file local.properties
 - [Football API](https://www.football-data.org/client/register)
 - [News API](https://newsapi.org/register)
 
 ```typescript
-object Constants {
-
-    const val FOOTBALL_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    const val NEW_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-}
+FOOTBALL_API_KEY = XXXXXXXXXXXXXXXXXXXXX
+NEW_API_KEY = XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ## Structure

@@ -22,7 +22,7 @@ class PersonViewModel(
         initialState = PersonState(),
         savedStateHandle = savedStateHandle
     ) {
-        reduce { state.copy(personId = personId ?: "") }
+        reduce { state.copy(personId = personId) }
         getPersonFromRemote()
     }
 

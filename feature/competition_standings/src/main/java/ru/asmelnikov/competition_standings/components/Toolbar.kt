@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -83,7 +84,7 @@ fun CollapsingToolbarScope.Toolbar(
             Box(
                 modifier = Modifier
                     .background(
-                        color = MaterialTheme.colorScheme.onBackground.copy(
+                        color = Color.White.copy(
                             alpha = 1f - collapsingState.toolbarState.progress
                         ),
                         shape = CircleShape
@@ -106,6 +107,7 @@ fun CollapsingToolbarScope.Toolbar(
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier
                 .statusBarsPadding()
+                .padding(horizontal = dimens.medium1)
                 .padding(
                     bottom = dimens.medium1,
                     top = dimens.extraSmall2

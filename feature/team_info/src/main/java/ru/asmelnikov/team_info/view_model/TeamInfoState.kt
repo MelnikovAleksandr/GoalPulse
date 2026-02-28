@@ -14,8 +14,8 @@ import ru.asmelnikov.domain.models.TeamInfo
 data class TeamInfoState(
     val teamId: String = "",
     val teamInfo: TeamInfo = TeamInfo(),
-    val isInfoLoading: Boolean = false,
-    val isMatchesLoading: Boolean = false,
+    val isInfoLoading: Boolean = true,
+    val isMatchesLoading: Boolean = true,
     val colorPalette: Map<String, String> = mapOf(),
     val matchesComplete: List<Match> = emptyList(),
     val matchesAhead: List<Match> = emptyList(),
@@ -30,7 +30,7 @@ sealed class TeamInfoSideEffects {
     data class Snackbar(val text: String, val duration: SnackbarDuration = SnackbarDuration.Short) :
         TeamInfoSideEffects()
 
-    object BackClick : TeamInfoSideEffects()
+    data object BackClick : TeamInfoSideEffects()
 
     data class OnPersonInfoNavigate(val personId: String) :
         TeamInfoSideEffects()

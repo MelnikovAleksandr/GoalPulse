@@ -1,6 +1,7 @@
 package ru.asmelnikov.person_info
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -25,12 +25,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.domain.models.Person
 import ru.asmelnikov.domain.models.PlayerPosition
+import ru.asmelnikov.domain.models.getMockPlayer
 import ru.asmelnikov.person_info.view_model.PersonSideEffects
 import ru.asmelnikov.person_info.view_model.PersonViewModel
 import ru.asmelnikov.utils.R
@@ -39,6 +41,7 @@ import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.navigation.popUp
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -83,10 +86,8 @@ fun PersonInfoContent(
     onReload: () -> Unit
 ) {
 
-    val shape = if (person.currentTeam.crest.endsWith(".svg")) CircleShape else RoundedCornerShape(0.dp)
-
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -117,7 +118,7 @@ fun PersonInfoContent(
 
                 SubComposeAsyncImageCommon(
                     imageUri = person.currentTeam.crest,
-                    shape = shape,
+                    shape = CircleShape,
                     size = dimens.medium4,
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -155,15 +156,16 @@ fun PersonInfoContent(
                 ) {
                     Text(
                         modifier = Modifier,
-                        text = "Age",
+                        text = stringResource(R.string.player_age),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
                         modifier = Modifier,
-                        text = "${person.age} y.o.",
+                        text = person.age,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
@@ -177,11 +179,12 @@ fun PersonInfoContent(
                 ) {
                     Text(
                         modifier = Modifier,
-                        text = "Nationality",
+                        text = stringResource(R.string.player_nationality),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
                         modifier = Modifier,
@@ -200,11 +203,12 @@ fun PersonInfoContent(
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = "Position",
+                            text = stringResource(R.string.player_position),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelMedium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
                             modifier = Modifier,
@@ -216,8 +220,31 @@ fun PersonInfoContent(
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }
-
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PersonInfoContentPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        PersonInfoContent(
+            isLoading = false,
+            person = getMockPlayer(),
+            onReload = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PersonInfoContentPreview2() {
+    GoalPulseTheme {
+        PersonInfoContent(
+            isLoading = false,
+            person = getMockPlayer(),
+            onReload = {}
+        )
     }
 }

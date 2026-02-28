@@ -1,17 +1,15 @@
 package ru.asmelnikov.team_info.di
 
-import androidx.lifecycle.SavedStateHandle
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ru.asmelnikov.team_info.view_model.TeamInfoViewModel
 
 val teamInfoModule = module {
 
-    viewModel { (teamId: String, savedStateHandle: SavedStateHandle) ->
+    viewModel { (teamId: String) ->
         TeamInfoViewModel(
             teamRepository = get(),
             stringResourceProvider = get(),
-            savedStateHandle = savedStateHandle,
             standingsRepository = get(),
             newsRepository = get(),
             colorGenerator = get(),

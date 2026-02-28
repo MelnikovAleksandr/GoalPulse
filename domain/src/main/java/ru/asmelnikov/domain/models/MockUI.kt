@@ -1389,3 +1389,936 @@ fun getMockHead2Head(): Head2head {
         ),
     )
 }
+
+fun getMockTeam(): TeamInfo {
+    return TeamInfo(
+        id = "66",
+        address = "Sir Matt Busby Way Manchester M16 0RA",
+        area = Area(
+            id = 2072,
+            name = "England",
+            flag = "https://crests.football-data.org/770.svg"
+        ),
+        clubColors = "Red / White",
+        coach = Coach(
+            id = 7903,
+            contract = Contract(
+                start = "2026-01",
+                until = "2026-06"
+            ),
+            dateOfBirth = "1980-12-29",
+            firstName = "Michael",
+            lastName = "Carrick",
+            name = "Michael Carrick",
+            nationality = "England"
+        ),
+        crest = "https://crests.football-data.org/66.png",
+        founded = 1878,
+        name = "Manchester United FC",
+        shortName = "Man United",
+        squadByPosition = listOf(
+            SquadByPosition(
+                position = PlayerPosition.GOALKEEPER,
+                squad = listOf(
+                    Squad(id = 8035, age = "38", name = "Tom Heaton", nationality = "England"),
+                    Squad(id = 29518, age = "27", name = "Altay Bayındır", nationality = "Turkey"),
+                    Squad(id = 129946, age = "23", name = "Senne Lammens", nationality = "Belgium")
+                )
+            ),
+            SquadByPosition(
+                position = PlayerPosition.DEFENCE,
+                squad = listOf(
+                    Squad(
+                        id = 188291,
+                        age = "21",
+                        name = "Tyler Fredricson",
+                        nationality = "England"
+                    ),
+                    Squad(id = 262921, age = "18", name = "Diego León", nationality = "Paraguay"),
+                    Squad(
+                        id = 273281,
+                        age = "18",
+                        name = "Godwill Kukonki",
+                        nationality = "England"
+                    ),
+                    Squad(
+                        id = 278168,
+                        age = "18",
+                        name = "Bendito Mantato",
+                        nationality = "England"
+                    ),
+                    Squad(
+                        id = 46451,
+                        age = "28",
+                        name = "Lisandro Martínez",
+                        nationality = "Argentina"
+                    ),
+                    Squad(id = 15905, age = "26", name = "Diogo Dalot", nationality = "Portugal"),
+                    Squad(id = 7898, age = "30", name = "Luke Shaw", nationality = "England"),
+                    Squad(
+                        id = 7553,
+                        age = "28",
+                        name = "Noussair Mazraoui",
+                        nationality = "Morocco"
+                    ),
+                    Squad(
+                        id = 7549,
+                        age = "26",
+                        name = "Matthijs de Ligt",
+                        nationality = "Netherlands"
+                    ),
+                    Squad(
+                        id = 7467,
+                        age = "26",
+                        name = "Tyrell Malacia",
+                        nationality = "Netherlands"
+                    ),
+                    Squad(id = 3326, age = "33", name = "Harry Maguire", nationality = "England"),
+                    Squad(id = 247644, age = "19", name = "Ayden Heaven", nationality = "England"),
+                    Squad(id = 211559, age = "21", name = "Patrick Dorgu", nationality = "Denmark"),
+                    Squad(id = 181933, age = "20", name = "Leny Yoro", nationality = "France")
+                )
+            ),
+            SquadByPosition(
+                position = PlayerPosition.MIDFIELD,
+                squad = listOf(
+                    Squad(id = 271941, age = "18", name = "Jack Fletcher", nationality = "England"),
+                    Squad(
+                        id = 275523,
+                        age = "20",
+                        name = "Jack Moorhouse",
+                        nationality = "Ireland"
+                    ),
+                    Squad(
+                        id = 290139,
+                        age = "18",
+                        name = "Tyler Fletcher",
+                        nationality = "England"
+                    ),
+                    Squad(id = 28549, age = "24", name = "Manuel Ugarte", nationality = "Uruguay"),
+                    Squad(id = 7599, age = "27", name = "Mason Mount", nationality = "England"),
+                    Squad(
+                        id = 3257,
+                        age = "31",
+                        name = "Bruno Fernandes",
+                        nationality = "Portugal"
+                    ),
+                    Squad(id = 3231, age = "34", name = "Casemiro", nationality = "Brazil"),
+                    Squad(id = 190797, age = "20", name = "Kobbie Mainoo", nationality = "England")
+                )
+            ),
+            SquadByPosition(
+                position = PlayerPosition.OFFENCE,
+                squad = listOf(
+                    Squad(
+                        id = 275522,
+                        age = "18",
+                        name = "Chido Obi-Martin",
+                        nationality = "Denmark"
+                    ),
+                    Squad(id = 289557, age = "18", name = "Shea Lacey", nationality = "England")
+                )
+            ),
+            SquadByPosition(
+                position = PlayerPosition.MIDFIELD,
+                squad = listOf(
+                    Squad(
+                        id = 99731,
+                        age = "24",
+                        name = "Joshua Zirkzee",
+                        nationality = "Netherlands"
+                    ),
+                    Squad(id = 30842, age = "26", name = "Matheus Cunha", nationality = "Brazil"),
+                    Squad(id = 8626, age = "26", name = "Bryan Mbeumo", nationality = "Cameroon"),
+                    Squad(
+                        id = 133584,
+                        age = "23",
+                        name = "Amad Diallo",
+                        nationality = "Ivory Coast"
+                    ),
+                    Squad(
+                        id = 124244,
+                        age = "22",
+                        name = "Benjamin Šeško",
+                        nationality = "Slovenia"
+                    )
+                )
+            )
+        ),
+        tla = "MUN",
+        venue = "Old Trafford",
+        website = "http://www.manutd.com"
+    )
+}
+
+fun getMockMatchesComplete(): List<Match> {
+    return listOf(
+        Match(
+            id = 537793,
+            utcDate = "2025-08-17T15:30:00Z",
+            bigDate = "2025-08-17T15:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 1,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 57,
+                name = "Arsenal FC",
+                shortName = "Arsenal",
+                tla = "ARS",
+                crest = "https://crests.football-data.org/57.png"
+            ),
+            score = Score(
+                winner = Winner.AWAY_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 1),
+                halfTime = Time(home = 0, away = 1)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11430,
+                    name = "Simon Hooper",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537801,
+            utcDate = "2025-08-24T15:30:00Z",
+            bigDate = "2025-08-24T15:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 2,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 63,
+                name = "Fulham FC",
+                shortName = "Fulham",
+                tla = "FUL",
+                crest = "https://crests.football-data.org/63.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.DRAW,
+                duration = "REGULAR",
+                fullTime = Time(home = 1, away = 1),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11443,
+                    name = "Chris Kavanagh",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537811,
+            utcDate = "2025-08-30T14:00:00Z",
+            bigDate = "2025-08-30T14:00:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 3,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 328,
+                name = "Burnley FC",
+                shortName = "Burnley",
+                tla = "BUR",
+                crest = "https://crests.football-data.org/328.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 3, away = 2),
+                halfTime = Time(home = 1, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 213813,
+                    name = "Sam Barrott",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537822,
+            utcDate = "2025-09-14T15:30:00Z",
+            bigDate = "2025-09-14T15:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 4,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 65,
+                name = "Manchester City FC",
+                shortName = "Man City",
+                tla = "MCI",
+                crest = "https://crests.football-data.org/65.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 3, away = 0),
+                halfTime = Time(home = 1, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11580,
+                    name = "Anthony Taylor",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537832,
+            utcDate = "2025-09-20T16:30:00Z",
+            bigDate = "2025-09-20T16:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 5,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 61,
+                name = "Chelsea FC",
+                shortName = "Chelsea",
+                tla = "CHE",
+                crest = "https://crests.football-data.org/61.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 2, away = 1),
+                halfTime = Time(home = 2, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11309,
+                    name = "Peter Bankes",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537837,
+            utcDate = "2025-09-27T11:30:00Z",
+            bigDate = "2025-09-27T11:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 6,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 402,
+                name = "Brentford FC",
+                shortName = "Brentford",
+                tla = "BRE",
+                crest = "https://crests.football-data.org/402.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 3, away = 1),
+                halfTime = Time(home = 2, away = 1)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11585,
+                    name = "Craig Pawson",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537852,
+            utcDate = "2025-10-04T14:00:00Z",
+            bigDate = "2025-10-04T14:00:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 7,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 71,
+                name = "Sunderland AFC",
+                shortName = "Sunderland",
+                tla = "SUN",
+                crest = "https://crests.football-data.org/71.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 2, away = 0),
+                halfTime = Time(home = 2, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11494,
+                    name = "Stuart Attwell",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537860,
+            utcDate = "2025-10-19T15:30:00Z",
+            bigDate = "2025-10-19T15:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 8,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 64,
+                name = "Liverpool FC",
+                shortName = "Liverpool",
+                tla = "LIV",
+                crest = "https://crests.football-data.org/64.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.AWAY_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 1, away = 2),
+                halfTime = Time(home = 0, away = 1)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11605,
+                    name = "Michael Oliver",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537872,
+            utcDate = "2025-10-25T16:30:00Z",
+            bigDate = "2025-10-25T16:30:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 9,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 397,
+                name = "Brighton & Hove Albion FC",
+                shortName = "Brighton Hove",
+                tla = "BHA",
+                crest = "https://crests.football-data.org/397.png"
+            ),
+            score = Score(
+                winner = Winner.HOME_TEAM,
+                duration = "REGULAR",
+                fullTime = Time(home = 4, away = 2),
+                halfTime = Time(home = 2, away = 0)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11580,
+                    name = "Anthony Taylor",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        ),
+        Match(
+            id = 537882,
+            utcDate = "2025-11-01T15:00:00Z",
+            bigDate = "2025-11-01T15:00:00Z",
+            status = MatchStatus.FINISHED,
+            matchDay = 10,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 351,
+                name = "Nottingham Forest FC",
+                shortName = "Nottingham",
+                tla = "NOT",
+                crest = "https://crests.football-data.org/351.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.DRAW,
+                duration = "REGULAR",
+                fullTime = Time(home = 2, away = 2),
+                halfTime = Time(home = 0, away = 1)
+            ),
+            referees = listOf(
+                Referee(
+                    id = 11469,
+                    name = "Darren England",
+                    nationality = "England",
+                    type = "REFEREE"
+                )
+            )
+        )
+    )
+}
+
+fun getMockMatchesAhead(): List<Match> {
+    return listOf(
+        Match(
+            id = 538062,
+            utcDate = "2026-03-01T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 28,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 354,
+                name = "Crystal Palace FC",
+                shortName = "Crystal Palace",
+                tla = "CRY",
+                crest = "https://crests.football-data.org/354.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538072,
+            utcDate = "2026-03-04T20:15:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 29,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 67,
+                name = "Newcastle United FC",
+                shortName = "Newcastle",
+                tla = "NEW",
+                crest = "https://crests.football-data.org/67.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538082,
+            utcDate = "2026-03-15T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 30,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 58,
+                name = "Aston Villa FC",
+                shortName = "Aston Villa",
+                tla = "AVL",
+                crest = "https://crests.football-data.org/58.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538085,
+            utcDate = "2026-03-20T20:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 31,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 1044,
+                name = "AFC Bournemouth",
+                shortName = "Bournemouth",
+                tla = "BOU",
+                crest = "https://crests.football-data.org/bournemouth.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538102,
+            utcDate = "2026-04-11T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 32,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 341,
+                name = "Leeds United FC",
+                shortName = "Leeds United",
+                tla = "LEE",
+                crest = "https://crests.football-data.org/341.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538108,
+            utcDate = "2026-04-18T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 33,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 61,
+                name = "Chelsea FC",
+                shortName = "Chelsea",
+                tla = "CHE",
+                crest = "https://crests.football-data.org/61.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538122,
+            utcDate = "2026-04-25T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 34,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 402,
+                name = "Brentford FC",
+                shortName = "Brentford",
+                tla = "BRE",
+                crest = "https://crests.football-data.org/402.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538132,
+            utcDate = "2026-05-02T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 35,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 64,
+                name = "Liverpool FC",
+                shortName = "Liverpool",
+                tla = "LIV",
+                crest = "https://crests.football-data.org/64.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538135,
+            utcDate = "2026-05-09T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 36,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 71,
+                name = "Sunderland AFC",
+                shortName = "Sunderland",
+                tla = "SUN",
+                crest = "https://crests.football-data.org/71.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        ),
+        Match(
+            id = 538152,
+            utcDate = "2026-05-17T14:00:00Z",
+            bigDate = "28.02",
+            status = MatchStatus.TIMED,
+            matchDay = 37,
+            stage = Stage.REGULAR_SEASON,
+            group = Group.NON,
+            competition = Competition(
+                name = "Premier League"
+            ),
+            homeTeam = MatchTeam(
+                id = 66,
+                name = "Manchester United FC",
+                shortName = "Man United",
+                tla = "MUN",
+                crest = "https://crests.football-data.org/66.png"
+            ),
+            awayTeam = MatchTeam(
+                id = 351,
+                name = "Nottingham Forest FC",
+                shortName = "Nottingham",
+                tla = "NOT",
+                crest = "https://crests.football-data.org/351.png"
+            ),
+            score = Score(
+                winner = Winner.NON,
+                duration = "REGULAR",
+                fullTime = Time(home = 0, away = 0),
+                halfTime = Time(home = 0, away = 0)
+            ),
+            referees = emptyList()
+        )
+    )
+}
+
+fun getMockPlayer(): Person {
+    return Person(
+        id = 38101,
+        currentTeam = CurrentTeam(
+            id = 8872,
+            address = "Serviceboks 1, Ullevaal stadion Oslo 0840",
+            area = Area(
+                id = 2173,
+                name = "Norway",
+                flag = "https://crests.football-data.org/813.svg"
+            ),
+            clubColors = "Red / White / Navy Blue",
+            crest = "https://crests.football-data.org/813.svg",
+            founded = 1902,
+            name = "Norway",
+            shortName = "Norway",
+            tla = "NOR",
+            venue = "Ullevaal Stadion",
+            website = "http://www.fotball.no"
+        ),
+        age = "25", // Рассчитано из dateOfBirth 2000-07-21
+        firstName = "Erling",
+        lastName = "Haaland",
+        lastUpdated = "2025-04-02T09:41:03Z",
+        name = "Erling Haaland",
+        nationality = "Norway",
+        position = PlayerPosition.OFFENCE,
+        section = "Centre-Forward",
+        shirtNumber = 22
+    )
+}

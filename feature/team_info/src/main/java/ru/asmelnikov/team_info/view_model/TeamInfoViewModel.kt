@@ -1,6 +1,5 @@
 package ru.asmelnikov.team_info.view_model
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -22,46 +21,18 @@ class TeamInfoViewModel(
     private val standingsRepository: CompetitionStandingsRepository,
     private val newsRepository: NewsRepository,
     private val colorGenerator: ColorGenerator,
-    private val teamId: String,
-    savedStateHandle: SavedStateHandle
+    private val teamId: String
 ) : ViewModel(),
     ContainerHost<TeamInfoState, TeamInfoSideEffects> {
 
     override val container = container<TeamInfoState, TeamInfoSideEffects>(
-        initialState = TeamInfoState(),
-        savedStateHandle = savedStateHandle
+        initialState = TeamInfoState()
     ) {
         reduce { state.copy(teamId = teamId) }
         collectTeamInfoFlowFromLocal()
         getTeamInfoFromRemoteToLocal()
         collectTeamMatchesFlowFromLocal()
         getTeamMatchesFromRemoteToLocal()
-    }
-
-    fun getNews() = intent {
-        reduce { state.copy(isNewsLoading = true) }
-        when (val news =
-            newsRepository.getNews(
-                state.teamInfo.name
-            )) {
-            is Resource.Success -> {
-                reduce {
-                    state.copy(
-                        isNewsLoading = false,
-                        news = news.data ?: News(),
-                    )
-                }
-            }
-
-            is Resource.Error -> {
-                reduce {
-                    state.copy(
-                        isNewsLoading = false
-                    )
-                }
-                handleError(news.httpErrors)
-            }
-        }
     }
 
     fun matchItemClick(itemId: Int) = intent {
@@ -100,10 +71,6 @@ class TeamInfoViewModel(
 
     fun onPersonClick(personId: Int) = intent {
         postSideEffect(TeamInfoSideEffects.OnPersonInfoNavigate(personId.toString()))
-    }
-
-    fun setColorPalette(colors: Map<String, String>) = intent {
-        reduce { state.copy(colorPalette = colors) }
     }
 
     fun getTeamInfoFromRemoteToLocal() = intent {
@@ -160,29 +127,51 @@ class TeamInfoViewModel(
         postSideEffect(TeamInfoSideEffects.BackClick)
     }
 
-    private fun collectTeamInfoFlowFromLocal() = intent(registerIdling = false) {
-        repeatOnSubscription {
-            teamRepository.getTeamInfoByIdFlowFromLocal(state.teamId).collect { teamInfo ->
-                reduce {
-                    state.copy(
-                        teamInfo = teamInfo ?: TeamInfo()
-                    )
-                }
-                if (!teamInfo?.crest.isNullOrEmpty()) generateColors()
-                if (!teamInfo?.name.isNullOrEmpty()) getNews()
+    private fun collectTeamInfoFlowFromLocal() = intent {
+        teamRepository.getTeamInfoByIdFlowFromLocal(state.teamId).collect { teamInfo ->
+            reduce {
+                state.copy(
+                    teamInfo = teamInfo ?: TeamInfo()
+                )
+            }
+            if (!teamInfo?.crest.isNullOrEmpty()) generateColors()
+            if (!teamInfo?.name.isNullOrEmpty()) getNews()
+        }
+    }
+
+    private fun collectTeamMatchesFlowFromLocal() = intent {
+        teamRepository.getTeamMatchesFlowFromLocal(state.teamId).collect { matches ->
+            reduce {
+                state.copy(
+                    matchesComplete = matches?.matchesCompleted ?: emptyList(),
+                    matchesAhead = matches?.matchesAhead ?: emptyList()
+                )
             }
         }
     }
 
-    private fun collectTeamMatchesFlowFromLocal() = intent(registerIdling = false) {
-        repeatOnSubscription {
-            teamRepository.getTeamMatchesFlowFromLocal(state.teamId).collect { matches ->
+    private fun getNews() = intent {
+        reduce { state.copy(isNewsLoading = true) }
+        when (val news =
+            newsRepository.getNews(
+                state.teamInfo.name
+            )) {
+            is Resource.Success -> {
                 reduce {
                     state.copy(
-                        matchesComplete = matches?.matchesCompleted ?: emptyList(),
-                        matchesAhead = matches?.matchesAhead ?: emptyList()
+                        isNewsLoading = false,
+                        news = news.data ?: News(),
                     )
                 }
+            }
+
+            is Resource.Error -> {
+                reduce {
+                    state.copy(
+                        isNewsLoading = false
+                    )
+                }
+                handleError(news.httpErrors)
             }
         }
     }

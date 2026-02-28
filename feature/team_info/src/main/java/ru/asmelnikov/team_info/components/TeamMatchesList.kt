@@ -1,8 +1,8 @@
 package ru.asmelnikov.team_info.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,17 +12,27 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
+import ru.asmelnikov.domain.models.getMockHead2Head
+import ru.asmelnikov.domain.models.getMockMatchesAhead
+import ru.asmelnikov.domain.models.getMockMatchesComplete
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.PagerTabRow
+import ru.asmelnikov.utils.composables.TabsMatches
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -42,20 +52,28 @@ fun TeamMatchesList(
 ) {
 
     val scope = rememberCoroutineScope()
+    val scheme = MaterialTheme.colorScheme
+    val tabListState by remember(matchesCompleted, matchesAhead) {
+        mutableStateOf(
+            buildList {
+                if (matchesCompleted.isNotEmpty()) add(TabsMatches.Completed)
+                if (matchesAhead.isNotEmpty()) add(TabsMatches.Ahead)
+            }
+        )
+    }
 
     val pagerState = rememberPagerState(
         initialPage = 0,
     ) {
-        2
+        tabListState.count()
     }
 
-    val brushColor: List<Color> = if (isMaterialColors)
-        listOf(
-            MaterialTheme.colorScheme.background,
-            MaterialTheme.colorScheme.background
-        )
-    else
-        listOf(stickyHeaderColor.copy(alpha = 0.5f), itemColor.copy(alpha = 0.5f))
+    val brushColor = remember(isMaterialColors, stickyHeaderColor, itemColor) {
+        if (isMaterialColors)
+            listOf(scheme.background, scheme.background)
+        else
+            listOf(stickyHeaderColor.copy(alpha = 0.5f), itemColor.copy(alpha = 0.5f))
+    }
 
     Column(
         modifier = Modifier
@@ -67,82 +85,43 @@ fun TeamMatchesList(
                 )
             )
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
-                )
-                .fillMaxWidth()
-                .height(dimens.extraSmall1)
-        ) {
-            if (isLoading) LinearProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
+
+        AnimatedVisibility(visible = isLoading) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimens.extraSmall1),
+                color = if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
             )
         }
 
-        when {
-            isLoading && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> LoadingBall()
-            !isLoading && matchesCompleted.isEmpty() && matchesAhead.isEmpty() -> EmptyContent(
-                onReloadClick = onReloadClick
-            )
-
-            else -> {
-
-                AnimatedVisibility(
-                    visible = matchesAhead.isEmpty() && matchesCompleted.isNotEmpty(),
-                ) {
-                    MatchList(
-                        matchesCompleted,
-                        matchesAhead,
-                        isAhead = false,
-                        expandedItemId = expandedItemId,
-                        onMatchItemClick = onMatchItemClick,
-                        head2head = head2head,
-                        isHead2headLoading = isHead2headLoading,
-                        teamId = teamId
-                    )
-                }
-                AnimatedVisibility(
-                    visible = matchesAhead.isNotEmpty() && matchesCompleted.isEmpty(),
-                ) {
-                    MatchList(
-                        matchesCompleted,
-                        matchesAhead,
-                        isAhead = true,
-                        expandedItemId = expandedItemId,
-                        onMatchItemClick = onMatchItemClick,
-                        head2head = head2head,
-                        isHead2headLoading = isHead2headLoading,
-                        teamId = teamId
-                    )
-                }
-                AnimatedVisibility(
-                    visible = matchesAhead.isNotEmpty() && matchesCompleted.isNotEmpty(),
-                ) {
+        AnimatedContent(targetState = matchesCompleted.isEmpty() && matchesAhead.isEmpty()) { emptyData ->
+            when {
+                isLoading && emptyData -> LoadingBall()
+                !isLoading && emptyData -> EmptyContent(onReloadClick = onReloadClick)
+                else -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        PagerTabRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            tabTitles = listOf("Completed", "Ahead"),
-                            selectedIndex = pagerState.currentPage,
-                            onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                            containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
-
-                        )
+                        AnimatedVisibility(visible = tabListState.count() > 1) {
+                            PagerTabRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                tabTitles = tabListState.map { stringResource(it.stringResId) },
+                                selectedIndex = pagerState.currentPage,
+                                onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
+                                containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else itemColor
+                            )
+                        }
 
                         HorizontalPager(
                             modifier = Modifier
                                 .fillMaxSize(),
                             state = pagerState,
-                            beyondViewportPageCount = 2,
+                            beyondViewportPageCount = 1,
                             verticalAlignment = Alignment.Top
                         ) { page ->
-                            when (page) {
-                                0 -> {
+                            when (tabListState[page]) {
+                                TabsMatches.Completed -> {
                                     MatchList(
-                                        matchesCompleted,
-                                        matchesAhead,
+                                        matches = matchesCompleted,
                                         isAhead = false,
                                         expandedItemId = expandedItemId,
                                         onMatchItemClick = onMatchItemClick,
@@ -152,10 +131,9 @@ fun TeamMatchesList(
                                     )
                                 }
 
-                                1 -> {
+                                TabsMatches.Ahead -> {
                                     MatchList(
-                                        matchesCompleted,
-                                        matchesAhead,
+                                        matches = matchesAhead,
                                         isAhead = true,
                                         expandedItemId = expandedItemId,
                                         onMatchItemClick = onMatchItemClick,
@@ -170,5 +148,68 @@ fun TeamMatchesList(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        TeamMatchesList(
+            matchesCompleted = getMockMatchesComplete(),
+            matchesAhead = getMockMatchesAhead(),
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {},
+            isLoading = false,
+            isMaterialColors = true,
+            stickyHeaderColor = Color.White,
+            itemColor = Color.White,
+            head2head = getMockHead2Head(),
+            teamId = "66"
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview2() {
+    GoalPulseTheme {
+        TeamMatchesList(
+            matchesCompleted = getMockMatchesComplete(),
+            matchesAhead = emptyList(),
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {},
+            isLoading = false,
+            isMaterialColors = true,
+            stickyHeaderColor = Color.White,
+            itemColor = Color.White,
+            head2head = getMockHead2Head(),
+            teamId = "66"
+        )
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun MatchesPreview3() {
+    GoalPulseTheme(darkTheme = true) {
+        TeamMatchesList(
+            matchesCompleted = emptyList(),
+            matchesAhead = getMockMatchesAhead(),
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            isHead2headLoading = false,
+            onReloadClick = {},
+            isLoading = false,
+            isMaterialColors = true,
+            stickyHeaderColor = Color.White,
+            itemColor = Color.White,
+            head2head = getMockHead2Head(),
+            teamId = "66"
+        )
     }
 }

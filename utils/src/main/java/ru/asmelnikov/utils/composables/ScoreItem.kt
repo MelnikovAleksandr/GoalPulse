@@ -1,4 +1,4 @@
-package ru.asmelnikov.competition_standings.components
+package ru.asmelnikov.utils.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,22 +14,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.ui.theme.lastRed
 
 @Composable
 fun ScoreItem(
     scoreHome: String,
-    scoreAway: String
+    scoreAway: String,
+    color: Color
 ) {
     Card(
         modifier = Modifier.padding(horizontal = dimens.medium1),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = color
         ),
     ) {
         Row(
@@ -56,11 +59,11 @@ private fun ScorePreview1() {
         Column (modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "2", scoreAway = "1"
+                scoreHome = "2", scoreAway = "1", color = lastRed.copy(alpha = 0.5f)
             )
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "0", scoreAway = "0"
+                scoreHome = "0", scoreAway = "0", color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(6.dp))
         }
@@ -74,11 +77,11 @@ private fun ScorePreview2() {
         Column (modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "2", scoreAway = "1"
+                scoreHome = "2", scoreAway = "1", color = MaterialTheme.colorScheme.secondary
             )
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "0", scoreAway = "0"
+                scoreHome = "0", scoreAway = "0", color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(6.dp))
         }

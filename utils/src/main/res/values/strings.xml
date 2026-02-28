@@ -142,4 +142,21 @@
     <string name="stat_home_wins_hyphen">Home wins -</string>
     <string name="stat_draws_hyphen">Draws -</string>
     <string name="stat_away_wins_hyphen">Away wins -</string>
+
+    <!-- TeamInfo Screen -->
+    <string name="team_tab_squad">Squad</string>
+    <string name="team_tab_info">Information</string>
+    <string name="team_tab_matches">Matches</string>
+    <string name="team_manager">Manager</string>
+    <string name="player_name">Name</string>
+    <string name="player_nationality">Nationality</string>
+    <string name="player_age">Age</string>
+    <string name="team_info_area">Area</string>
+    <string name="team_info_address">Address</string>
+    <string name="team_info_founded">Founded</string>
+    <string name="team_info_venue">Venue</string>
+    <string name="team_news">Team news</string>
+
+    <!-- Person Screen -->
+    <string name="player_position">Position</string>
 </resources>

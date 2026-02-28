@@ -141,4 +141,21 @@
     <string name="stat_home_wins_hyphen">Побед дома -</string>
     <string name="stat_draws_hyphen">Ничьи -</string>
     <string name="stat_away_wins_hyphen">Побед в гостях -</string>
+
+    <!-- TeamInfo Screen -->
+    <string name="team_tab_squad">Команда</string>
+    <string name="team_tab_info">Иформация</string>
+    <string name="team_tab_matches">Матчи</string>
+    <string name="team_manager">Тренер</string>
+    <string name="player_name">Имя</string>
+    <string name="player_nationality">Национальность</string>
+    <string name="player_age">Возраст</string>
+    <string name="team_info_area">Регион</string>
+    <string name="team_info_address">Адрес</string>
+    <string name="team_info_founded">Основан</string>
+    <string name="team_info_venue">Стадион</string>
+    <string name="team_news">Новости команды</string>
+
+    <!-- Person Screen -->
+    <string name="player_position">Позиция</string>
 </resources>

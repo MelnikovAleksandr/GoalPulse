@@ -27,6 +27,7 @@ import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.PagerTabRow
+import ru.asmelnikov.utils.composables.TabsMatches
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 

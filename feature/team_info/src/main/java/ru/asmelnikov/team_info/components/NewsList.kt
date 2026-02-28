@@ -1,8 +1,6 @@
 package ru.asmelnikov.team_info.components
 
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +27,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Article
 import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.utils.R
-import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.composables.shimmerEffect
 import ru.asmelnikov.utils.ui.theme.dimens
@@ -43,44 +41,39 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun NewsList(
     news: News,
-    isLoading: Boolean,
-    onReloadClick: () -> Unit
+    isLoading: Boolean
 ) {
     val context = LocalContext.current
-    when {
-        isLoading -> ShimmerEffect()
-        !isLoading && news.articles.isEmpty() -> EmptyContent(onReloadClick = onReloadClick)
-        else -> {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(dimens.small1),
-                contentPadding = PaddingValues(all = dimens.small1)
-            ) {
-                item {
-                    Text(
-                        text = "Team news",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.titleLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                items(
-                    items = news.articles,
-                ) { article ->
-                    ArticleItem(
-                        modifier = Modifier.animateItem(),
-                        article = article,
-                        onArticleClick = { url ->
-                            Intent(Intent.ACTION_VIEW).also {
-                                it.data = Uri.parse(url)
-                                if (it.resolveActivity(context.packageManager) != null) {
-                                    context.startActivity(it)
-                                }
+    AnimatedContent(targetState = isLoading) { isLoadingState ->
+        when {
+            isLoadingState -> ShimmerEffect()
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(dimens.small1),
+                    contentPadding = PaddingValues(all = dimens.small1)
+                ) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.team_news),
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.titleLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    items(
+                        items = news.articles,
+                    ) { article ->
+                        ArticleItem(
+                            modifier = Modifier.animateItem(),
+                            article = article,
+                            onArticleClick = { url ->
+                                getWebIntent(url, context)
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

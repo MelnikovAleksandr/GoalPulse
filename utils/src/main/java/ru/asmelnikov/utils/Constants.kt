@@ -66,35 +66,3 @@ fun String.getCompColor(index: Int, listSize: Int): Color {
     }
 }
 
-fun getDescription(stage: String?): String {
-    return when (stage) {
-        "FINAL" -> "Final"
-        "THIRD_PLACE" -> "Third Place"
-        "SEMI_FINALS" -> "Semi Finals"
-        "QUARTER_FINALS" -> "Quarter Finals"
-        "LAST_16" -> "Round of 16"
-        "LAST_32" -> "Round of 32"
-        "LAST_64" -> "Round of 64"
-        "ROUND_4" -> "Round 4"
-        "ROUND_3" -> "Round 3"
-        "ROUND_2" -> "Round 2"
-        "ROUND_1" -> "Round 1"
-        "GROUP_STAGE" -> "Group Stage"
-        "PRELIMINARY_ROUND" -> "Preliminary Round"
-        "QUALIFICATION" -> "Qualification"
-        "QUALIFICATION_ROUND_1" -> "Qualification Round 1"
-        "QUALIFICATION_ROUND_2" -> "Qualification Round 2"
-        "QUALIFICATION_ROUND_3" -> "Qualification Round 3"
-        "PLAYOFF_ROUND_1" -> "Playoff Round 1"
-        "PLAYOFF_ROUND_2" -> "Playoff Round 2"
-        "PLAYOFFS" -> "Playoffs"
-        "REGULAR_SEASON" -> "Regular Season"
-        "CLAUSURA" -> "Clausura"
-        "APERTURA" -> "Apertura"
-        "CHAMPIONSHIP" -> "Championship"
-        "RELEGATION" -> "Relegation"
-        "RELEGATION_ROUND" -> "Relegation Round"
-        else -> stage ?: ""
-    }
-}
-

@@ -1,4 +1,5 @@
-package ru.asmelnikov.competition_standings.components
+package ru.asmelnikov.utils.composables
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,29 +15,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.asmelnikov.domain.models.Head2head
-import ru.asmelnikov.domain.models.Match
-import ru.asmelnikov.domain.models.getMockHead2Head
-import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.R
-import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
+import java.util.UUID
 
 @Composable
 fun MatchItem(
     modifier: Modifier = Modifier,
-    match: Match,
+    matchId: Int,
+    homeTeamCrest: String,
+    homeName: String,
+    awayTeamCrest: String,
+    awayName: String,
+    bigDate: String,
+    fullDate: String,
+    homeScore: String,
+    awayScore: String,
     isAhead: Boolean,
     expandedItemId: Int,
+    numberOfMatches: Int,
+    homeWinsPercentage: Float,
+    drawsPercentage: Float,
+    awayWinsPercentage: Float,
+    homeWins: Int,
+    homeDraws: Int,
+    homeLosses: Int,
+    head2headId: Int,
+    isHead2headLoading: Boolean,
     onMatchItemClick: (Int) -> Unit,
-    head2head: Head2head,
-    isHead2headLoading: Boolean
+    compName: String = "",
+    color: Color = MaterialTheme.colorScheme.primary
 ) {
 
     Column(
@@ -57,14 +72,14 @@ fun MatchItem(
         ) {
             SubComposeAsyncImageCommon(
                 modifier = Modifier.padding(horizontal = dimens.small1),
-                imageUri = match.homeTeam.crest,
+                imageUri = homeTeamCrest,
                 shape = RoundedCornerShape(0.dp),
                 size = dimens.medium4
             )
             if (isAhead) {
                 Text(
                     modifier = Modifier.padding(horizontal = dimens.medium1),
-                    text = match.bigDate,
+                    text = bigDate,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
@@ -73,20 +88,21 @@ fun MatchItem(
                 )
             } else {
                 ScoreItem(
-                    match.score.fullTime.home.toString(),
-                    match.score.fullTime.away.toString()
+                    scoreHome = homeScore,
+                    scoreAway = awayScore,
+                    color = color
                 )
             }
             SubComposeAsyncImageCommon(
                 modifier = Modifier.padding(horizontal = dimens.small1),
-                imageUri = match.awayTeam.crest,
+                imageUri = awayTeamCrest,
                 shape = RoundedCornerShape(0.dp),
                 size = dimens.medium4
             )
         }
         Text(
             modifier = Modifier.padding(top = dimens.small3),
-            text = "${match.homeTeam.shortName} - ${match.awayTeam.shortName}",
+            text = "$homeName - $awayName",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
@@ -95,14 +111,14 @@ fun MatchItem(
         )
         Text(
             modifier = Modifier.padding(bottom = dimens.medium1),
-            text = match.utcDate,
+            text = "$fullDate ${compName.ifEmpty { "" }}",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.secondary
         )
-        AnimatedVisibility(visible = expandedItemId == match.id) {
+        AnimatedVisibility(visible = expandedItemId == matchId) {
             AnimatedVisibility(
                 visible = isHead2headLoading
             ) {
@@ -114,9 +130,9 @@ fun MatchItem(
                 )
             }
             AnimatedVisibility(
-                visible = match.id == head2head.id
+                visible = matchId == head2headId
             ) {
-                if (head2head.aggregates.numberOfMatches < 1) {
+                if (numberOfMatches < 1) {
                     Text(
                         text = stringResource(R.string.first_match_no_statistics),
                         textAlign = TextAlign.Center,
@@ -126,7 +142,14 @@ fun MatchItem(
                         color = MaterialTheme.colorScheme.secondary
                     )
                 } else {
-                    Head2headView(head2head)
+                    Head2headView(
+                        homeWinsPercentage = homeWinsPercentage,
+                        drawsPercentage = drawsPercentage,
+                        awayWinsPercentage = awayWinsPercentage,
+                        homeWins = homeWins,
+                        homeDraws = homeDraws,
+                        homeLosses = homeLosses
+                    )
                 }
             }
         }
@@ -139,12 +162,27 @@ private fun MatchItemPreview1() {
     GoalPulseTheme(darkTheme = true) {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourCompleted.first().matches.first(),
             isAhead = false,
             expandedItemId = -1,
             onMatchItemClick = {},
-            head2head = Head2head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = UUID.randomUUID().hashCode(),
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 9,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }
@@ -155,12 +193,27 @@ private fun MatchItemPreview2() {
     GoalPulseTheme {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourCompleted.first().matches.first(),
             isAhead = false,
             expandedItemId = -1,
             onMatchItemClick = {},
-            head2head = Head2head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = UUID.randomUUID().hashCode(),
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 9,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }
@@ -171,12 +224,27 @@ private fun MatchItemPreview3() {
     GoalPulseTheme(darkTheme = true) {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourAhead.first().matches.first(),
             isAhead = true,
             expandedItemId = -1,
             onMatchItemClick = {},
-            head2head = Head2head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = UUID.randomUUID().hashCode(),
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 9,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }
@@ -187,12 +255,27 @@ private fun MatchItemPreview4() {
     GoalPulseTheme {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourAhead.first().matches.first(),
             isAhead = true,
             expandedItemId = -1,
             onMatchItemClick = {},
-            head2head = Head2head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = UUID.randomUUID().hashCode(),
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 9,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }
@@ -203,14 +286,27 @@ private fun MatchItemPreview5() {
     GoalPulseTheme(darkTheme = true) {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourCompleted.first().matches.first().copy(id = 538046),
             isAhead = false,
             expandedItemId = 538046,
             onMatchItemClick = {},
-            head2head = Head2head(
-                id = 538046
-            ),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = 538046,
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 0,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }
@@ -221,12 +317,27 @@ private fun MatchItemPreview6() {
     GoalPulseTheme(darkTheme = true) {
         MatchItem(
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            match = getMockMatches().matchesByTourCompleted.first().matches.first().copy(id = 538046),
             isAhead = false,
             expandedItemId = 538046,
             onMatchItemClick = {},
-            head2head = getMockHead2Head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
+            matchId = 538046,
+            homeTeamCrest = "",
+            homeName = "Sunderland",
+            awayTeamCrest = "https://crests.football-data.org/66.png",
+            awayName = "Man United",
+            bigDate = "28.02",
+            fullDate = "2026-05-09T14:00:00Z",
+            homeScore = "1",
+            awayScore = "2",
+            numberOfMatches = 9,
+            homeWinsPercentage = 35f,
+            drawsPercentage = 20f,
+            awayWinsPercentage = 45f,
+            homeWins = 5,
+            homeDraws = 3,
+            homeLosses = 1,
+            head2headId = 538046
         )
     }
 }

@@ -1,6 +1,5 @@
 package ru.asmelnikov.team_info.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -55,7 +54,7 @@ fun SquadItem(
             modifier = Modifier
                 .weight(0.5f)
                 .padding(dimens.small1),
-            text = "${squad.age} y.o.",
+            text = squad.age,
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,

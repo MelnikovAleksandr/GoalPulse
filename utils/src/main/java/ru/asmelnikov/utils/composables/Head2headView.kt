@@ -1,4 +1,4 @@
-package ru.asmelnikov.competition_standings.components
+package ru.asmelnikov.utils.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -16,13 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.ui.theme.topGreen
 import ru.asmelnikov.utils.R
 
 @Composable
-fun Head2headView(head2head: Head2head) {
+fun Head2headView(
+    homeWinsPercentage: Float,
+    drawsPercentage: Float,
+    awayWinsPercentage: Float,
+    homeWins: Int,
+    homeDraws: Int,
+    homeLosses: Int
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,18 +37,18 @@ fun Head2headView(head2head: Head2head) {
         Row(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (head2head.aggregates.homeWinsPercentage > 0)
+            if (homeWinsPercentage > 0)
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(head2head.aggregates.homeWinsPercentage)
+                        .weight(homeWinsPercentage)
                         .background(topGreen)
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_home_wins_hyphen)} ${head2head.aggregates.homeWinsPercentage.toInt()}% (${head2head.aggregates.homeTeam.wins})",
+                        text = "${stringResource(R.string.stat_home_wins_hyphen)} ${homeWinsPercentage.toInt()}% (${homeWins})",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,
@@ -50,18 +56,18 @@ fun Head2headView(head2head: Head2head) {
                         color = MaterialTheme.colorScheme.surface
                     )
                 }
-            if (head2head.aggregates.drawsPercentage > 0)
+            if (drawsPercentage > 0)
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(head2head.aggregates.drawsPercentage)
+                        .weight(drawsPercentage)
                         .background(MaterialTheme.colorScheme.secondary)
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_draws_hyphen)} ${head2head.aggregates.drawsPercentage.toInt()}% (${head2head.aggregates.homeTeam.draws})",
+                        text = "${stringResource(R.string.stat_draws_hyphen)} ${drawsPercentage.toInt()}% (${homeDraws})",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,
@@ -69,18 +75,18 @@ fun Head2headView(head2head: Head2head) {
                         color = MaterialTheme.colorScheme.surface
                     )
                 }
-            if (head2head.aggregates.awayWinsPercentage > 0)
+            if (awayWinsPercentage > 0)
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .weight(head2head.aggregates.awayWinsPercentage)
+                        .weight(awayWinsPercentage)
                         .background(MaterialTheme.colorScheme.primary)
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_away_wins_hyphen)} ${head2head.aggregates.awayWinsPercentage.toInt()}% (${head2head.aggregates.homeTeam.losses})",
+                        text = "${stringResource(R.string.stat_away_wins_hyphen)} ${awayWinsPercentage.toInt()}% (${homeLosses})",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelLarge,
                         maxLines = 1,

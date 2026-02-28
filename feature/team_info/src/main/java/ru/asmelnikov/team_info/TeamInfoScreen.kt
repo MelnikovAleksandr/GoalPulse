@@ -1,26 +1,23 @@
 package ru.asmelnikov.team_info
 
 import android.content.res.Configuration
-import android.graphics.Color.parseColor
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,9 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.toColorInt
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
@@ -48,17 +45,23 @@ import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.domain.models.TeamInfo
+import ru.asmelnikov.domain.models.getMockMatchesAhead
+import ru.asmelnikov.domain.models.getMockMatchesComplete
+import ru.asmelnikov.domain.models.getMockTeam
 import ru.asmelnikov.team_info.components.SquadPagerList
+import ru.asmelnikov.team_info.components.TabsTeam
 import ru.asmelnikov.team_info.components.TeamInfoPage
 import ru.asmelnikov.team_info.components.TeamMatchesList
+import ru.asmelnikov.team_info.components.Toolbar
 import ru.asmelnikov.team_info.view_model.TeamInfoSideEffects
 import ru.asmelnikov.team_info.view_model.TeamInfoViewModel
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.PagerTabRow
-import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
+import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -110,13 +113,12 @@ fun TeamInfoScreen(
         onMatchesReload = viewModel::getTeamMatchesFromRemoteToLocal,
         onPersonClick = viewModel::onPersonClick,
         news = state.news,
-        isLoadingNews = state.isNewsLoading,
-        onReloadNewsClick = viewModel::getNews
+        isLoadingNews = state.isNewsLoading
     )
 
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalToolbarApi::class)
+@OptIn(ExperimentalToolbarApi::class)
 @Composable
 fun TeamInfoScreenContent(
     teamInfo: TeamInfo,
@@ -135,201 +137,170 @@ fun TeamInfoScreenContent(
     onMatchesReload: () -> Unit,
     onPersonClick: (Int) -> Unit,
     news: News,
-    isLoadingNews: Boolean,
-    onReloadNewsClick: () -> Unit
+    isLoadingNews: Boolean
 ) {
 
-    val isMaterialColors = teamInfo.crest.endsWith(".svg")
-
+    val isMaterialColors = remember(teamInfo.crest) { teamInfo.crest.endsWith(".svg") }
     var vibrant by remember { mutableStateOf("#ffffff") }
     var lightMutedSwatch by remember { mutableStateOf("#ffffff") }
     var onDarkVibrant by remember { mutableStateOf("#ffffff") }
-
-    if (colors.isNotEmpty())
-        LaunchedEffect(key1 = true) {
+    val configuration = LocalConfiguration.current
+    val scope = rememberCoroutineScope()
+    val collapsingState = rememberCollapsingToolbarScaffoldState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { TabsTeam.entries.count() }
+    )
+    LaunchedEffect(key1 = configuration.orientation) {
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            collapsingState.toolbarState.collapse()
+        }
+    }
+    LaunchedEffect(key1 = colors) {
+        if (colors.isNotEmpty()) {
             vibrant = colors["vibrant"] ?: ""
             lightMutedSwatch = colors["lightMuted"] ?: ""
             onDarkVibrant = colors["onDarkVibrant"] ?: ""
         }
-
-    val configuration = LocalConfiguration.current
-
-    val scope = rememberCoroutineScope()
-
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-    ) {
-        3
     }
-    val orientation =
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) "LANDSCAPE" else "PORTRAIT"
 
-    Box {
-
-        val state = rememberCollapsingToolbarScaffoldState()
-
-        LaunchedEffect(key1 = orientation) {
-            if (orientation == "LANDSCAPE")
-                state.toolbarState.collapse()
-        }
-
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
-            state = state,
-            enabled = orientation == "PORTRAIT",
+            state = collapsingState,
+            enabled = isPortrait(),
             scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
             toolbar = {
-                val progress = state.toolbarState.progress
-                val textSize = (18 + (18 * progress)).sp
+                Toolbar(
+                    collapsingState = collapsingState,
+                    teamName = teamInfo.name,
+                    teamCrest = teamInfo.crest,
+                    lightMutedSwatch = lightMutedSwatch,
+                    onDarkVibrant = onDarkVibrant,
+                    isMaterialColors = isMaterialColors
+                )
+            },
+            body = {
+                Column(modifier = Modifier.fillMaxSize()) {
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .pin()
-                        .background(
-                            color = if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else Color(
-                                parseColor(lightMutedSwatch)
+                    AnimatedVisibility(visible = isLoading) {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(dimens.extraSmall1),
+                            color = MaterialTheme.colorScheme.primary,
+                            trackColor = if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else Color(
+                                lightMutedSwatch.toColorInt()
                             )
                         )
-                )
+                    }
 
-                Box(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = dimens.small1,
-                            vertical = dimens.medium2
+                    PagerTabRow(
+                        tabTitles = TabsTeam.entries.map { stringResource(it.stringResId) },
+                        selectedIndex = pagerState.currentPage,
+                        modifier = Modifier.fillMaxWidth(),
+                        onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
+                        containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else Color(
+                            vibrant.toColorInt()
                         )
-                        .road(
-                            whenCollapsed = Alignment.TopEnd,
-                            whenExpanded = Alignment.Center
-                        )
-                ) {
-
-                    val imgSize = (40 + (100 * progress)).dp
-
-                    SubComposeAsyncImageCommon(
-                        imageUri = teamInfo.crest,
-                        shape = RoundedCornerShape(0.dp),
-                        size = imgSize
                     )
 
-                }
+                    HorizontalPager(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        state = pagerState,
+                        beyondViewportPageCount = 1,
+                        verticalAlignment = Alignment.Top
+                    ) { page ->
+                        when (page) {
+                            0 -> {
+                                SquadPagerList(
+                                    teamInfo = teamInfo,
+                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
+                                    itemColor = Color(vibrant.toColorInt()),
+                                    isMaterialColors = isMaterialColors,
+                                    isLoading = isLoading,
+                                    onReloadClick = onTeamInfoReload,
+                                    onPersonClick = onPersonClick
+                                )
+                            }
 
-                Text(
-                    text = teamInfo.name,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = textSize,
-                    modifier = Modifier
-                        .padding(
-                            bottom = dimens.medium1,
-                            top = dimens.medium3
-                        )
-                        .road(
-                            whenCollapsed = Alignment.TopCenter,
-                            whenExpanded = Alignment.BottomCenter
-                        ),
-                    color = Color(parseColor(onDarkVibrant))
-                )
+                            1 -> {
+                                TeamInfoPage(
+                                    teamInfo = teamInfo,
+                                    isLoading = isLoading,
+                                    onReloadClick = onTeamInfoReload,
+                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
+                                    itemColor = Color(vibrant.toColorInt()),
+                                    isMaterialColors = isMaterialColors,
+                                    news = news,
+                                    isLoadingNews = isLoadingNews
+                                )
+                            }
 
-            }) {
-
-            Column(modifier = Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier
-                        .background(
-                            if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else Color(
-                                parseColor(lightMutedSwatch)
-                            )
-                        )
-                        .fillMaxWidth()
-                        .height(dimens.extraSmall1)
-                ) {
-                    if (isLoading) LinearProgressIndicator(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.primary,
-                        trackColor = if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else Color(
-                            parseColor(lightMutedSwatch)
-                        )
-                    )
-                }
-
-                PagerTabRow(
-                    tabTitles = listOf("Squad", "Info/News", "Matches"),
-                    selectedIndex = pagerState.currentPage,
-                    modifier = Modifier.fillMaxWidth(),
-                    onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                    containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else Color(
-                        parseColor(vibrant)
-                    )
-                )
-
-                HorizontalPager(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    state = pagerState,
-                    beyondViewportPageCount = 2,
-                    verticalAlignment = Alignment.Top
-                ) { page ->
-                    when (page) {
-                        0 -> {
-                            SquadPagerList(
-                                teamInfo = teamInfo,
-                                stickyHeaderColor = Color(parseColor(lightMutedSwatch)),
-                                itemColor = Color(parseColor(vibrant)),
-                                isMaterialColors = isMaterialColors,
-                                isLoading = isLoading,
-                                onReloadClick = onTeamInfoReload,
-                                onPersonClick = onPersonClick
-                            )
-                        }
-
-                        1 -> {
-                            TeamInfoPage(
-                                teamInfo = teamInfo,
-                                isLoading = isLoading,
-                                onReloadClick = onTeamInfoReload,
-                                stickyHeaderColor = Color(parseColor(lightMutedSwatch)),
-                                itemColor = Color(parseColor(vibrant)),
-                                isMaterialColors = isMaterialColors,
-                                news = news,
-                                isLoadingNews = isLoadingNews,
-                                onReloadNewsClick = onReloadNewsClick
-                            )
-                        }
-
-                        2 -> {
-                            TeamMatchesList(
-                                matchesCompleted = matchesComplete,
-                                matchesAhead = matchesAhead,
-                                isLoading = isMatchesLoading,
-                                onReloadClick = onMatchesReload,
-                                isMaterialColors = isMaterialColors,
-                                stickyHeaderColor = Color(parseColor(lightMutedSwatch)),
-                                itemColor = Color(parseColor(vibrant)),
-                                expandedItemId = expandedItemId,
-                                onMatchItemClick = onMatchItemClick,
-                                teamId = teamId,
-                                head2head = head2head,
-                                isHead2headLoading = isHead2headLoading
-                            )
+                            2 -> {
+                                TeamMatchesList(
+                                    matchesCompleted = matchesComplete,
+                                    matchesAhead = matchesAhead,
+                                    isLoading = isMatchesLoading,
+                                    onReloadClick = onMatchesReload,
+                                    isMaterialColors = isMaterialColors,
+                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
+                                    itemColor = Color(vibrant.toColorInt()),
+                                    expandedItemId = expandedItemId,
+                                    onMatchItemClick = onMatchItemClick,
+                                    teamId = teamId,
+                                    head2head = head2head,
+                                    isHead2headLoading = isHead2headLoading
+                                )
+                            }
                         }
                     }
                 }
             }
-        }
+        )
         IconButton(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = dimens.medium1), onClick = onBackClick
+                .systemBarsPadding(),
+            onClick = onBackClick
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
         }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun TeamInfoPreview1() {
+    GoalPulseTheme {
+        TeamInfoScreenContent(
+            teamInfo = getMockTeam(),
+            isLoading = false,
+            onBackClick = {},
+            colors = emptyMap(),
+            onTeamInfoReload = {},
+            isMatchesLoading = false,
+            matchesComplete = getMockMatchesComplete(),
+            matchesAhead = getMockMatchesAhead(),
+            teamId = "-1",
+            expandedItemId = -1,
+            onMatchItemClick = {},
+            head2head = Head2head(),
+            isHead2headLoading = false,
+            onMatchesReload = {},
+            onPersonClick = {},
+            news = News(),
+            isLoadingNews = false
+        )
     }
 }
 

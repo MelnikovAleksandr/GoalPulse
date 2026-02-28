@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.SquadByPosition
 import ru.asmelnikov.utils.ui.theme.dimens
+import ru.asmelnikov.utils.R
 
 @Composable
 fun SquadHeaderItem(
@@ -43,7 +44,7 @@ fun SquadHeaderItem(
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
-        Divider(
+        HorizontalDivider(
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
         Row(
@@ -57,7 +58,7 @@ fun SquadHeaderItem(
                         vertical = dimens.extraSmall1
                     )
                     .weight(1f),
-                text = "Name",
+                text = stringResource(R.string.player_name),
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
@@ -71,7 +72,7 @@ fun SquadHeaderItem(
                         vertical = dimens.extraSmall1
                     )
                     .weight(1f),
-                text = "Nationality",
+                text = stringResource(R.string.player_nationality),
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
@@ -85,7 +86,7 @@ fun SquadHeaderItem(
                         vertical = dimens.extraSmall1
                     )
                     .weight(0.5f),
-                text = "Age",
+                text = stringResource(R.string.player_age),
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,

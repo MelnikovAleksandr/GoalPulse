@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="1500"
+    android:duration="1600"
     android:interpolator="@android:anim/linear_interpolator"
-    android:propertyName="rotation"
+    android:propertyName="trimPathEnd"
     android:repeatCount="-1"
     android:repeatMode="restart"
-    android:valueFrom="0"
-    android:valueTo="360">
-
-</objectAnimator>
+    android:valueFrom="0.32"
+    android:valueTo="1.32" />

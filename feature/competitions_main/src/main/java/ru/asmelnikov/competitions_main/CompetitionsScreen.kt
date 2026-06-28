@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +42,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -115,7 +115,6 @@ fun SharedTransitionScope.CompetitionsScreenContent(
     val topBarBackdrop = rememberLayerBackdrop()
     val contentBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop)
     val refreshBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop, topBarBackdrop)
-    var topBarHeight by remember { mutableStateOf(0.dp) }
     var headerBottomY by remember { mutableFloatStateOf(0f) }
     var pullRefreshTopY by remember { mutableFloatStateOf(0f) }
     val density = LocalDensity.current
@@ -154,7 +153,6 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                     modifier = Modifier
                         .layerBackdrop(topBarBackdrop)
                         .onGloballyPositioned { coordinates ->
-                            topBarHeight = with(density) { coordinates.size.height.toDp() }
                             headerBottomY = coordinates.positionInRoot().y + coordinates.size.height
                         },
                     backdrop = contentBackdrop,
@@ -164,6 +162,10 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                 )
             }
         ) { paddingValues ->
+            val listTopPadding = paddingValues.calculateTopPadding() + dimens.small3
+            val listState = rememberSaveable(saver = LazyListState.Saver) {
+                LazyListState()
+            }
             LiquidPullToRefreshWrapper(
                 modifier = Modifier
                     .fillMaxSize()
@@ -186,10 +188,10 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                         },
                         label = "competitions_content"
                     ) { state ->
-                        val listTopPadding = topBarHeight + dimens.small3
                         when (state) {
                             ContentState.Loading -> {
                                 LazyColumn(
+                                    state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .dismissKeyboardOnScroll()
@@ -215,7 +217,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(top = topBarHeight)
+                                        .padding(top = paddingValues.calculateTopPadding())
                                 ) {
                                     EmptyContent(
                                         withScroll = true,
@@ -231,7 +233,9 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .padding(horizontal = dimens.medium1)
                                 ) {
                                     Text(
-                                        modifier = Modifier.padding(top = topBarHeight + dimens.medium2),
+                                        modifier = Modifier.padding(
+                                            top = paddingValues.calculateTopPadding() + dimens.medium2
+                                        ),
                                         text = stringResource(R.string.competitions_not_found),
                                         style = MaterialTheme.typography.bodyLarge,
                                         color = Color.White.copy(alpha = 0.55f)
@@ -241,6 +245,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
 
                             ContentState.List -> {
                                 LazyColumn(
+                                    state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .dismissKeyboardOnScroll()

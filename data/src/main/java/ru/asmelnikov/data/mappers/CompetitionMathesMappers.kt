@@ -51,7 +51,7 @@ fun MatchDTO.toMatchEntity(): MatchEntity {
         awayTeam = this@toMatchEntity.awayTeam?.toTeamEmbeddedEntity()
         group = this@toMatchEntity.group ?: ""
         homeTeam = this@toMatchEntity.homeTeam?.toTeamEmbeddedEntity()
-        matchDay = this@toMatchEntity.matchDay ?: -1
+        matchDay = this@toMatchEntity.matchDay ?: 0
         referees = realmListOf<RefereeEntity>().apply {
             this@toMatchEntity.referees?.map { it.toRefereeEntity() }?.let { addAll(it) }
         }
@@ -71,7 +71,7 @@ fun TeamInfoDTO.toTeamEmbeddedEntity(): TeamEmbeddedEntity {
         tla = this@toTeamEmbeddedEntity.tla ?: ""
         address = this@toTeamEmbeddedEntity.address ?: ""
         clubColors = this@toTeamEmbeddedEntity.clubColors ?: ""
-        founded = this@toTeamEmbeddedEntity.founded ?: -1
+        founded = this@toTeamEmbeddedEntity.founded ?: 0
         website = this@toTeamEmbeddedEntity.website ?: ""
         venue = this@toTeamEmbeddedEntity.venue ?: ""
     }
@@ -97,8 +97,8 @@ fun ScoreDTO.toScoreEntity(): ScoreEntity {
 
 fun TimeDTO.toFullTimeEntity(): TimeEntity {
     return TimeEntity().apply {
-        away = this@toFullTimeEntity.away ?: -1
-        home = this@toFullTimeEntity.home ?: -1
+        away = this@toFullTimeEntity.away ?: 0
+        home = this@toFullTimeEntity.home ?: 0
     }
 }
 
@@ -243,8 +243,8 @@ fun ScoreEntity?.toScore(): Score {
 
 fun TimeEntity?.toTime(): Time {
     return Time(
-        away = this?.away ?: -1,
-        home = this?.home ?: -1
+        away = this?.away ?: 0,
+        home = this?.home ?: 0
     )
 }
 

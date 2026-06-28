@@ -11,7 +11,7 @@ fun NewsDTO.toNews(): News {
     return News(
         articles = articles?.map { it.toArticle() } ?: emptyList(),
         status = status ?: "",
-        totalResults = totalResults ?: -1
+        totalResults = totalResults ?: 0
     )
 }
 

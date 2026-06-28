@@ -34,9 +34,9 @@
     <string name="stage_third_place">Матч за 3-е место</string>
     <string name="stage_semi_finals">Полуфинал</string>
     <string name="stage_quarter_finals">Четвертьфинал</string>
-    <string name="stage_last_16">1/16 финала</string>
-    <string name="stage_last_32">1/32 финала</string>
-    <string name="stage_last_64">1/64 финала</string>
+    <string name="stage_last_16">1/8 финала</string>
+    <string name="stage_last_32">1/16 финала</string>
+    <string name="stage_last_64">1/32 финала</string>
     <string name="stage_round_4">Раунд 4</string>
     <string name="stage_round_3">Раунд 3</string>
     <string name="stage_round_2">Раунд 2</string>

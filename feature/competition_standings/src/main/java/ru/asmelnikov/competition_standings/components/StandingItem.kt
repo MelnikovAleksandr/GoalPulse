@@ -41,7 +41,7 @@ fun StandingItem(
     onTeamClick: (Int) -> Unit
 ) {
 
-    val itemsRow = remember {
+    val itemsRow = remember(table) {
         listOf(
             table.position.toString(),
             "",

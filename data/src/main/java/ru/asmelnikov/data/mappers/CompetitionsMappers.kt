@@ -50,7 +50,7 @@ fun AreaDTO?.toAreaEntity(): AreaEntity {
 fun CurrentSeasonDTO?.toCurrentSeasonEntity(): CurrentSeasonEntity {
     return CurrentSeasonEntity().apply {
         id = this@toCurrentSeasonEntity?.id ?: UUID.randomUUID().hashCode()
-        currentMatchDay = this@toCurrentSeasonEntity?.currentMatchDay ?: -1
+        currentMatchDay = this@toCurrentSeasonEntity?.currentMatchDay ?: 0
         endDate = this@toCurrentSeasonEntity?.endDate ?: ""
         startDate = this@toCurrentSeasonEntity?.startDate ?: ""
         winner = this@toCurrentSeasonEntity?.winner?.toTeamEmbeddedEntity()
@@ -79,7 +79,7 @@ fun AreaEntity?.toArea(): Area {
 fun CurrentSeasonEntity?.toCurrentSeason(): CurrentSeason {
     return CurrentSeason(
         id = this?.id ?: UUID.randomUUID().hashCode(),
-        currentMatchDay = this?.currentMatchDay ?: -1,
+        currentMatchDay = this?.currentMatchDay ?: 0,
         startDateEndDate = createYearRange(this?.startDate ?: "", this?.endDate ?: ""),
         endDate = this?.endDate ?: "",
         startDate = this?.startDate ?: ""

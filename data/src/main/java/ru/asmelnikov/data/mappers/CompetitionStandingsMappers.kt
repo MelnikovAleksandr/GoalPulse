@@ -43,17 +43,17 @@ fun StandingDTO.toStandingEntity(): StandingEntity {
 
 fun TableDTO?.toTableEntity(): TableEntity {
     return TableEntity().apply {
-        draw = this@toTableEntity?.draw ?: -1
+        draw = this@toTableEntity?.draw ?: 0
         form = this@toTableEntity?.form ?: ""
-        goalDifference = this@toTableEntity?.goalDifference ?: -1
-        goalsAgainst = this@toTableEntity?.goalsAgainst ?: -1
-        goalsFor = this@toTableEntity?.goalsFor ?: -1
-        lost = this@toTableEntity?.lost ?: -1
-        playedGames = this@toTableEntity?.playedGames ?: -1
-        points = this@toTableEntity?.points ?: -1
-        position = this@toTableEntity?.position ?: -1
+        goalDifference = this@toTableEntity?.goalDifference ?: 0
+        goalsAgainst = this@toTableEntity?.goalsAgainst ?: 0
+        goalsFor = this@toTableEntity?.goalsFor ?: 0
+        lost = this@toTableEntity?.lost ?: 0
+        playedGames = this@toTableEntity?.playedGames ?: 0
+        points = this@toTableEntity?.points ?: 0
+        position = this@toTableEntity?.position ?: 0
         team = this@toTableEntity?.team?.toTeamEmbeddedEntity()
-        won = this@toTableEntity?.won ?: -1
+        won = this@toTableEntity?.won ?: 0
     }
 }
 
@@ -83,7 +83,7 @@ fun StandingEntity.toStanding(): Standing {
         group = Group.safeValueOf(group),
         stage = Stage.safeValueOf(stage),
         type = TournamentType.safeValueOf(type),
-        table = this.table?.map { it.toTable() } ?: emptyList()
+        table = this.table?.map { it.toTable() }?.sortedBy { it.position } ?: emptyList()
     )
 }
 

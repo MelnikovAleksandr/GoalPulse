@@ -27,17 +27,19 @@ fun CompetitionScorersModelDTO.toCompetitionScorersEntity(): CompetitionScorersE
 fun CompetitionScorersEntity.toCompetitionScorers(): CompetitionScorers {
     return CompetitionScorers(
         id = id,
-        scorers = this.scorers?.map { it.toScorer() } ?: emptyList(),
+        scorers = this.scorers?.map { it.toScorer() }
+            ?.sortedWith(compareByDescending<Scorer> { it.goals }.thenByDescending { it.assists })
+            ?: emptyList(),
         season = this.season.toCurrentSeason(),
     )
 }
 
 fun ScorerDTO.toScorerEntity(): ScorerEntity {
     return ScorerEntity().apply {
-        assists = this@toScorerEntity.assists ?: -1
-        goals = this@toScorerEntity.goals ?: -1
-        penalties = this@toScorerEntity.penalties ?: -1
-        playedMatches = this@toScorerEntity.playedMatches ?: -1
+        assists = this@toScorerEntity.assists ?: 0
+        goals = this@toScorerEntity.goals ?: 0
+        penalties = this@toScorerEntity.penalties ?: 0
+        playedMatches = this@toScorerEntity.playedMatches ?: 0
         player = this@toScorerEntity.player?.toPlayerEntity()
         team = this@toScorerEntity.team?.toTeamEmbeddedEntity()
     }

@@ -96,6 +96,7 @@
     <string name="available_competitions">Доступные соревнования</string>
     <string name="available_competitions_count">%1$d доступных соревнований</string>
     <string name="search_competitions">Поиск соревнований</string>
+    <string name="clear_search">Очистить поиск</string>
     <string name="competitions_not_found">Соревнования не найдены</string>
     <string name="goal_pulse">Голевой пульс!</string>
     <string name="current_match_day">Текущий игровой день</string>

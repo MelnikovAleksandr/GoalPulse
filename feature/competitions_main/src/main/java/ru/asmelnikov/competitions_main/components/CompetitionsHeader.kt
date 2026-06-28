@@ -16,7 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -28,11 +34,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import kotlin.math.roundToInt
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,6 +65,7 @@ fun CompetitionsHeader(
     competitionsCount: Int,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
+    searchBarScrollState: SearchBarScrollState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -83,7 +91,7 @@ fun CompetitionsHeader(
                 Image(
                     painter = painterResource(R.mipmap.ic_launcher),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.clip(CircleShape).fillMaxSize(0.8f),
                     contentScale = ContentScale.Fit
                 )
             }
@@ -105,15 +113,73 @@ fun CompetitionsHeader(
             }
         }
 
-        Spacer(modifier = Modifier.height(dimens.small3))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clipToBounds()
+        ) {
+            CollapsibleSearchBarSection(
+                searchBarScrollState = searchBarScrollState
+            ) {
+                Spacer(modifier = Modifier.height(dimens.small3))
 
-        CompetitionsSearchBar(
-            backdrop = backdrop,
-            query = searchQuery,
-            onQueryChange = onSearchQueryChange
-        )
+                CompetitionsSearchBar(
+                    backdrop = backdrop,
+                    query = searchQuery,
+                    onQueryChange = onSearchQueryChange
+                )
+            }
+        }
     }
 }
+
+@Composable
+private fun CollapsibleSearchBarSection(
+    searchBarScrollState: SearchBarScrollState,
+    content: @Composable () -> Unit
+) {
+    val sectionHeight = remember { SectionHeightHolder() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .layout { measurable, constraints ->
+                val hideOffsetPx = searchBarScrollState.hideOffsetPx
+                val placeable = measurable.measure(constraints)
+                if (sectionHeight.px == 0f) {
+                    sectionHeight.px = placeable.height.toFloat()
+                    searchBarScrollState.updateMaxHidePx(sectionHeight.px)
+                }
+                val progress = if (sectionHeight.px > 0f) {
+                    (hideOffsetPx / sectionHeight.px).coerceIn(0f, 1f)
+                } else {
+                    0f
+                }
+                val scaleY = 1f - progress
+                val visibleHeight = (sectionHeight.px * scaleY).roundToInt().coerceAtLeast(0)
+                layout(placeable.width, visibleHeight) {
+                    placeable.place(0, 0)
+                }
+            }
+            .graphicsLayer {
+                val hideOffsetPx = searchBarScrollState.hideOffsetPx
+                val progress = if (sectionHeight.px > 0f) {
+                    (hideOffsetPx / sectionHeight.px).coerceIn(0f, 1f)
+                } else {
+                    0f
+                }
+                transformOrigin = TransformOrigin(0.5f, 0f)
+                scaleY = 1f - progress
+                alpha = 1f - progress * 0.35f
+            }
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            content()
+        }
+    }
+}
+
+private class SectionHeightHolder(var px: Float = 0f)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

@@ -28,7 +28,7 @@ fun TeamInfoDTO.toTeamInfoEntity(): TeamInfoEntity {
         clubColors = this@toTeamInfoEntity.clubColors ?: ""
         coach = this@toTeamInfoEntity.coach.toCoachEntity()
         crest = this@toTeamInfoEntity.crest ?: ""
-        founded = this@toTeamInfoEntity.founded ?: 0
+        founded = this@toTeamInfoEntity.founded ?: -1
         name = this@toTeamInfoEntity.name ?: ""
         shortName = this@toTeamInfoEntity.shortName ?: ""
         squadByPosition = convertToRealmList(this@toTeamInfoEntity.squad)

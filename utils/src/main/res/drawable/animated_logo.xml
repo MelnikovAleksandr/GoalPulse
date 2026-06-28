@@ -3,10 +3,16 @@
     android:drawable="@drawable/splash_logo">
 
     <target
-        android:name="animationGroupStripes"
-        android:animation="@animator/logo_stripes_animator" />
+        android:name="pulseGlow"
+        android:animation="@animator/logo_pulse_trim_start_animator" />
     <target
-        android:name="animationGroupBall"
-        android:animation="@animator/logo_ball_animator" />
+        android:name="pulseGlow"
+        android:animation="@animator/logo_pulse_trim_end_animator" />
+    <target
+        android:name="pulseLine"
+        android:animation="@animator/logo_pulse_trim_start_animator" />
+    <target
+        android:name="pulseLine"
+        android:animation="@animator/logo_pulse_trim_end_animator" />
 
 </animated-vector>

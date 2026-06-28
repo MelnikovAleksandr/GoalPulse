@@ -22,7 +22,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -36,22 +38,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competitions_main.components.CompetitionItem
 import ru.asmelnikov.competitions_main.components.CompetitionsScaffoldTopBar
 import ru.asmelnikov.competitions_main.components.LiquidPullToRefreshWrapper
 import ru.asmelnikov.competitions_main.components.MainBackVideo
+import ru.asmelnikov.competitions_main.components.SearchBarScrollState
 import ru.asmelnikov.competitions_main.components.ShimmerListItem
+import ru.asmelnikov.competitions_main.components.rememberSearchBarScrollState
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenSideEffects
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenViewModel
 import ru.asmelnikov.domain.models.Competition
@@ -126,6 +134,23 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         }
     }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    val searchBarScrollState = rememberSearchBarScrollState()
+    val listState = rememberSaveable(saver = LazyListState.Saver) {
+        LazyListState()
+    }
+
+    LaunchedEffect(listState, searchBarScrollState) {
+        snapshotFlow {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+            .distinctUntilChanged()
+            .filter { it }
+            .collect {
+                searchBarScrollState.expand()
+            }
+    }
+
+    val focusManager = LocalFocusManager.current
 
     val filteredComps = remember(comps, searchQuery) {
         if (searchQuery.isBlank()) {
@@ -158,14 +183,12 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                     backdrop = contentBackdrop,
                     competitionsCount = comps.size,
                     searchQuery = searchQuery,
-                    onSearchQueryChange = { searchQuery = it }
+                    onSearchQueryChange = { searchQuery = it },
+                    searchBarScrollState = searchBarScrollState
                 )
             }
         ) { paddingValues ->
             val listTopPadding = paddingValues.calculateTopPadding() + dimens.small3
-            val listState = rememberSaveable(saver = LazyListState.Saver) {
-                LazyListState()
-            }
             LiquidPullToRefreshWrapper(
                 modifier = Modifier
                     .fillMaxSize()
@@ -194,7 +217,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                     state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .dismissKeyboardOnScroll()
+                                        .competitionsListScrollEffects(searchBarScrollState, focusManager)
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.small3),
                                     contentPadding = PaddingValues(
@@ -248,7 +271,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                     state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .dismissKeyboardOnScroll()
+                                        .competitionsListScrollEffects(searchBarScrollState, focusManager)
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.small3),
                                     contentPadding = PaddingValues(
@@ -289,21 +312,27 @@ private enum class ContentState {
 }
 
 @Composable
-private fun Modifier.dismissKeyboardOnScroll(): Modifier {
-    val focusManager = LocalFocusManager.current
-    return nestedScroll(
-        remember(focusManager) {
-            object : NestedScrollConnection {
-                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                    if (source == NestedScrollSource.UserInput) {
-                        focusManager.clearFocus()
-                    }
-                    return Offset.Zero
+private fun Modifier.competitionsListScrollEffects(
+    searchBarScrollState: SearchBarScrollState,
+    focusManager: FocusManager,
+): Modifier = nestedScroll(
+    remember(searchBarScrollState, focusManager) {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (source == NestedScrollSource.UserInput && available.y != 0f) {
+                    focusManager.clearFocus()
+                    searchBarScrollState.onScroll(-available.y)
                 }
+                return Offset.Zero
+            }
+
+            override suspend fun onPreFling(available: Velocity): Velocity {
+                searchBarScrollState.snapToNearest()
+                return Velocity.Zero
             }
         }
-    )
-}
+    }
+)
 
 @Preview(showBackground = true, locale = "ru", name = "with data")
 @Composable

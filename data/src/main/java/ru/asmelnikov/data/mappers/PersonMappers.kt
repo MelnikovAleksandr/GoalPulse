@@ -32,7 +32,7 @@ fun TeamInfoDTO?.toCurrentTeam(): CurrentTeam {
         area = this?.area.toArea(),
         clubColors = this?.clubColors ?: "",
         crest = this?.crest ?: "",
-        founded = this?.founded ?: 0,
+        founded = this?.founded ?: -1,
         name = this?.name ?: "",
         shortName = this?.shortName ?: "",
         tla = this?.tla ?: "",

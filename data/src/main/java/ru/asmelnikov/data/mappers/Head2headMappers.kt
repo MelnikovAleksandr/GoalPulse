@@ -33,11 +33,11 @@ fun AggregatesDTO?.toAggregates(): Aggregates {
     }
 
     return Aggregates(
-        numberOfMatches = this?.numberOfMatches ?: -1,
-        totalGoals = this?.totalGoals ?: -1,
-        homeWinsPercentage = homeWinsPercentage ?: -1f,
-        awayWinsPercentage = awayWinsPercentage ?: -1f,
-        drawsPercentage = drawsPercentage ?: -1f,
+        numberOfMatches = this?.numberOfMatches ?: 0,
+        totalGoals = this?.totalGoals ?: 0,
+        homeWinsPercentage = homeWinsPercentage ?: 0f,
+        awayWinsPercentage = awayWinsPercentage ?: 0f,
+        drawsPercentage = drawsPercentage ?: 0f,
         awayTeam = this?.awayTeam.toTeamH2H(),
         homeTeam = this?.homeTeam.toTeamH2H()
     )
@@ -46,10 +46,10 @@ fun AggregatesDTO?.toAggregates(): Aggregates {
 
 fun TeamH2HDTO?.toTeamH2H(): TeamH2H {
     return TeamH2H(
-        draws = this?.draws ?: -1,
-        id = this?.id ?: -1,
-        losses = this?.losses ?: -1,
+        draws = this?.draws ?: 0,
+        id = this?.id ?: 0,
+        losses = this?.losses ?: 0,
         name = this?.name ?: "",
-        wins = this?.wins ?: -1
+        wins = this?.wins ?: 0
     )
 }

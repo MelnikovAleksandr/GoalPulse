@@ -28,7 +28,7 @@ fun TeamInfoDTO.toTeamInfoEntity(): TeamInfoEntity {
         clubColors = this@toTeamInfoEntity.clubColors ?: ""
         coach = this@toTeamInfoEntity.coach.toCoachEntity()
         crest = this@toTeamInfoEntity.crest ?: ""
-        founded = this@toTeamInfoEntity.founded ?: -1
+        founded = this@toTeamInfoEntity.founded ?: 0
         name = this@toTeamInfoEntity.name ?: ""
         shortName = this@toTeamInfoEntity.shortName ?: ""
         squadByPosition = convertToRealmList(this@toTeamInfoEntity.squad)
@@ -117,7 +117,7 @@ fun convertToRealmList(squadDTOList: List<PersonDTO>?): RealmList<SquadByPositio
         squadDTOs.forEach { squadDTO ->
             val squadEntity = PersonEntity().apply {
                 dateOfBirth = squadDTO.dateOfBirth ?: ""
-                id = squadDTO.id ?: -1
+                id = squadDTO.id ?: 0
                 name = squadDTO.name ?: ""
                 nationality = squadDTO.nationality ?: ""
             }

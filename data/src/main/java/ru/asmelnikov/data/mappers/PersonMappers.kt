@@ -21,7 +21,7 @@ fun PersonInfoDTO.toPerson(): Person {
         nationality = nationality ?: "",
         position = PlayerPosition.fromValue(position),
         section = section ?: "",
-        shirtNumber = shirtNumber ?: -1
+        shirtNumber = shirtNumber ?: 0
     )
 }
 
@@ -32,7 +32,7 @@ fun TeamInfoDTO?.toCurrentTeam(): CurrentTeam {
         area = this?.area.toArea(),
         clubColors = this?.clubColors ?: "",
         crest = this?.crest ?: "",
-        founded = this?.founded ?: -1,
+        founded = this?.founded ?: 0,
         name = this?.name ?: "",
         shortName = this?.shortName ?: "",
         tla = this?.tla ?: "",

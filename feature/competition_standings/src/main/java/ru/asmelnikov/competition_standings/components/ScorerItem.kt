@@ -35,7 +35,7 @@ fun ScorerItem(
     onPersonClick: (Int) -> Unit
 ) {
 
-    val itemsRow = remember {
+    val itemsRow = remember(scorer) {
         listOf(
             scorer.playedMatches.toString(),
             scorer.goals.toString(),

@@ -55,7 +55,7 @@ fun ThirdPagerScreenMatches(
     }
 
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = 0
     ) {
         tabListState.count()
     }

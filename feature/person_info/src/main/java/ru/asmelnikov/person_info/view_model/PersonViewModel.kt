@@ -36,7 +36,7 @@ class PersonViewModel(
                 reduce {
                     state.copy(
                         isLoading = false,
-                        person = person.data ?: Person(),
+                        person = person.data ?: Person()
                     )
                 }
             }

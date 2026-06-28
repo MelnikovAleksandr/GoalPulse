@@ -8,10 +8,10 @@ plugins {
 
 android {
     namespace = "ru.asmelnikov.person_info"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

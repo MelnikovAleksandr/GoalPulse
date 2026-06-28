@@ -17,7 +17,7 @@ enum class CompetitionType(
     val type: String,
     val top: Int = 0,
     val second: Int = 0,
-    val last: Int = 0,
+    val last: Int = 0
 ) {
     BSA("BSA"), // todo
     ELC("ELC", top = 1, second = 5, last = 3),

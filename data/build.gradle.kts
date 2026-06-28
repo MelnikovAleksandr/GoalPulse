@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace = "ru.asmelnikov.data"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

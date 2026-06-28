@@ -18,15 +18,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kyant.backdrop.backdrops.LayerBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.getMockCompetitionsList
 import ru.asmelnikov.utils.R
@@ -38,26 +40,23 @@ import ru.asmelnikov.utils.ui.theme.dimens
 fun SharedTransitionScope.CompetitionItem(
     modifier: Modifier = Modifier,
     competition: Competition,
+    backdrop: LayerBackdrop,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onCompClick: (String, String) -> Unit
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                onCompClick(competition.id.toString(), competition.emblem)
-            },
-        shape = RoundedCornerShape(0.dp),
+    LiquidCompetitionCard(
+        backdrop = backdrop,
+        modifier = modifier.clickable {
+            onCompClick(competition.id.toString(), competition.emblem)
+        }
     ) {
-
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(dimens.medium1),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             SubComposeAsyncImageCommon(
                 modifier = Modifier.sharedElement(
                     rememberSharedContentState(key = competition.emblem),
@@ -71,7 +70,6 @@ fun SharedTransitionScope.CompetitionItem(
             )
 
             Column(
-                modifier = Modifier,
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -79,7 +77,8 @@ fun SharedTransitionScope.CompetitionItem(
                     Text(
                         modifier = Modifier.basicMarquee(Int.MAX_VALUE),
                         text = competition.name,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
                     )
                     Spacer(modifier = Modifier.width(dimens.small1))
 
@@ -92,15 +91,18 @@ fun SharedTransitionScope.CompetitionItem(
 
                 Text(
                     text = "${stringResource(R.string.current_match_day)} - ${competition.currentSeason.currentMatchDay}",
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White.copy(alpha = 0.85f)
                 )
                 Text(
                     text = "${stringResource(R.string.label_start_date)} - ${competition.currentSeason.startDate}",
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White.copy(alpha = 0.85f)
                 )
                 Text(
                     text = "${stringResource(R.string.label_end_date)} - ${competition.currentSeason.endDate}",
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White.copy(alpha = 0.85f)
                 )
             }
         }
@@ -114,11 +116,13 @@ private fun CompetitionItemPreview() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(Color.Black)
         ) {
             AnimatedVisibility(visible = true) {
+                val backdrop = rememberLayerBackdrop()
                 CompetitionItem(
                     competition = getMockCompetitionsList().first(),
+                    backdrop = backdrop,
                     animatedVisibilityScope = this,
                     onCompClick = { _, _ -> }
                 )

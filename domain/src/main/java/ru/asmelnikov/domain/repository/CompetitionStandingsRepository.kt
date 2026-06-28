@@ -26,7 +26,7 @@ interface CompetitionStandingsRepository {
     ): Resource<Boolean>
 
     suspend fun getAllMatchesFlowFromLocal(
-        compId: String,
+        compId: String
     ): Flow<Matches?>
 
     suspend fun getHead2headById(

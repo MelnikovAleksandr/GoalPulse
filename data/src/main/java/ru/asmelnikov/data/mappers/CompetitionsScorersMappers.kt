@@ -30,7 +30,7 @@ fun CompetitionScorersEntity.toCompetitionScorers(): CompetitionScorers {
         scorers = this.scorers?.map { it.toScorer() }
             ?.sortedWith(compareByDescending<Scorer> { it.goals }.thenByDescending { it.assists })
             ?: emptyList(),
-        season = this.season.toCurrentSeason(),
+        season = this.season.toCurrentSeason()
     )
 }
 
@@ -65,7 +65,7 @@ fun ScorerEntity.toScorer(): Scorer {
         penalties = penalties,
         playedMatches = playedMatches,
         player = this.player.toPlayer(),
-        team = this.team.toTeam(),
+        team = this.team.toTeam()
     )
 }
 

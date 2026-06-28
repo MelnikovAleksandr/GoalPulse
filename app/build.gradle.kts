@@ -25,12 +25,12 @@ android {
     }
 
     namespace = "ru.asmelnikov.goalpulse"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "ru.asmelnikov.goalpulse"
-        minSdk = 26
-        targetSdk = 36
+        minSdk = 33
+        targetSdk = 37
         versionCode = 3
         versionName = "3.0"
 

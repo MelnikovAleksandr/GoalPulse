@@ -63,7 +63,7 @@ fun TeamMatchesList(
     }
 
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = 0
     ) {
         tabListState.count()
     }

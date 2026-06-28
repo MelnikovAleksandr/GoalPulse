@@ -51,7 +51,7 @@ class CompetitionStandingsViewModel(
                 reduce {
                     state.copy(
                         head2head = head2head.data ?: Head2head(),
-                        isHead2headLoading = false,
+                        isHead2headLoading = false
                     )
                 }
             }

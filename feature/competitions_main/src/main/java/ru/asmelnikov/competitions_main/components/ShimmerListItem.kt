@@ -13,28 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
+import com.kyant.backdrop.backdrops.LayerBackdrop
 import ru.asmelnikov.utils.composables.shimmerEffect
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun ShimmerListItem(
+    backdrop: LayerBackdrop,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    LiquidCompetitionCard(
+        backdrop = backdrop,
         modifier = modifier
-            .fillMaxWidth()
-            .height(140.dp)
-            .shimmerEffect(),
-        shape = RoundedCornerShape(0.dp),
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,7 +37,6 @@ fun ShimmerListItem(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
@@ -52,13 +46,11 @@ fun ShimmerListItem(
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.7f)
@@ -66,7 +58,7 @@ fun ShimmerListItem(
                             .shimmerEffect()
                     )
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(dimens.small1))
 
                     Box(
                         modifier = Modifier

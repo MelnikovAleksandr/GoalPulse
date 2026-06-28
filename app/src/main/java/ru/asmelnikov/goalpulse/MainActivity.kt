@@ -1,12 +1,15 @@
 package ru.asmelnikov.goalpulse
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -20,7 +23,10 @@ import ru.asmelnikov.utils.composables.rememberAppState
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+        )
+        window.isNavigationBarContrastEnforced = false
         installSplashScreen()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
@@ -29,11 +35,14 @@ class MainActivity : ComponentActivity() {
 
             GoalPulseTheme {
                 Scaffold(
-                    contentWindowInsets = WindowInsets.navigationBars,
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.background,
                     snackbarHost = {
-                        SnackbarHost(appState.snackbarState)
+                        SnackbarHost(
+                            hostState = appState.snackbarState,
+                            modifier = Modifier.navigationBarsPadding()
+                        )
                     }
                 ) { paddingValues ->
                     SharedTransitionLayout {

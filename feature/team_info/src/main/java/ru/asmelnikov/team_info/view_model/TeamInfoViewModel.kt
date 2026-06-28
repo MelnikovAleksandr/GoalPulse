@@ -53,7 +53,7 @@ class TeamInfoViewModel(
                 reduce {
                     state.copy(
                         head2head = head2head.data ?: Head2head(),
-                        isHead2headLoading = false,
+                        isHead2headLoading = false
                     )
                 }
             }
@@ -160,7 +160,7 @@ class TeamInfoViewModel(
                 reduce {
                     state.copy(
                         isNewsLoading = false,
-                        news = news.data ?: News(),
+                        news = news.data ?: News()
                     )
                 }
             }

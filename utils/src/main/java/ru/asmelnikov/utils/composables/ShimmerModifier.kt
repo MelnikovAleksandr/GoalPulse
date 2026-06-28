@@ -35,7 +35,7 @@ fun Modifier.shimmerEffect(): Modifier = composed {
             colors = listOf(
                 Color(0xFFB8B5B5),
                 Color(0xFF8F8B8B),
-                Color(0xFFB8B5B5),
+                Color(0xFFB8B5B5)
             ),
             start = Offset(startOffsetX, 0f),
             end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())

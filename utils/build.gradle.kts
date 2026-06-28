@@ -10,10 +10,10 @@ plugins {
 
 android {
     namespace = "ru.asmelnikov.utils"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -97,6 +97,10 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
+
+    // Liquid Glass
+    implementation(libs.backdrop)
+    implementation(libs.kyant.shapes)
 }
 
 fun getApiKey(propertyKey: String): String {

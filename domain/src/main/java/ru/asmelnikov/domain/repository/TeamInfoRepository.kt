@@ -21,6 +21,6 @@ interface TeamInfoRepository {
     ): Resource<Boolean>
 
     suspend fun getTeamMatchesFlowFromLocal(
-        teamId: String,
+        teamId: String
     ): Flow<TeamMatches?>
 }

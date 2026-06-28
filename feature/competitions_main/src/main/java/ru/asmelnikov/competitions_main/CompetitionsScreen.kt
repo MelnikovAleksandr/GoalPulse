@@ -8,39 +8,49 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ScrollStrategy
-import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
+import androidx.compose.ui.unit.dp
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competitions_main.components.CompetitionItem
-import ru.asmelnikov.competitions_main.components.GifImage
+import ru.asmelnikov.competitions_main.components.CompetitionsScaffoldTopBar
+import ru.asmelnikov.competitions_main.components.LiquidPullToRefreshWrapper
+import ru.asmelnikov.competitions_main.components.MainBackVideo
 import ru.asmelnikov.competitions_main.components.ShimmerListItem
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenSideEffects
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenViewModel
@@ -53,7 +63,6 @@ import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
-import ru.asmelnikov.utils.composables.PullToRefreshWrapper
 
 @Composable
 fun SharedTransitionScope.CompetitionsScreen(
@@ -91,7 +100,6 @@ fun SharedTransitionScope.CompetitionsScreen(
         onCompClick = viewModel::onCompClick,
         animatedVisibilityScope = animatedVisibilityScope
     )
-
 }
 
 @Composable
@@ -100,112 +108,192 @@ fun SharedTransitionScope.CompetitionsScreenContent(
     updateComps: () -> Unit,
     isLoading: Boolean,
     onCompClick: (String, String) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-
-    val collapsingState = rememberCollapsingToolbarScaffoldState()
-    val titleText = when (collapsingState.toolbarState.progress) {
-        0f -> stringResource(R.string.available_competitions)
-        else -> stringResource(R.string.goal_pulse)
+    val videoBackdrop = rememberLayerBackdrop()
+    val listBackdrop = rememberLayerBackdrop()
+    val topBarBackdrop = rememberLayerBackdrop()
+    val contentBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop)
+    val refreshBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop, topBarBackdrop)
+    var topBarHeight by remember { mutableStateOf(0.dp) }
+    var headerBottomY by remember { mutableFloatStateOf(0f) }
+    var pullRefreshTopY by remember { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
+    val refreshIndicatorTopOffset by remember(density) {
+        derivedStateOf {
+            with(density) {
+                (headerBottomY - pullRefreshTopY).coerceAtLeast(0f).toDp()
+            }
+        }
     }
-    val textSize = remember(collapsingState.toolbarState.progress) {
-        (18 + (30 - 12) * collapsingState.toolbarState.progress).sp
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+
+    val filteredComps = remember(comps, searchQuery) {
+        if (searchQuery.isBlank()) {
+            comps
+        } else {
+            comps.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
     }
 
-    CollapsingToolbarScaffold(
-        modifier = Modifier.fillMaxSize(),
-        state = collapsingState,
-        scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
-        toolbar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimens.large)
-                    .pin()
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+        MainBackVideo(
+            modifier = Modifier
+                .fillMaxSize()
+                .layerBackdrop(videoBackdrop),
+            videoResId = R.raw.main_back_video,
+            reverseVideoResId = R.raw.main_back_video_reverse
+        )
 
-            GifImage(
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = Color.Transparent,
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            topBar = {
+                CompetitionsScaffoldTopBar(
+                    modifier = Modifier
+                        .layerBackdrop(topBarBackdrop)
+                        .onGloballyPositioned { coordinates ->
+                            topBarHeight = with(density) { coordinates.size.height.toDp() }
+                            headerBottomY = coordinates.positionInRoot().y + coordinates.size.height
+                        },
+                    backdrop = contentBackdrop,
+                    competitionsCount = comps.size,
+                    searchQuery = searchQuery,
+                    onSearchQueryChange = { searchQuery = it }
+                )
+            }
+        ) { paddingValues ->
+            LiquidPullToRefreshWrapper(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .parallax(),
-                alpha = collapsingState.toolbarState.progress
-            )
-
-            Spacer(
-                Modifier
-                    .fillMaxWidth()
-                    .height(dimens.large)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                MaterialTheme.colorScheme.background
-                            )
-                        )
-                    )
-                    .road(
-                        whenCollapsed = Alignment.BottomCenter,
-                        whenExpanded = Alignment.BottomCenter
-                    )
-            )
-
-            Text(
-                text = titleText,
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontSize = textSize
-                ),
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .road(whenCollapsed = Alignment.TopStart, whenExpanded = Alignment.BottomEnd)
-                    .padding(dimens.small3)
-            )
-        },
-        body = {
-            AnimatedContent(targetState = comps.isEmpty()) { isListEmpty ->
-                when {
-                    isListEmpty && isLoading -> {
-                        Column(
-                            modifier = Modifier.verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(dimens.small3)
-                        ) {
-                            repeat(10) {
-                                ShimmerListItem()
+                    .fillMaxSize()
+                    .onGloballyPositioned { coordinates ->
+                        pullRefreshTopY = coordinates.positionInRoot().y
+                    },
+                backdrop = refreshBackdrop,
+                isRefreshing = isLoading,
+                onRefresh = updateComps,
+                topOffset = refreshIndicatorTopOffset
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    AnimatedContent(
+                        modifier = Modifier.fillMaxSize(),
+                        targetState = when {
+                            isLoading && comps.isEmpty() -> ContentState.Loading
+                            comps.isEmpty() -> ContentState.Empty
+                            filteredComps.isEmpty() -> ContentState.NotFound
+                            else -> ContentState.List
+                        },
+                        label = "competitions_content"
+                    ) { state ->
+                        val listTopPadding = topBarHeight + dimens.small3
+                        when (state) {
+                            ContentState.Loading -> {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .dismissKeyboardOnScroll()
+                                        .layerBackdrop(listBackdrop),
+                                    verticalArrangement = Arrangement.spacedBy(dimens.small3),
+                                    contentPadding = PaddingValues(
+                                        start = dimens.medium1,
+                                        end = dimens.medium1,
+                                        top = listTopPadding,
+                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3
+                                    )
+                                ) {
+                                    items(10) {
+                                        ShimmerListItem(backdrop = videoBackdrop)
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.navigationBarsPadding())
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    isListEmpty -> {
-                        EmptyContent(
-                            withScroll = true,
-                            onReloadClick = updateComps
-                        )
-                    }
-
-                    else -> {
-                        PullToRefreshWrapper(
-                            isRefreshing = isLoading,
-                            onRefresh = updateComps,
-                            enabled = collapsingState.toolbarState.progress == 1f
-                        ) {
-                            LazyColumn(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.spacedBy(dimens.small3)
-                            ) {
-                                items(items = comps, key = { it.id }) { comp ->
-                                    CompetitionItem(
-                                        modifier = Modifier.animateItem(),
-                                        competition = comp,
-                                        animatedVisibilityScope = animatedVisibilityScope,
-                                        onCompClick = onCompClick
+                            ContentState.Empty -> {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(top = topBarHeight)
+                                ) {
+                                    EmptyContent(
+                                        withScroll = true,
+                                        onReloadClick = updateComps
                                     )
                                 }
-                                item {
-                                    Spacer(modifier = Modifier.height(dimens.medium4))
+                            }
+
+                            ContentState.NotFound -> {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = dimens.medium1)
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(top = topBarHeight + dimens.medium2),
+                                        text = stringResource(R.string.competitions_not_found),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        color = Color.White.copy(alpha = 0.55f)
+                                    )
+                                }
+                            }
+
+                            ContentState.List -> {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .dismissKeyboardOnScroll()
+                                        .layerBackdrop(listBackdrop),
+                                    verticalArrangement = Arrangement.spacedBy(dimens.small3),
+                                    contentPadding = PaddingValues(
+                                        start = dimens.medium1,
+                                        end = dimens.medium1,
+                                        top = listTopPadding,
+                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3
+                                    )
+                                ) {
+                                    items(items = filteredComps, key = { it.id }) { comp ->
+                                        CompetitionItem(
+                                            modifier = Modifier.animateItem(),
+                                            competition = comp,
+                                            backdrop = videoBackdrop,
+                                            animatedVisibilityScope = animatedVisibilityScope,
+                                            onCompClick = onCompClick
+                                        )
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.navigationBarsPadding())
+                                    }
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+
+private enum class ContentState {
+    Loading,
+    Empty,
+    NotFound,
+    List,
+}
+
+@Composable
+private fun Modifier.dismissKeyboardOnScroll(): Modifier {
+    val focusManager = LocalFocusManager.current
+    return nestedScroll(
+        remember(focusManager) {
+            object : NestedScrollConnection {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    if (source == NestedScrollSource.UserInput) {
+                        focusManager.clearFocus()
+                    }
+                    return Offset.Zero
                 }
             }
         }
@@ -277,5 +365,3 @@ private fun CompetitionsScreenContentPreview3() {
         }
     }
 }
-
-

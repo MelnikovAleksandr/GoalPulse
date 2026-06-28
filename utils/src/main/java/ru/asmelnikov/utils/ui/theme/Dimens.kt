@@ -14,10 +14,16 @@ data class Dimens(
     val medium2: Dp = 0.dp,
     val medium3: Dp = 0.dp,
     val medium4: Dp = 0.dp,
+    val medium5: Dp = 0.dp,
     val large: Dp = 0.dp,
     val champLogoDefaultSize: Dp = 80.dp,
     val emptyContentImageSize: Dp = 240.dp,
-    val mainGifHeight: Dp = 280.dp
+    val mainGifHeight: Dp = 280.dp,
+    val searchBarHeight: Dp = 44.dp,
+    val searchBarIconSize: Dp = 20.dp,
+    val pullRefreshIndicatorStrokeWidth: Dp = 2.5.dp,
+    val competitionCardHeight: Dp = 140.dp,
+    val liquidCardCornerRadius: Dp = 20.dp
 )
 
 val CompactSmallDimens = Dimens(
@@ -30,7 +36,13 @@ val CompactSmallDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 80.dp
+    medium5 = 50.dp,
+    large = 80.dp,
+    searchBarHeight = 44.dp,
+    searchBarIconSize = 20.dp,
+    pullRefreshIndicatorStrokeWidth = 2.5.dp,
+    competitionCardHeight = 140.dp,
+    liquidCardCornerRadius = 20.dp
 )
 
 val CompactMediumDimens = Dimens(
@@ -43,7 +55,13 @@ val CompactMediumDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 80.dp
+    medium5 = 50.dp,
+    large = 80.dp,
+    searchBarHeight = 44.dp,
+    searchBarIconSize = 20.dp,
+    pullRefreshIndicatorStrokeWidth = 2.5.dp,
+    competitionCardHeight = 140.dp,
+    liquidCardCornerRadius = 20.dp
 )
 
 val CompactDimens = Dimens(
@@ -56,7 +74,13 @@ val CompactDimens = Dimens(
     medium2 = 24.dp,
     medium3 = 32.dp,
     medium4 = 40.dp,
-    large = 80.dp
+    medium5 = 50.dp,
+    large = 80.dp,
+    searchBarHeight = 44.dp,
+    searchBarIconSize = 20.dp,
+    pullRefreshIndicatorStrokeWidth = 2.5.dp,
+    competitionCardHeight = 140.dp,
+    liquidCardCornerRadius = 20.dp
 )
 
 val MediumDimens = Dimens(
@@ -70,10 +94,16 @@ val MediumDimens = Dimens(
     medium2 = 32.dp,
     medium3 = 40.dp,
     medium4 = 48.dp,
+    medium5 = 60.dp,
     large = 100.dp,
     champLogoDefaultSize = 100.dp,
     emptyContentImageSize = 300.dp,
-    mainGifHeight = 320.dp
+    mainGifHeight = 320.dp,
+    searchBarHeight = 48.dp,
+    searchBarIconSize = 24.dp,
+    pullRefreshIndicatorStrokeWidth = 2.5.dp,
+    competitionCardHeight = 160.dp,
+    liquidCardCornerRadius = 24.dp
 )
 
 val ExpandedDimens = Dimens(
@@ -87,8 +117,14 @@ val ExpandedDimens = Dimens(
     medium2 = 32.dp,
     medium3 = 40.dp,
     medium4 = 48.dp,
+    medium5 = 60.dp,
     large = 100.dp,
     champLogoDefaultSize = 140.dp,
     emptyContentImageSize = 360.dp,
-    mainGifHeight = 400.dp
+    mainGifHeight = 400.dp,
+    searchBarHeight = 52.dp,
+    searchBarIconSize = 24.dp,
+    pullRefreshIndicatorStrokeWidth = 3.dp,
+    competitionCardHeight = 180.dp,
+    liquidCardCornerRadius = 24.dp
 )

@@ -64,7 +64,7 @@ fun NewsList(
                         )
                     }
                     items(
-                        items = news.articles,
+                        items = news.articles
                     ) { article ->
                         ArticleItem(
                             modifier = Modifier.animateItem(),

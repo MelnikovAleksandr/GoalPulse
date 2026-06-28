@@ -8,10 +8,10 @@ plugins {
 
 android {
     namespace = "ru.asmelnikov.competitions_main"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.animation)
     implementation(libs.androidx.material.icons.core)
+    implementation("androidx.compose.material:material-icons-extended")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -69,8 +70,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Collapsing Toolbar
-    implementation(libs.toolbar.compose)
+    // Liquid Glass
+    implementation(libs.backdrop)
+    implementation(libs.kyant.shapes)
+
+    // Video background
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui.compose)
 
     // Coil
     implementation(libs.coil.compose)

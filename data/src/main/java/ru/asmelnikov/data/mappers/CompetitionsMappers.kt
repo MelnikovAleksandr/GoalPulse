@@ -92,6 +92,6 @@ fun TeamEmbeddedEntity?.toTeam(): Team {
         crest = this?.crest ?: "",
         name = this?.name ?: "",
         shortName = this?.shortName ?: "",
-        tla = this?.tla ?: "",
+        tla = this?.tla ?: ""
     )
 }

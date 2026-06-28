@@ -33,7 +33,7 @@ fun ScoreItem(
         modifier = Modifier.padding(horizontal = dimens.medium1),
         colors = CardDefaults.cardColors(
             containerColor = color
-        ),
+        )
     ) {
         Row(
             modifier = Modifier.padding(dimens.small1),

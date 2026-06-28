@@ -57,7 +57,7 @@ interface ColorGenerator {
                 ),
                 "darkMuted" to parseColorSwatch(
                     color = Palette.from(bitmap).generate().darkMutedSwatch
-                ),
+                )
             )
         }
 

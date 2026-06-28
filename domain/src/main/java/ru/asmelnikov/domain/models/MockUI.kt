@@ -1386,7 +1386,7 @@ fun getMockHead2Head(): Head2head {
                 losses = 1,
                 wins = 3
             )
-        ),
+        )
     )
 }
 

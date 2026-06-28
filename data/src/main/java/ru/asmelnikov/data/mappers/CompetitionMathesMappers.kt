@@ -209,7 +209,7 @@ fun MatchEntity.toMatches(): Match {
         stage = Stage.safeValueOf(stage),
         status = MatchStatus.safeValueOf(status),
         utcDate = utcDate.toDate()?.formatTo("dd MMMM yyyy, HH:mm") ?: "",
-        bigDate = utcDate.toDate()?.formatTo("dd.MM") ?: "",
+        bigDate = utcDate.toDate()?.formatTo("dd.MM") ?: ""
     )
 }
 
@@ -237,7 +237,7 @@ fun ScoreEntity?.toScore(): Score {
         duration = this?.duration ?: "",
         winner = Winner.safeValueOf(this?.winner ?: ""),
         fullTime = this?.fullTime.toTime(),
-        halfTime = this?.halfTime.toTime(),
+        halfTime = this?.halfTime.toTime()
     )
 }
 

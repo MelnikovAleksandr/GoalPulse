@@ -134,25 +134,11 @@ fun filterAheadMatches(matches: MatchesEntity): List<MatchesByTour> {
         it.status != "FINISHED" && it.homeTeam?.id != null && it.awayTeam?.id != null
     } ?: emptyList()
 
-    val groupedMatches = filteredMatches.groupBy { it.stage }
-    val result = mutableListOf<MatchesByTour>()
-
-    for ((stage, matchesByStage) in groupedMatches) {
-        val matchesByTourEntities = matchesByStage.groupBy { it.matchDay }
-        val sortedTourEntities = matchesByTourEntities.entries.sortedBy { it.key }
-
-        for ((matchDay, matchesByMatchDay) in sortedTourEntities) {
-            val domainMatches = matchesByMatchDay.map { it.toMatches() }
-            val matchesByTour = MatchesByTour(
-                matchDay = matchDay,
-                stage = Stage.safeValueOf(stage),
-                seasonType = TournamentType.safeValueOf(matches.seasonType),
-                matches = domainMatches
-            )
-            result.add(matchesByTour)
-        }
-    }
-    return result
+    return groupMatchesByTour(
+        matches = filteredMatches,
+        seasonType = matches.seasonType,
+        ascending = true
+    )
 }
 
 fun filterCompletedMatches(matches: MatchesEntity): List<MatchesByTour> {
@@ -160,39 +146,43 @@ fun filterCompletedMatches(matches: MatchesEntity): List<MatchesByTour> {
         it.status == "FINISHED" && it.homeTeam?.id != null && it.awayTeam?.id != null
     } ?: emptyList()
 
-    val groupedMatches = filteredMatches.groupBy { it.stage }
-    val result = mutableListOf<MatchesByTour>()
+    return groupMatchesByTour(
+        matches = filteredMatches,
+        seasonType = matches.seasonType,
+        ascending = false
+    )
+}
 
-    val sortedStages = groupedMatches.keys.sortedWith { stage1, stage2 ->
-        when {
-            stage1 == null && stage2 == null -> 0
-            stage1 == null -> -1
-            stage2 == null -> 1
-            else -> stage1.compareTo(stage2)
-        }
-    }
-
-    for (stage in sortedStages) {
-        val matchesByStage = groupedMatches[stage] ?: continue
-        val matchesByTourEntities = matchesByStage.groupBy { it.matchDay }
-        val sortedMatchDays = matchesByTourEntities.keys.sortedWith { day1, day2 ->
-            (day2 ?: 0).compareTo(day1 ?: 0)
-        }
-
-        for (matchDay in sortedMatchDays) {
-            val matchesByMatchDay = matchesByTourEntities[matchDay] ?: continue
-
-            val domainMatches = matchesByMatchDay.map { it.toMatches() }
-            val matchesByTour = MatchesByTour(
+private fun groupMatchesByTour(
+    matches: List<MatchEntity>,
+    seasonType: String,
+    ascending: Boolean
+): List<MatchesByTour> {
+    return matches
+        .groupBy { it.stage to it.matchDay }
+        .map { (key, tourMatches) ->
+            val (stage, matchDay) = key
+            val sortedMatches = if (ascending) {
+                tourMatches.sortedBy { it.utcDate }
+            } else {
+                tourMatches.sortedByDescending { it.utcDate }
+            }
+            val groupSortKey = sortedMatches.firstOrNull()?.utcDate.orEmpty()
+            groupSortKey to MatchesByTour(
                 matchDay = matchDay,
                 stage = Stage.safeValueOf(stage),
-                seasonType = TournamentType.safeValueOf(matches.seasonType),
-                matches = domainMatches
+                seasonType = TournamentType.safeValueOf(seasonType),
+                matches = sortedMatches.map { it.toMatches() }
             )
-            result.add(matchesByTour)
         }
-    }
-    return result
+        .let { tours ->
+            if (ascending) {
+                tours.sortedBy { it.first }
+            } else {
+                tours.sortedByDescending { it.first }
+            }
+        }
+        .map { it.second }
 }
 
 fun MatchEntity.toMatches(): Match {

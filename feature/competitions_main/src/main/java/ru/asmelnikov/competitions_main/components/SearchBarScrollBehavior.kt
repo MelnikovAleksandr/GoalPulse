@@ -7,15 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 
 @Stable
-class SearchBarScrollState {
-    var hideOffsetPx by mutableFloatStateOf(0f)
+class SearchBarScrollState(initialHideOffsetPx: Float = 0f) {
+    var hideOffsetPx by mutableFloatStateOf(initialHideOffsetPx)
         private set
 
     private var maxHidePx = 0f
@@ -66,7 +67,16 @@ class SearchBarScrollState {
         snapJob = null
         hideOffsetPx = 0f
     }
+
+    companion object {
+        val Saver: Saver<SearchBarScrollState, Float> = Saver(
+            save = { it.hideOffsetPx },
+            restore = { SearchBarScrollState(initialHideOffsetPx = it) }
+        )
+    }
 }
 
 @Composable
-fun rememberSearchBarScrollState(): SearchBarScrollState = remember { SearchBarScrollState() }
+fun rememberSearchBarScrollState(): SearchBarScrollState = rememberSaveable(
+    saver = SearchBarScrollState.Saver
+) { SearchBarScrollState() }

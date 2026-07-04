@@ -50,7 +50,6 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competitions_main.components.CompetitionItem
@@ -139,14 +138,24 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         LazyListState()
     }
 
+    LaunchedEffect(searchQuery) {
+        if (searchQuery.isNotBlank()) {
+            searchBarScrollState.expand()
+        }
+    }
+
     LaunchedEffect(listState, searchBarScrollState) {
+        var isFirstEmission = true
         snapshotFlow {
             listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
         }
             .distinctUntilChanged()
-            .filter { it }
-            .collect {
-                searchBarScrollState.expand()
+            .collect { isAtTop ->
+                if (isFirstEmission) {
+                    isFirstEmission = false
+                } else if (isAtTop) {
+                    searchBarScrollState.expand()
+                }
             }
     }
 
@@ -217,7 +226,11 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                     state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .competitionsListScrollEffects(searchBarScrollState, focusManager)
+                                        .competitionsListScrollEffects(
+                                            searchBarScrollState = searchBarScrollState,
+                                            focusManager = focusManager,
+                                            isScrollCollapseEnabled = searchQuery.isBlank()
+                                        )
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.medium2),
                                     contentPadding = PaddingValues(
@@ -271,7 +284,11 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                     state = listState,
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .competitionsListScrollEffects(searchBarScrollState, focusManager)
+                                        .competitionsListScrollEffects(
+                                            searchBarScrollState = searchBarScrollState,
+                                            focusManager = focusManager,
+                                            isScrollCollapseEnabled = searchQuery.isBlank()
+                                        )
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.medium2),
                                     contentPadding = PaddingValues(
@@ -315,19 +332,24 @@ private enum class ContentState {
 private fun Modifier.competitionsListScrollEffects(
     searchBarScrollState: SearchBarScrollState,
     focusManager: FocusManager,
+    isScrollCollapseEnabled: Boolean,
 ): Modifier = nestedScroll(
-    remember(searchBarScrollState, focusManager) {
+    remember(searchBarScrollState, focusManager, isScrollCollapseEnabled) {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 if (source == NestedScrollSource.UserInput && available.y != 0f) {
                     focusManager.clearFocus()
-                    searchBarScrollState.onScroll(-available.y)
+                    if (isScrollCollapseEnabled) {
+                        searchBarScrollState.onScroll(-available.y)
+                    }
                 }
                 return Offset.Zero
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
-                searchBarScrollState.snapToNearest()
+                if (isScrollCollapseEnabled) {
+                    searchBarScrollState.snapToNearest()
+                }
                 return Velocity.Zero
             }
         }

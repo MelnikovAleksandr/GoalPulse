@@ -40,8 +40,7 @@ fun LiquidCompetitionCard(
                 onDrawSurface = {
                     drawLiquidGlassCardSurface(surfaceColor = liquidColor)
                 }
-            )
-            .height(dimens.competitionCardHeight),
+            ),
         content = content
     )
 }

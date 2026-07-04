@@ -219,7 +219,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .fillMaxSize()
                                         .competitionsListScrollEffects(searchBarScrollState, focusManager)
                                         .layerBackdrop(listBackdrop),
-                                    verticalArrangement = Arrangement.spacedBy(dimens.small3),
+                                    verticalArrangement = Arrangement.spacedBy(dimens.medium2),
                                     contentPadding = PaddingValues(
                                         start = dimens.medium1,
                                         end = dimens.medium1,
@@ -273,7 +273,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .fillMaxSize()
                                         .competitionsListScrollEffects(searchBarScrollState, focusManager)
                                         .layerBackdrop(listBackdrop),
-                                    verticalArrangement = Arrangement.spacedBy(dimens.small3),
+                                    verticalArrangement = Arrangement.spacedBy(dimens.medium2),
                                     contentPadding = PaddingValues(
                                         start = dimens.medium1,
                                         end = dimens.medium1,

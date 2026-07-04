@@ -33,7 +33,7 @@ fun ShimmerListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimens.medium2),
+                .padding(dimens.medium1),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {

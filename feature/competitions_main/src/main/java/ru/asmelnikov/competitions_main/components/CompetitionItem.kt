@@ -73,7 +73,7 @@ fun SharedTransitionScope.CompetitionItem(
             ) {
                 Row {
                     Text(
-                        modifier = Modifier.basicMarquee(Int.MAX_VALUE),
+                        modifier = Modifier.weight(1f).basicMarquee(Int.MAX_VALUE),
                         text = competition.name,
                         style = MaterialTheme.typography.titleMedium,
                         color = Color.White
@@ -119,7 +119,7 @@ private fun CompetitionItemPreview() {
             AnimatedVisibility(visible = true) {
                 val backdrop = rememberLayerBackdrop()
                 CompetitionItem(
-                    competition = getMockCompetitionsList().first(),
+                    competition = getMockCompetitionsList().first().copy(name = "SHDKJSHDFKHSDKJFHSDJHFKJSDHFKJSDHFKJSDHFKJSHDFKL"),
                     backdrop = backdrop,
                     animatedVisibilityScope = this,
                     onCompClick = { _, _ -> }

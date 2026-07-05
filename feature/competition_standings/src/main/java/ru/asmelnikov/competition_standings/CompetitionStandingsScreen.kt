@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.kyant.backdrop.backdrops.layerBackdrop
@@ -66,6 +68,7 @@ import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
+import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
@@ -207,6 +210,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                     containerColor = Color.Transparent,
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     topBar = {
+                        val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
+                        val tint = MaterialTheme.colorScheme.background
                         val tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) }
                         var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -216,28 +221,40 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             }
                         }
 
-                        LiquidBottomTabs(
-                            selectedTabIndex = { selectedTabIndex },
-                            onTabSelected = {
-                                selectedTabIndex = it
-                                if (pagerState.currentPage != it) {
-                                    scope.launch { pagerState.animateScrollToPage(it) }
-                                }
-                            },
-                            backdrop = backdrop,
-                            tabsCount = tabTitles.size,
-                            modifier = Modifier.padding(
-                                horizontal = dimens.medium2,
-                                vertical = dimens.small3
-                            )
-                        ) {
-                            tabTitles.forEachIndexed { index, title ->
-                                LiquidBottomTab({ selectedTabIndex = index }) {
-                                    Text(
-                                        text = title,
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        style = MaterialTheme.typography.labelMedium
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .drawProgressivePlainBackdrop(
+                                        backdrop = backdrop,
+                                        blurRadiusPx = blurRadiusPx,
+                                        tint = tint
                                     )
+                            )
+
+                            LiquidBottomTabs(
+                                selectedTabIndex = { selectedTabIndex },
+                                onTabSelected = {
+                                    selectedTabIndex = it
+                                    if (pagerState.currentPage != it) {
+                                        scope.launch { pagerState.animateScrollToPage(it) }
+                                    }
+                                },
+                                backdrop = backdrop,
+                                tabsCount = tabTitles.size,
+                                modifier = Modifier.padding(
+                                    horizontal = dimens.medium2,
+                                    vertical = dimens.small3
+                                )
+                            ) {
+                                tabTitles.forEachIndexed { index, title ->
+                                    LiquidBottomTab({ selectedTabIndex = index }) {
+                                        Text(
+                                            text = title,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
                                 }
                             }
                         }

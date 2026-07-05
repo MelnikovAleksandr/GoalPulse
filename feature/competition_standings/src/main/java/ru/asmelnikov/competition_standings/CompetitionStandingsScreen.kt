@@ -9,7 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -19,16 +19,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
@@ -52,12 +58,14 @@ import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.domain.models.getMockScorers
 import ru.asmelnikov.domain.models.getMockStandings
 import ru.asmelnikov.utils.composables.MainAppState
-import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.composables.isPortrait
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
+import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun SharedTransitionScope.CompetitionStandingsScreen(
@@ -148,7 +156,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     onPersonClick: (Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-
+    val backdrop = rememberLayerBackdrop()
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
@@ -185,13 +193,40 @@ fun SharedTransitionScope.CompetitionStandingsContent(
             },
             body = {
                 Column(modifier = Modifier.fillMaxSize()) {
+                    val tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) }
+                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                    PagerTabRow(
-                        tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) },
-                        selectedIndex = pagerState.currentPage,
-                        modifier = Modifier.fillMaxWidth(),
-                        onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } }
-                    )
+                    LaunchedEffect(pagerState.currentPage) {
+                        snapshotFlow { pagerState.currentPage }.collect { page ->
+                            selectedTabIndex = page
+                        }
+                    }
+
+                    LiquidBottomTabs(
+                        selectedTabIndex = { selectedTabIndex },
+                        onTabSelected = {
+                            selectedTabIndex = it
+                            if (pagerState.currentPage != it) {
+                                scope.launch { pagerState.animateScrollToPage(it) }
+                            }
+                        },
+                        backdrop = backdrop,
+                        tabsCount = tabTitles.size,
+                        modifier = Modifier.padding(
+                            horizontal = dimens.medium2,
+                            vertical = dimens.small3
+                        )
+                    ) {
+                        tabTitles.forEachIndexed { index, title ->
+                            LiquidBottomTab({ selectedTabIndex = index }) {
+                                Text(
+                                    text = title,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        }
+                    }
 
                     HorizontalPager(
                         modifier = Modifier
@@ -251,7 +286,10 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     }
 }
 
-@Preview(showBackground = true, locale = "ru")
+@Preview(
+    showBackground = true, locale = "ru", showSystemUi = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
 @Composable
 private fun StandingsPreview1() {
     GoalPulseTheme(darkTheme = true) {

@@ -3,6 +3,9 @@ package ru.asmelnikov.competition_standings.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,24 +18,36 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingBall
-import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.composables.TabsMatches
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
@@ -46,9 +61,14 @@ fun ThirdPagerScreenMatches(
     onMatchItemClick: (Int) -> Unit,
     head2head: Head2head = Head2head(),
     isHead2headLoading: Boolean = false,
-    onReloadClick: () -> Unit
+    onReloadClick: () -> Unit,
+    onOuterPagerScrollBlocked: (Boolean) -> Unit = {}
 ) {
-
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val backdrop = rememberLayerBackdrop {
+        drawRect(backgroundColor)
+        drawContent()
+    }
     val scope = rememberCoroutineScope()
     val topInset = paddingValues.calculateTopPadding()
     val tabListState by remember(matchesCompleted, matchesAhead) {
@@ -95,25 +115,65 @@ fun ThirdPagerScreenMatches(
                         contentWindowInsets = WindowInsets(),
                         topBar = {
                             AnimatedVisibility(visible = tabListState.count() > 1) {
-                                PagerTabRow(
-                                    modifier = Modifier.fillMaxWidth().padding(top = topInset),
-                                    tabTitles = tabListState.map { stringResource(it.stringResId) },
-                                    selectedIndex = pagerState.currentPage,
-                                    onTabSelected = {
-                                        scope.launch {
-                                            pagerState.animateScrollToPage(
-                                                it
-                                            )
+                                val tabTitles = tabListState.map { stringResource(it.stringResId) }
+                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+
+                                LaunchedEffect(pagerState.currentPage) {
+                                    snapshotFlow { pagerState.currentPage }.collect { page ->
+                                        selectedTabIndex = page
+                                    }
+                                }
+                                Box(
+                                    modifier = Modifier
+                                    .fillMaxWidth()
+                                    .pointerInput(Unit) {
+                                        awaitEachGesture {
+                                            awaitFirstDown(requireUnconsumed = false)
+                                            onOuterPagerScrollBlocked(true)
+                                            do {
+                                                val event =
+                                                    awaitPointerEvent(PointerEventPass.Final)
+                                            } while (event.changes.any { it.pressed })
+                                            onOuterPagerScrollBlocked(false)
+                                        }
+                                    },
+                                    contentAlignment = Alignment.Center) {
+                                    LiquidBottomTabs(
+                                        selectedTabIndex = { selectedTabIndex },
+                                        onTabSelected = {
+                                            selectedTabIndex = it
+                                            if (pagerState.currentPage != it) {
+                                                scope.launch { pagerState.animateScrollToPage(it) }
+                                            }
+                                        },
+                                        backdrop = backdrop,
+                                        heightMain = 44f.dp,
+                                        heightInner = 38f.dp,
+                                        tabsCount = tabTitles.size,
+                                        modifier = Modifier
+                                            .fillMaxWidth(0.7f)
+                                            .padding(top = topInset, bottom = dimens.small3)
+                                    ) {
+                                        tabTitles.forEachIndexed { index, title ->
+                                            LiquidBottomTab({ selectedTabIndex = index }) {
+                                                Text(
+                                                    text = title,
+                                                    color = MaterialTheme.colorScheme.onBackground,
+                                                    style = MaterialTheme.typography.labelSmall
+                                                )
+                                            }
                                         }
                                     }
-                                )
+                                }
                             }
                         }
                     ) { innerPaddingValues ->
                         val innerTopInset = innerPaddingValues.calculateTopPadding()
-                        val topInsetResult = if (tabListState.count() > 1) innerTopInset else topInset
+                        val topInsetResult =
+                            if (tabListState.count() > 1) innerTopInset else topInset
                         HorizontalPager(
                             modifier = Modifier
+                                .layerBackdrop(backdrop)
                                 .fillMaxSize(),
                             state = pagerState,
                             beyondViewportPageCount = 1,

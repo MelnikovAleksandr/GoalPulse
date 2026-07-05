@@ -26,6 +26,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -171,6 +173,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
         pageCount = { TabsStandings.entries.count() }
     )
     val collapsingState = rememberCollapsingToolbarScaffoldState()
+    var blockOuterPagerScroll by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = configuration.orientation) {
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             collapsingState.toolbarState.collapse()
@@ -246,6 +249,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             .fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 1,
+                        userScrollEnabled = !blockOuterPagerScroll,
                         verticalAlignment = Alignment.Top
                     ) { page ->
                         when (page) {
@@ -279,7 +283,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                     onMatchItemClick = onMatchItemClick,
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
-                                    onReloadClick = onReloadMatchesClick
+                                    onReloadClick = onReloadMatchesClick,
+                                    onOuterPagerScrollBlocked = { blockOuterPagerScroll = it }
                                 )
                             }
                         }

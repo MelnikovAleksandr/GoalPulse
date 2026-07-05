@@ -81,9 +81,9 @@ fun MatchList(
                     HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                 }
             }
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
-            }
+        }
+        item {
+            Spacer(modifier = Modifier.navigationBarsPadding())
         }
     }
 }

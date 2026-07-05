@@ -18,6 +18,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.kyant.backdrop.backdrops.LayerBackdrop
@@ -41,14 +42,6 @@ fun FirstPagerScreenStandings(
 ) {
     val topInset = paddingValues.calculateTopPadding()
     Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = isLoading) {
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimens.extraSmall1),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
         AnimatedContent(targetState = competitionStandings?.standings == null) { emptyData ->
             when {
                 isLoading && emptyData -> LoadingBall(modifier = Modifier.padding(top = topInset))
@@ -77,6 +70,17 @@ fun FirstPagerScreenStandings(
                                         .fillMaxWidth()
                                         .background(MaterialTheme.colorScheme.background)
                                 ) {
+
+                                    AnimatedVisibility(visible = isLoading && standingIndex == 0) {
+                                        LinearProgressIndicator(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(dimens.extraSmall1),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            trackColor = MaterialTheme.colorScheme.background
+                                        )
+                                    }
+
                                     HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                                     StandingTopItem(
                                         tableName = stringResource(standing.group.stringResId)

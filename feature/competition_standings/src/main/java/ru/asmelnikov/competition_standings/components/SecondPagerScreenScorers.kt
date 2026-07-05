@@ -18,6 +18,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import ru.asmelnikov.domain.models.Scorer
 import ru.asmelnikov.domain.models.getMockScorers
@@ -36,14 +37,6 @@ fun SecondPagerScreenScorers(
 ) {
     val topInset = paddingValues.calculateTopPadding()
     Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedVisibility(visible = isLoadingScorers) {
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimens.extraSmall1),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
 
         AnimatedContent(targetState = scorers.isEmpty()) { emptyData ->
             when {
@@ -69,6 +62,15 @@ fun SecondPagerScreenScorers(
                                     .fillMaxWidth()
                                     .background(MaterialTheme.colorScheme.background)
                             ) {
+                                AnimatedVisibility(visible = isLoadingScorers) {
+                                    LinearProgressIndicator(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(dimens.extraSmall1),
+                                        color = MaterialTheme.colorScheme.primary,
+                                        trackColor = MaterialTheme.colorScheme.background
+                                    )
+                                }
                                 HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                                 ScorerItemEmpty()
                                 HorizontalDivider(color = MaterialTheme.colorScheme.primary)

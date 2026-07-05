@@ -162,4 +162,7 @@
 
     <!-- Person Screen -->
     <string name="player_position">Позиция</string>
+
+    <!-- Common -->
+    <string name="reload">Обновить</string>
 </resources>

@@ -25,6 +25,20 @@ private const val PROGRESSIVE_BLUR_ALPHA_MASK_SHADER = """
     }
 """
 
+private const val PROGRESSIVE_BLUR_ALPHA_MASK_REVERSE_SHADER = """
+    uniform shader content;
+
+    uniform float2 size;
+    layout(color) uniform half4 tint;
+    uniform float tintIntensity;
+
+    half4 main(float2 coord) {
+        float blurAlpha = smoothstep(size.y * 0.5, size.y, coord.y);
+        float tintAlpha = smoothstep(size.y * 0.5, size.y, coord.y);
+        return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
+    }
+"""
+
 fun Modifier.drawProgressivePlainBackdrop(
     backdrop: Backdrop,
     blurRadiusPx: Float,
@@ -40,6 +54,30 @@ fun Modifier.drawProgressivePlainBackdrop(
             runtimeShaderEffect(
                 key = "AlphaMask",
                 shaderString = PROGRESSIVE_BLUR_ALPHA_MASK_SHADER,
+                uniformShaderName = "content",
+            ) {
+                setFloatUniform("size", size.width, size.height)
+                setColorUniform("tint", tint)
+                setFloatUniform("tintIntensity", tintIntensity)
+            }
+        }
+    )
+
+fun Modifier.drawProgressivePlainBackdropReverse(
+    backdrop: Backdrop,
+    blurRadiusPx: Float,
+    tint: Color,
+    tintIntensity: Float = 1f,
+    shape: Shape = RectangleShape,
+): Modifier = graphicsLayer { compositingStrategy = CompositingStrategy.Offscreen }
+    .drawPlainBackdrop(
+        backdrop = backdrop,
+        shape = { shape },
+        effects = {
+            blur(blurRadiusPx)
+            runtimeShaderEffect(
+                key = "AlphaMaskReverse",
+                shaderString = PROGRESSIVE_BLUR_ALPHA_MASK_REVERSE_SHADER,
                 uniformShaderName = "content",
             ) {
                 setFloatUniform("size", size.width, size.height)

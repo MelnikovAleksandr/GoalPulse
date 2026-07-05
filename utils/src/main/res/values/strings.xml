@@ -163,4 +163,7 @@
 
     <!-- Person Screen -->
     <string name="player_position">Position</string>
+
+    <!-- Common -->
+    <string name="reload">Reload</string>
 </resources>

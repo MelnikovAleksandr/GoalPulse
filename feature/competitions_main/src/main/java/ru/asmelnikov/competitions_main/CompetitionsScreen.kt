@@ -169,7 +169,9 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background)) {
         MainBackVideo(
             modifier = Modifier
                 .fillMaxSize()

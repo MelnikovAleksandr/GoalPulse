@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.ui.theme.dimens
 
@@ -43,7 +44,10 @@ fun EmptyContent(
             contentDescription = null
         )
         TextButton(onClick = onReloadClick) {
-            Text(text = "Reload", style = MaterialTheme.typography.headlineLarge)
+            Text(
+                text = stringResource(R.string.reload),
+                style = MaterialTheme.typography.headlineLarge
+            )
         }
     }
 }

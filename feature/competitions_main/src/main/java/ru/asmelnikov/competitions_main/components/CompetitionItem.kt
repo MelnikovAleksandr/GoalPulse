@@ -81,7 +81,7 @@ fun SharedTransitionScope.CompetitionItem(
                     Spacer(modifier = Modifier.width(dimens.small1))
 
                     SubComposeAsyncImageCommon(
-                        imageUri = competition.area.flag.ifBlank { R.drawable.unknown_flag },
+                        imageUri = competition.area.flag.ifBlank { R.drawable.united_nations },
                         shape = CircleShape,
                         size = dimens.medium2
                     )

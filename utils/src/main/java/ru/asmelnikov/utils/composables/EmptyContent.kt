@@ -20,11 +20,12 @@ import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun EmptyContent(
+    modifier: Modifier = Modifier,
     withScroll: Boolean = false,
     onReloadClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .then(
                 if (withScroll) {

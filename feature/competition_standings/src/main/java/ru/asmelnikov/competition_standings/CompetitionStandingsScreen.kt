@@ -7,7 +7,7 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,9 +32,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -156,7 +159,11 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     onPersonClick: (Int) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val backdrop = rememberLayerBackdrop()
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val backdrop = rememberLayerBackdrop {
+        drawRect(backgroundColor)
+        drawContent()
+    }
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
@@ -192,44 +199,50 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                 )
             },
             body = {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    val tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) }
-                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = Color.Transparent,
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                    topBar = {
+                        val tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) }
+                        var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                    LaunchedEffect(pagerState.currentPage) {
-                        snapshotFlow { pagerState.currentPage }.collect { page ->
-                            selectedTabIndex = page
-                        }
-                    }
-
-                    LiquidBottomTabs(
-                        selectedTabIndex = { selectedTabIndex },
-                        onTabSelected = {
-                            selectedTabIndex = it
-                            if (pagerState.currentPage != it) {
-                                scope.launch { pagerState.animateScrollToPage(it) }
-                            }
-                        },
-                        backdrop = backdrop,
-                        tabsCount = tabTitles.size,
-                        modifier = Modifier.padding(
-                            horizontal = dimens.medium2,
-                            vertical = dimens.small3
-                        )
-                    ) {
-                        tabTitles.forEachIndexed { index, title ->
-                            LiquidBottomTab({ selectedTabIndex = index }) {
-                                Text(
-                                    text = title,
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    style = MaterialTheme.typography.labelMedium
-                                )
+                        LaunchedEffect(pagerState.currentPage) {
+                            snapshotFlow { pagerState.currentPage }.collect { page ->
+                                selectedTabIndex = page
                             }
                         }
-                    }
 
+                        LiquidBottomTabs(
+                            selectedTabIndex = { selectedTabIndex },
+                            onTabSelected = {
+                                selectedTabIndex = it
+                                if (pagerState.currentPage != it) {
+                                    scope.launch { pagerState.animateScrollToPage(it) }
+                                }
+                            },
+                            backdrop = backdrop,
+                            tabsCount = tabTitles.size,
+                            modifier = Modifier.padding(
+                                horizontal = dimens.medium2,
+                                vertical = dimens.small3
+                            )
+                        ) {
+                            tabTitles.forEachIndexed { index, title ->
+                                LiquidBottomTab({ selectedTabIndex = index }) {
+                                    Text(
+                                        text = title,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                ) { paddingValues ->
                     HorizontalPager(
                         modifier = Modifier
+                            .layerBackdrop(backdrop)
                             .fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 1,
@@ -238,6 +251,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         when (page) {
                             0 -> {
                                 FirstPagerScreenStandings(
+                                    paddingValues = paddingValues,
                                     competitionStandings = competitionStandings,
                                     isLoading = isLoadingStandings,
                                     onTeamClick = onTeamClick,
@@ -248,6 +262,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             1 -> {
                                 SecondPagerScreenScorers(
                                     scorers = scorers,
+                                    paddingValues = paddingValues,
                                     isLoadingScorers = isLoadingScorers,
                                     onReloadClick = onReloadScorersClick,
                                     onPersonClick = onPersonClick
@@ -257,6 +272,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             2 -> {
                                 ThirdPagerScreenMatches(
                                     matchesCompleted = matchesCompleted,
+                                    paddingValues = paddingValues,
                                     matchesAhead = matchesAhead,
                                     isLoadingMatches = isLoadingMatches,
                                     expandedItemId = expandedItemId,

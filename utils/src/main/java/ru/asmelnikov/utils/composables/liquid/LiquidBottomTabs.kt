@@ -40,6 +40,7 @@ import androidx.compose.ui.util.fastCoerceIn
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.compose.ui.util.lerp
 import com.kyant.backdrop.Backdrop
+import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -57,7 +58,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
 import kotlin.time.ExperimentalTime
-
 
 @Composable
 fun LiquidBottomTabs(

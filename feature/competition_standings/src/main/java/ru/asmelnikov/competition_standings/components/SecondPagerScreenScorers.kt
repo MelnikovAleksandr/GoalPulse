@@ -5,11 +5,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -26,13 +29,13 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SecondPagerScreenScorers(
     scorers: List<Scorer>,
+    paddingValues: PaddingValues = PaddingValues(),
     isLoadingScorers: Boolean,
     onReloadClick: () -> Unit,
     onPersonClick: (Int) -> Unit
 ) {
-
+    val topInset = paddingValues.calculateTopPadding()
     Column(modifier = Modifier.fillMaxSize()) {
-
         AnimatedVisibility(visible = isLoadingScorers) {
             LinearProgressIndicator(
                 modifier = Modifier
@@ -44,17 +47,34 @@ fun SecondPagerScreenScorers(
 
         AnimatedContent(targetState = scorers.isEmpty()) { emptyData ->
             when {
-                isLoadingScorers && emptyData -> LoadingBall()
-                !isLoadingScorers && emptyData -> EmptyContent(onReloadClick = onReloadClick)
+                isLoadingScorers && emptyData -> LoadingBall(modifier = Modifier.padding(top = topInset))
+                !isLoadingScorers && emptyData -> EmptyContent(
+                    modifier = Modifier.padding(top = topInset),
+                    onReloadClick = onReloadClick
+                )
+
                 else -> {
+                    val listState = rememberLazyListState()
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        state = listState,
+                        contentPadding = PaddingValues(top = topInset)
                     ) {
-                        stickyHeader {
-                            HorizontalDivider(color = MaterialTheme.colorScheme.primary)
-                            ScorerItemEmpty()
-                            HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                        stickyHeaderContentPaddingAware(
+                            listState = listState,
+                            key = "stickyKey",
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.background)
+                            ) {
+                                HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                                ScorerItemEmpty()
+                                HorizontalDivider(color = MaterialTheme.colorScheme.primary)
+                            }
                         }
+
                         itemsIndexed(
                             items = scorers,
                             key = { _, scorer -> scorer.player.id }) { index, scorer ->
@@ -80,9 +100,11 @@ fun SecondPagerScreenScorers(
 @Composable
 private fun ScorersPreview1() {
     GoalPulseTheme(darkTheme = true) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
                 isLoadingScorers = false,
@@ -97,9 +119,11 @@ private fun ScorersPreview1() {
 @Composable
 private fun ScorersPreview2() {
     GoalPulseTheme {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
                 isLoadingScorers = false,

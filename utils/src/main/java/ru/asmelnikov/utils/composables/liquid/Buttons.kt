@@ -347,7 +347,10 @@ fun LiquidBox(
                     lens(glassSpec.lensWidthPx, glassSpec.lensHeightPx)
                 },
                 onDrawSurface = {
-                    drawLiquidGlassSurface()
+                    drawLiquidGlassSurface(
+                        surfaceAlpha = 0.24f,
+                        overlayAlpha = 0.12f,
+                    )
                 }
             ),
         contentAlignment = Alignment.Center,

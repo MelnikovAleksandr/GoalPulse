@@ -91,14 +91,6 @@ fun ThirdPagerScreenMatches(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        AnimatedVisibility(visible = isLoadingMatches) {
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimens.extraSmall1),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
 
         AnimatedContent(targetState = matchesCompleted.isEmpty() && matchesAhead.isEmpty()) { emptyData ->
             when {
@@ -114,56 +106,72 @@ fun ThirdPagerScreenMatches(
                         containerColor = Color.Transparent,
                         contentWindowInsets = WindowInsets(),
                         topBar = {
-                            AnimatedVisibility(visible = tabListState.count() > 1) {
-                                val tabTitles = tabListState.map { stringResource(it.stringResId) }
-                                var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+                            Column {
+                                AnimatedVisibility(visible = tabListState.count() > 1) {
+                                    val tabTitles =
+                                        tabListState.map { stringResource(it.stringResId) }
+                                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                                LaunchedEffect(pagerState.currentPage) {
-                                    snapshotFlow { pagerState.currentPage }.collect { page ->
-                                        selectedTabIndex = page
+                                    LaunchedEffect(pagerState.currentPage) {
+                                        snapshotFlow { pagerState.currentPage }.collect { page ->
+                                            selectedTabIndex = page
+                                        }
+                                    }
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .pointerInput(Unit) {
+                                                awaitEachGesture {
+                                                    awaitFirstDown(requireUnconsumed = false)
+                                                    onOuterPagerScrollBlocked(true)
+                                                    do {
+                                                        val event =
+                                                            awaitPointerEvent(PointerEventPass.Final)
+                                                    } while (event.changes.any { it.pressed })
+                                                    onOuterPagerScrollBlocked(false)
+                                                }
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        LiquidBottomTabs(
+                                            selectedTabIndex = { selectedTabIndex },
+                                            onTabSelected = {
+                                                selectedTabIndex = it
+                                                if (pagerState.currentPage != it) {
+                                                    scope.launch { pagerState.animateScrollToPage(it) }
+                                                }
+                                            },
+                                            backdrop = backdrop,
+                                            heightMain = 44f.dp,
+                                            heightInner = 38f.dp,
+                                            tabsCount = tabTitles.size,
+                                            modifier = Modifier
+                                                .fillMaxWidth(0.7f)
+                                                .padding(top = topInset, bottom = dimens.small3)
+                                        ) {
+                                            tabTitles.forEachIndexed { index, title ->
+                                                LiquidBottomTab({ selectedTabIndex = index }) {
+                                                    Text(
+                                                        text = title,
+                                                        color = MaterialTheme.colorScheme.onBackground,
+                                                        style = MaterialTheme.typography.labelSmall
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                Box(
-                                    modifier = Modifier
-                                    .fillMaxWidth()
-                                    .pointerInput(Unit) {
-                                        awaitEachGesture {
-                                            awaitFirstDown(requireUnconsumed = false)
-                                            onOuterPagerScrollBlocked(true)
-                                            do {
-                                                val event =
-                                                    awaitPointerEvent(PointerEventPass.Final)
-                                            } while (event.changes.any { it.pressed })
-                                            onOuterPagerScrollBlocked(false)
-                                        }
-                                    },
-                                    contentAlignment = Alignment.Center) {
-                                    LiquidBottomTabs(
-                                        selectedTabIndex = { selectedTabIndex },
-                                        onTabSelected = {
-                                            selectedTabIndex = it
-                                            if (pagerState.currentPage != it) {
-                                                scope.launch { pagerState.animateScrollToPage(it) }
-                                            }
-                                        },
-                                        backdrop = backdrop,
-                                        heightMain = 44f.dp,
-                                        heightInner = 38f.dp,
-                                        tabsCount = tabTitles.size,
+                                AnimatedVisibility(visible = isLoadingMatches) {
+                                    LinearProgressIndicator(
                                         modifier = Modifier
-                                            .fillMaxWidth(0.7f)
-                                            .padding(top = topInset, bottom = dimens.small3)
-                                    ) {
-                                        tabTitles.forEachIndexed { index, title ->
-                                            LiquidBottomTab({ selectedTabIndex = index }) {
-                                                Text(
-                                                    text = title,
-                                                    color = MaterialTheme.colorScheme.onBackground,
-                                                    style = MaterialTheme.typography.labelSmall
-                                                )
-                                            }
-                                        }
-                                    }
+                                            .fillMaxWidth()
+                                            .padding(
+                                                top = if (tabListState.count() > 1) 0.dp else topInset
+                                            )
+                                            .height(dimens.extraSmall1),
+                                        color = MaterialTheme.colorScheme.primary,
+                                        trackColor = MaterialTheme.colorScheme.background
+                                    )
                                 }
                             }
                         }

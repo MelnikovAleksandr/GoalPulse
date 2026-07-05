@@ -11,13 +11,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -201,14 +196,15 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                     compUrl = compUrl,
                     compName = competitionStandings?.competition?.name ?: "",
                     sharedTransitionScope = this@CompetitionStandingsContent,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    onBackClick = onBackClick
                 )
             },
             body = {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     containerColor = Color.Transparent,
-                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                    contentWindowInsets = WindowInsets(),
                     topBar = {
                         val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
                         val tint = MaterialTheme.colorScheme.background
@@ -309,18 +305,6 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                 }
             }
         )
-        IconButton(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .systemBarsPadding(),
-            onClick = onBackClick
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
     }
 }
 

@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Properties
 
 plugins {
@@ -49,6 +51,22 @@ android {
             )
         }
     }
+
+    applicationVariants.all {
+        val variant = this
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val baseName = "GoalPulse"
+            val buildType = variant.buildType.name
+            val fileName = "${baseName}-${buildType}-" +
+                    "v${defaultConfig.versionName}-" +
+                    "vc${defaultConfig.versionCode}-" +
+                    "${getDateTimeFormat()}.apk"
+
+            outputImpl.outputFileName = fileName
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -113,4 +131,9 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":utils"))
+}
+
+fun getDateTimeFormat(): String {
+    val simpleDateFormat = SimpleDateFormat("ddMMyy")
+    return simpleDateFormat.format(Date())
 }

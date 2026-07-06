@@ -5,7 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Head2headDTO(
-    @Json(name = "aggregates") val aggregates: AggregatesDTO?
+    @Json(name = "aggregates") val aggregates: AggregatesDTO?,
+    @Json(name = "matches") val matches: List<MatchDTO>? = null
 )
 
 @JsonClass(generateAdapter = true)

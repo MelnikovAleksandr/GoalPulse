@@ -26,6 +26,7 @@ enum class Stage(@StringRes val stringResId: Int) {
     PLAYOFF_ROUND_1(R.string.stage_playoff_round_1),
     PLAYOFF_ROUND_2(R.string.stage_playoff_round_2),
     PLAYOFFS(R.string.stage_playoffs),
+    PLAY_OFFS(R.string.stage_playoffs),
     REGULAR_SEASON(R.string.stage_regular_season),
     CLAUSURA(R.string.stage_clausura),
     APERTURA(R.string.stage_apertura),

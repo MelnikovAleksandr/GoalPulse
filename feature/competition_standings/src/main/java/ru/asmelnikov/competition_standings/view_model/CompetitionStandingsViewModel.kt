@@ -80,7 +80,7 @@ class CompetitionStandingsViewModel(
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        //isLoadingScorers = false
+                        isLoadingScorers = false
                     )
                 }
             }
@@ -88,7 +88,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        //isLoadingScorers = false
+                        isLoadingScorers = false
                     )
                 }
                 handleError(compsFromRemote.httpErrors)
@@ -105,7 +105,7 @@ class CompetitionStandingsViewModel(
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        //isLoadingStandings = false
+                        isLoadingStandings = false
                     )
                 }
             }
@@ -113,7 +113,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        //isLoadingStandings = false
+                        isLoadingStandings = false
                     )
                 }
                 handleError(compsFromRemote.httpErrors)
@@ -130,7 +130,7 @@ class CompetitionStandingsViewModel(
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        //isLoadingMatches = false
+                        isLoadingMatches = false
                     )
                 }
             }
@@ -138,7 +138,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        //isLoadingMatches = false
+                        isLoadingMatches = false
                     )
                 }
                 handleError(matchesFromRemote.httpErrors)

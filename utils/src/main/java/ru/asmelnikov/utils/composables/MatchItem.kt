@@ -2,6 +2,7 @@ package ru.asmelnikov.utils.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -57,9 +58,9 @@ fun MatchItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-//            .clickable(enabled = !isHead2headLoading) { TODO api Head2head wrong data, replace after v5
-//                onMatchItemClick(match.id)
-//            }
+            .clickable(enabled = !isHead2headLoading) {
+                onMatchItemClick(matchId)
+            }
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -165,6 +165,7 @@ fun ThirdPagerScreenMatches(
                                     LinearProgressIndicator(
                                         modifier = Modifier
                                             .fillMaxWidth()
+                                            .background(MaterialTheme.colorScheme.background)
                                             .padding(
                                                 top = if (tabListState.count() > 1) 0.dp else topInset
                                             )

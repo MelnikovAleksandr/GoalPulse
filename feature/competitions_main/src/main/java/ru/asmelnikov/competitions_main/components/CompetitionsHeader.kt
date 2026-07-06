@@ -91,7 +91,9 @@ fun CompetitionsHeader(
                 Image(
                     painter = painterResource(R.mipmap.ic_launcher),
                     contentDescription = null,
-                    modifier = Modifier.clip(CircleShape).fillMaxSize(0.8f),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .fillMaxSize(0.8f),
                     contentScale = ContentScale.Fit
                 )
             }
@@ -112,19 +114,34 @@ fun CompetitionsHeader(
                 )
             }
         }
-
+        Spacer(modifier = Modifier.height(dimens.small3))
+        val glassSpec = rememberLiquidGlassCompactSpec()
         Box(
             modifier = Modifier
+                .padding(horizontal = dimens.extraSmall2)
+                .drawBackdrop(
+                    backdrop = backdrop,
+                    shape = { Capsule() },
+                    effects = {
+                        vibrancy()
+                        blur(glassSpec.blurPx)
+                        lens(glassSpec.lensWidthPx, glassSpec.lensHeightPx)
+                    },
+                    onDrawSurface = {
+                        drawLiquidGlassSurface(
+                            surfaceAlpha = LiquidGlassDefaults.COMPACT_SURFACE_ALPHA,
+                            overlayAlpha = LiquidGlassDefaults.COMPACT_OVERLAY_ALPHA,
+                            surfaceColor = Color.White
+                        )
+                    }
+                )
                 .fillMaxWidth()
                 .clipToBounds()
         ) {
             CollapsibleSearchBarSection(
                 searchBarScrollState = searchBarScrollState
             ) {
-                Spacer(modifier = Modifier.height(dimens.small3))
-
                 CompetitionsSearchBar(
-                    backdrop = backdrop,
                     query = searchQuery,
                     onQueryChange = onSearchQueryChange
                 )
@@ -169,8 +186,8 @@ private fun CollapsibleSearchBarSection(
                     0f
                 }
                 transformOrigin = TransformOrigin(0.5f, 0f)
-                scaleY = 1f - progress
-                alpha = 1f - progress * 0.35f
+                rotationX = -90f * progress
+                cameraDistance = 12f * density
             }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -184,7 +201,6 @@ private class SectionHeightHolder(var px: Float = 0f)
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CompetitionsSearchBar(
-    backdrop: Backdrop,
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -198,96 +214,73 @@ private fun CompetitionsSearchBar(
         }
     }
 
-    val glassSpec = rememberLiquidGlassCompactSpec()
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimens.extraSmall2)
-            .drawBackdrop(
-                backdrop = backdrop,
-                shape = { Capsule() },
-                effects = {
-                    vibrancy()
-                    blur(glassSpec.blurPx)
-                    lens(glassSpec.lensWidthPx, glassSpec.lensHeightPx)
-                },
-                onDrawSurface = {
-                    drawLiquidGlassSurface(
-                        surfaceAlpha = LiquidGlassDefaults.COMPACT_SURFACE_ALPHA,
-                        overlayAlpha = LiquidGlassDefaults.COMPACT_OVERLAY_ALPHA,
-                        surfaceColor = Color.White
-                    )
-                }
-            )
-    ) {
-        BasicTextField(
+    BasicTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = modifier.fillMaxWidth(),
+        textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
+        singleLine = true,
+        cursorBrush = SolidColor(Color.White),
+    ) { innerTextField ->
+        TextFieldDefaults.DecorationBox(
             value = query,
-            onValueChange = onQueryChange,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
+            innerTextField = innerTextField,
             singleLine = true,
-            cursorBrush = SolidColor(Color.White),
-        ) { innerTextField ->
-            TextFieldDefaults.DecorationBox(
-                value = query,
-                innerTextField = innerTextField,
-                singleLine = true,
-                enabled = true,
-                visualTransformation = VisualTransformation.None,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        modifier = Modifier.size(dimens.searchBarIconSize)
-                    )
-                },
-                trailingIcon = if (query.isNotEmpty()) {
-                    {
-                        IconButton(onClick = { onQueryChange("") }) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = stringResource(R.string.clear_search),
-                                modifier = Modifier.size(dimens.searchBarIconSize)
-                            )
-                        }
-                    }
-                } else {
-                    null
-                },
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.search_competitions),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White.copy(alpha = 0.55f)
-                    )
-                },
-                interactionSource = remember { MutableInteractionSource() },
-                contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
-                    top = 0.dp,
-                    bottom = 0.dp
-                ),
-                shape = Capsule(),
-                colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    disabledTextColor = Color.White.copy(alpha = 0.55f),
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedLeadingIconColor = Color.White,
-                    unfocusedLeadingIconColor = Color.White,
-                    focusedTrailingIconColor = Color.White,
-                    unfocusedTrailingIconColor = Color.White,
-                    focusedPlaceholderColor = Color.White,
-                    unfocusedPlaceholderColor = Color.White,
+            enabled = true,
+            visualTransformation = VisualTransformation.None,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    modifier = Modifier.size(dimens.searchBarIconSize)
                 )
+            },
+            trailingIcon = if (query.isNotEmpty()) {
+                {
+                    IconButton(onClick = { onQueryChange("") }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.clear_search),
+                            modifier = Modifier.size(dimens.searchBarIconSize)
+                        )
+                    }
+                }
+            } else {
+                null
+            },
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.search_competitions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White.copy(alpha = 0.55f)
+                )
+            },
+            interactionSource = remember { MutableInteractionSource() },
+            contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
+                top = 0.dp,
+                bottom = 0.dp
+            ),
+            shape = Capsule(),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                disabledTextColor = Color.White.copy(alpha = 0.55f),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent,
+                cursorColor = Color.White,
+                focusedLeadingIconColor = Color.White,
+                unfocusedLeadingIconColor = Color.White,
+                focusedTrailingIconColor = Color.White,
+                unfocusedTrailingIconColor = Color.White,
+                focusedPlaceholderColor = Color.White,
+                unfocusedPlaceholderColor = Color.White,
             )
-        }
+        )
     }
+
 }

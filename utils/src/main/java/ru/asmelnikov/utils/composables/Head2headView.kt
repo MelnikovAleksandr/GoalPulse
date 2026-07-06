@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.utils.ui.theme.dimens
@@ -32,7 +33,7 @@ fun Head2headView(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(dimens.medium3)
+            .height(dimens.medium2)
     ) {
         Row(
             modifier = Modifier.fillMaxSize()
@@ -50,7 +51,7 @@ fun Head2headView(
                             .basicMarquee(iterations = Int.MAX_VALUE),
                         text = "${stringResource(R.string.stat_home_wins_hyphen)} ${homeWinsPercentage.toInt()}% (${homeWins})",
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.surface
@@ -69,7 +70,7 @@ fun Head2headView(
                             .basicMarquee(iterations = Int.MAX_VALUE),
                         text = "${stringResource(R.string.stat_draws_hyphen)} ${drawsPercentage.toInt()}% (${homeDraws})",
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.surface
@@ -88,7 +89,7 @@ fun Head2headView(
                             .basicMarquee(iterations = Int.MAX_VALUE),
                         text = "${stringResource(R.string.stat_away_wins_hyphen)} ${awayWinsPercentage.toInt()}% (${homeLosses})",
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelLarge,
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.surface

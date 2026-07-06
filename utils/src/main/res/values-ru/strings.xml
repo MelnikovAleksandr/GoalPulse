@@ -142,9 +142,9 @@
     <string name="tab_matches_ahead">Предстоящие</string>
     <string name="tour">тур</string>
     <string name="first_match_no_statistics">Нет статистики, это первый матч.</string>
-    <string name="stat_home_wins_hyphen">Побед дома -</string>
+    <string name="stat_home_wins_hyphen">Побед хозяев -</string>
     <string name="stat_draws_hyphen">Ничьи -</string>
-    <string name="stat_away_wins_hyphen">Побед в гостях -</string>
+    <string name="stat_away_wins_hyphen">Побед гостей -</string>
 
     <!-- TeamInfo Screen -->
     <string name="team_tab_squad">Команда</string>

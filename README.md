@@ -11,12 +11,14 @@ A simple Android application for displaying statistics of major football competi
 • Localization added  
 • Refactored data models  
 • Refactored Compose screens
+• Redesign Compose screens (in progress)*
 
 ## Content
 - [Technologies](#technologies)
 - [Usage](#usage)
 - [Structure](#structure)
-- [Video](#video)
+- [VideoNew](#videoNew)
+- [VideoOld](#videoOld)
   
 ## Technologies
 - [Realm](https://github.com/realm/realm-kotlin)
@@ -36,9 +38,19 @@ NEW_API_KEY = XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ## Structure
-<img src="https://github.com/MelnikovAleksandr/GoalPulse/assets/83123472/254a1b2e-67d8-4033-a1ff-b6992933b9ba.png" width="600"> 
+<img src="https://github.com/user-attachments/assets/8541615b-06c4-4aa2-b607-5fddbcd7c068" width="600"> 
 
-## Video
+## VideoNew
+
+<table>
+  <tr>
+    <td><video src="https://github.com/user-attachments/assets/22360629-0f7f-4648-a640-3eda1c370e64" width="250"></video></td>
+    <td><video src="https://github.com/user-attachments/assets/86063cb9-3edb-4d2c-99d6-2fae4e48660b" width="250"></video></td>
+    <td><video src="https://github.com/user-attachments/assets/985cf7de-f63c-4895-8e47-17288950559d" width="250"></video></td>
+  </tr>
+</table>
+
+## VideoOld
 
 <table>
   <tr>

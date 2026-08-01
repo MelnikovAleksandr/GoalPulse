@@ -1,10 +1,11 @@
-package ru.asmelnikov.competitions_main.components
+package ru.asmelnikov.utils.composables.liquid
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
@@ -20,9 +21,15 @@ fun LiquidPullToRefreshWrapper(
     topOffset: Dp = 0.dp,
     contentAlignment: Alignment = Alignment.TopStart,
     enabled: Boolean = true,
+    onPullActiveChange: (Boolean) -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     val refreshState = rememberPullToRefreshState()
+    val isPullActive = refreshState.distanceFraction > 0f || isRefreshing
+
+    LaunchedEffect(isPullActive) {
+        onPullActiveChange(isPullActive)
+    }
 
     Box(
         modifier.pullToRefresh(

@@ -26,10 +26,10 @@ import ru.asmelnikov.domain.models.Stage
 import ru.asmelnikov.domain.models.TeamMatches
 import ru.asmelnikov.domain.models.TournamentType
 import ru.asmelnikov.domain.models.Winner
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.TimeZone
 import java.util.UUID
 
 
@@ -186,6 +186,8 @@ private fun groupMatchesByTour(
 }
 
 fun MatchEntity.toMatches(): Match {
+    val matchInstant = utcDate.toInstant()
+
     return Match(
         area = area.toArea(),
         competition = competition.toCompetition(),
@@ -198,8 +200,8 @@ fun MatchEntity.toMatches(): Match {
         score = score.toScore(),
         stage = Stage.safeValueOf(stage),
         status = MatchStatus.safeValueOf(status),
-        utcDate = utcDate.toDate()?.formatTo("dd MMMM yyyy, HH:mm") ?: "",
-        bigDate = utcDate.toDate()?.formatTo("dd.MM") ?: ""
+        utcDate = matchInstant?.formatTo("dd MMMM yyyy, HH:mm") ?: "",
+        bigDate = matchInstant?.formatTo("dd.MM") ?: ""
     )
 }
 
@@ -238,20 +240,17 @@ fun TimeEntity?.toTime(): Time {
     )
 }
 
-fun String.toDate(
-    dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssX",
-    timeZone: TimeZone = TimeZone.getTimeZone("UTC")
-): Date? {
-    val parser = SimpleDateFormat(dateFormat, Locale.US)
-    parser.timeZone = timeZone
-    return parser.parse(this)
+fun String.toInstant(): Instant? {
+    return runCatching {
+        Instant.parse(this)
+    }.getOrNull()
 }
 
-fun Date.formatTo(
+fun Instant.formatTo(
     dateFormat: String,
-    timeZone: TimeZone = TimeZone.getTimeZone("Asia/Karachi")
-): String { //todo correct time zone
-    val formatter = SimpleDateFormat(dateFormat, Locale.US) // todo locale
-    formatter.timeZone = timeZone
+    zoneId: ZoneId = ZoneId.systemDefault(),
+    locale: Locale = Locale.getDefault()
+): String {
+    val formatter = DateTimeFormatter.ofPattern(dateFormat, locale).withZone(zoneId)
     return formatter.format(this)
 }

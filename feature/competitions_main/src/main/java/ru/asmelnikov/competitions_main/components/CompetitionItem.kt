@@ -32,6 +32,7 @@ import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.getMockCompetitionsList
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
+import ru.asmelnikov.utils.toLocalizedUiDate
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
@@ -93,12 +94,12 @@ fun SharedTransitionScope.CompetitionItem(
                     color = Color.White.copy(alpha = 0.85f)
                 )
                 Text(
-                    text = "${stringResource(R.string.label_start_date)} - ${competition.currentSeason.startDate}",
+                    text = "${stringResource(R.string.label_start_date)} - ${competition.currentSeason.startDate.toLocalizedUiDate()}",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.85f)
                 )
                 Text(
-                    text = "${stringResource(R.string.label_end_date)} - ${competition.currentSeason.endDate}",
+                    text = "${stringResource(R.string.label_end_date)} - ${competition.currentSeason.endDate.toLocalizedUiDate()}",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.85f)
                 )
@@ -119,7 +120,7 @@ private fun CompetitionItemPreview() {
             AnimatedVisibility(visible = true) {
                 val backdrop = rememberLayerBackdrop()
                 CompetitionItem(
-                    competition = getMockCompetitionsList().first().copy(name = "SHDKJSHDFKHSDKJFHSDJHFKJSDHFKJSDHFKJSDHFKJSHDFKL"),
+                    competition = getMockCompetitionsList().first().copy(name = "Very long name of some competition"),
                     backdrop = backdrop,
                     animatedVisibilityScope = this,
                     onCompClick = { _, _ -> }

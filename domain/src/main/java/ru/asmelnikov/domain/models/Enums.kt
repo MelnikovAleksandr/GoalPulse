@@ -117,7 +117,12 @@ enum class Group(@StringRes val stringResId: Int) {
 
     companion object {
         fun safeValueOf(value: String): Group {
-            return runCatching { valueOf(value) }.getOrDefault(NON)
+            val normalizedValue = value
+                .trim()
+                .uppercase()
+                .replace(" ", "_")
+                .replace("-", "_")
+            return runCatching { valueOf(normalizedValue) }.getOrDefault(NON)
         }
     }
 }

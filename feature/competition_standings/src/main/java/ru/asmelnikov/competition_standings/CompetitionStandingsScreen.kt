@@ -21,13 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -180,7 +177,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(backgroundColor)
     ) {
 
         CollapsingToolbarScaffold(
@@ -208,13 +205,6 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
                         val tint = MaterialTheme.colorScheme.background
                         val tabTitles = TabsStandings.entries.map { stringResource(it.stringResId) }
-                        var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-
-                        LaunchedEffect(pagerState.currentPage) {
-                            snapshotFlow { pagerState.currentPage }.collect { page ->
-                                selectedTabIndex = page
-                            }
-                        }
 
                         Box(modifier = Modifier.fillMaxWidth()) {
                             Box(
@@ -228,13 +218,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             )
 
                             LiquidBottomTabs(
-                                selectedTabIndex = { selectedTabIndex },
-                                onTabSelected = {
-                                    selectedTabIndex = it
-                                    if (pagerState.currentPage != it) {
-                                        scope.launch { pagerState.animateScrollToPage(it) }
-                                    }
-                                },
+                                pagerState = pagerState,
                                 backdrop = backdrop,
                                 tabsCount = tabTitles.size,
                                 modifier = Modifier.padding(
@@ -243,7 +227,9 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                 )
                             ) {
                                 tabTitles.forEachIndexed { index, title ->
-                                    LiquidBottomTab({ selectedTabIndex = index }) {
+                                    LiquidBottomTab({
+                                        scope.launch { pagerState.animateScrollToPage(index) }
+                                    }) {
                                         Text(
                                             text = title,
                                             color = MaterialTheme.colorScheme.onBackground,

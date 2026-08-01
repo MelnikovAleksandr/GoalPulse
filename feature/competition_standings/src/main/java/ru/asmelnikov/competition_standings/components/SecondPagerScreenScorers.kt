@@ -18,8 +18,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import ru.asmelnikov.domain.models.Scorer
 import ru.asmelnikov.domain.models.getMockScorers
 import ru.asmelnikov.utils.composables.EmptyContent
@@ -30,12 +30,11 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SecondPagerScreenScorers(
     scorers: List<Scorer>,
-    paddingValues: PaddingValues = PaddingValues(),
+    topInset: Dp,
     isLoadingScorers: Boolean,
     onReloadClick: () -> Unit,
     onPersonClick: (Int) -> Unit
 ) {
-    val topInset = paddingValues.calculateTopPadding()
     Column(modifier = Modifier.fillMaxSize()) {
 
         AnimatedContent(targetState = scorers.isEmpty()) { emptyData ->
@@ -49,7 +48,9 @@ fun SecondPagerScreenScorers(
                 else -> {
                     val listState = rememberLazyListState()
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background),
                         state = listState,
                         contentPadding = PaddingValues(top = topInset)
                     ) {
@@ -110,6 +111,7 @@ private fun ScorersPreview1() {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
                 isLoadingScorers = false,
+                topInset = Dp.Unspecified,
                 onReloadClick = {},
                 onPersonClick = {}
             )
@@ -129,6 +131,7 @@ private fun ScorersPreview2() {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
                 isLoadingScorers = false,
+                topInset = Dp.Unspecified,
                 onReloadClick = {},
                 onPersonClick = {}
             )

@@ -30,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -140,7 +139,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 @Composable
 fun SharedTransitionScope.CompetitionStandingsContent(
     compUrl: String,
-    competitionStandings: CompetitionStandings?,
+    competitionStandings: CompetitionStandings,
     onBackClick: () -> Unit,
     isLoadingStandings: Boolean,
     scorers: List<Scorer>,
@@ -192,9 +191,9 @@ fun SharedTransitionScope.CompetitionStandingsContent(
             toolbar = {
                 Toolbar(
                     collapsingState = collapsingState,
-                    areaUrl = competitionStandings?.area?.flag ?: "",
+                    areaUrl = competitionStandings.area.flag,
                     compUrl = compUrl,
-                    compName = competitionStandings?.competition?.name ?: "",
+                    compName = competitionStandings.competition.name,
                     sharedTransitionScope = this@CompetitionStandingsContent,
                     animatedVisibilityScope = animatedVisibilityScope,
                     onBackClick = onBackClick
@@ -203,7 +202,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
             body = {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    containerColor = Color.Transparent,
+                    containerColor = MaterialTheme.colorScheme.background,
                     contentWindowInsets = WindowInsets(),
                     topBar = {
                         val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
@@ -256,6 +255,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         }
                     }
                 ) { paddingValues ->
+                    val topInset = paddingValues.calculateTopPadding()
                     HorizontalPager(
                         modifier = Modifier
                             .layerBackdrop(backdrop)
@@ -268,7 +268,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         when (page) {
                             0 -> {
                                 FirstPagerScreenStandings(
-                                    paddingValues = paddingValues,
+                                    topInset = topInset,
                                     competitionStandings = competitionStandings,
                                     isLoading = isLoadingStandings,
                                     onTeamClick = onTeamClick,
@@ -279,7 +279,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             1 -> {
                                 SecondPagerScreenScorers(
                                     scorers = scorers,
-                                    paddingValues = paddingValues,
+                                    topInset = topInset,
                                     isLoadingScorers = isLoadingScorers,
                                     onReloadClick = onReloadScorersClick,
                                     onPersonClick = onPersonClick
@@ -289,7 +289,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             2 -> {
                                 ThirdPagerScreenMatches(
                                     matchesCompleted = matchesCompleted,
-                                    paddingValues = paddingValues,
+                                    topInset = topInset,
                                     matchesAhead = matchesAhead,
                                     isLoadingMatches = isLoadingMatches,
                                     expandedItemId = expandedItemId,

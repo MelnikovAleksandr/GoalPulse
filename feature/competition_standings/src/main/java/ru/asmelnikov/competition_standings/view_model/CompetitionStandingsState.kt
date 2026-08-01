@@ -4,17 +4,25 @@ import android.os.Parcelable
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
+import ru.asmelnikov.domain.models.Area
+import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.Scorer
+import java.util.UUID
 
 @Immutable
 @Parcelize
 data class CompetitionStandingsState(
     val compId: String = "",
     val compUrl: String = "",
-    val competitionStandings: CompetitionStandings? = null,
+    val competitionStandings: CompetitionStandings = CompetitionStandings(
+        id = UUID.randomUUID().toString(),
+        area = Area(),
+        competition = Competition(),
+        standings = listOf()
+    ),
     val matchesCompleted: List<MatchesByTour> = emptyList(),
     val matchesAhead: List<MatchesByTour> = emptyList(),
     val isLoadingStandings: Boolean = true,

@@ -153,10 +153,12 @@ class CompetitionStandingsViewModel(
 
     private fun collectStandingsFlowFromLocal() = intent {
         standingsRepository.getStandingsFlowFromLocalById(state.compId).collect { standings ->
-            reduce {
-                state.copy(
-                    competitionStandings = standings
-                )
+            if (standings != null) {
+                reduce {
+                    state.copy(
+                        competitionStandings = standings
+                    )
+                }
             }
         }
     }

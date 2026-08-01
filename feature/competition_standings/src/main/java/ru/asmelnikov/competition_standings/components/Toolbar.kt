@@ -150,7 +150,7 @@ fun CollapsingToolbarScope.Toolbar(
                     backdrop = backdrop
                 ) {}
                 SubComposeAsyncImageCommon(
-                    modifier = Modifier.fillMaxSize(0.8f),
+                    modifier = Modifier.fillMaxSize(0.7f),
                     imageUri = compUrl,
                     shape = RoundedCornerShape(0.dp)
                 )

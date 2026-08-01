@@ -19,15 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -109,13 +104,6 @@ fun ThirdPagerScreenMatches(
                                 AnimatedVisibility(visible = tabListState.count() > 1) {
                                     val tabTitles =
                                         tabListState.map { stringResource(it.stringResId) }
-                                    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-
-                                    LaunchedEffect(pagerState.currentPage) {
-                                        snapshotFlow { pagerState.currentPage }.collect { page ->
-                                            selectedTabIndex = page
-                                        }
-                                    }
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -133,13 +121,7 @@ fun ThirdPagerScreenMatches(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         LiquidBottomTabs(
-                                            selectedTabIndex = { selectedTabIndex },
-                                            onTabSelected = {
-                                                selectedTabIndex = it
-                                                if (pagerState.currentPage != it) {
-                                                    scope.launch { pagerState.animateScrollToPage(it) }
-                                                }
-                                            },
+                                            pagerState = pagerState,
                                             backdrop = backdrop,
                                             heightMain = 44f.dp,
                                             heightInner = 38f.dp,
@@ -149,7 +131,11 @@ fun ThirdPagerScreenMatches(
                                                 .padding(top = topInset, bottom = dimens.small3)
                                         ) {
                                             tabTitles.forEachIndexed { index, title ->
-                                                LiquidBottomTab({ selectedTabIndex = index }) {
+                                                LiquidBottomTab({
+                                                    scope.launch {
+                                                        pagerState.animateScrollToPage(index)
+                                                    }
+                                                }) {
                                                     Text(
                                                         text = title,
                                                         color = MaterialTheme.colorScheme.onBackground,

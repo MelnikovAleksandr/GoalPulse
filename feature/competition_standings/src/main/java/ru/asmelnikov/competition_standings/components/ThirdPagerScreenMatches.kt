@@ -7,7 +7,6 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,6 +35,7 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -54,7 +54,7 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun ThirdPagerScreenMatches(
     matchesCompleted: List<MatchesByTour>,
-    paddingValues: PaddingValues = PaddingValues(),
+    topInset: Dp,
     matchesAhead: List<MatchesByTour>,
     isLoadingMatches: Boolean,
     expandedItemId: Int,
@@ -70,7 +70,6 @@ fun ThirdPagerScreenMatches(
         drawContent()
     }
     val scope = rememberCoroutineScope()
-    val topInset = paddingValues.calculateTopPadding()
     val tabListState by remember(matchesCompleted, matchesAhead) {
         mutableStateOf(
             buildList {
@@ -229,6 +228,7 @@ private fun MatchesPreview1() {
             matchesCompleted = getMockMatches().matchesByTourCompleted,
             matchesAhead = getMockMatches().matchesByTourAhead,
             isLoadingMatches = false,
+            topInset = Dp.Unspecified,
             expandedItemId = -1,
             onMatchItemClick = {},
             isHead2headLoading = false,
@@ -244,6 +244,7 @@ private fun MatchesPreview2() {
         ThirdPagerScreenMatches(
             matchesCompleted = getMockMatches().matchesByTourCompleted,
             matchesAhead = emptyList(),
+            topInset = Dp.Unspecified,
             isLoadingMatches = false,
             expandedItemId = -1,
             onMatchItemClick = {},
@@ -259,6 +260,7 @@ private fun MatchesPreview3() {
     GoalPulseTheme(darkTheme = true) {
         ThirdPagerScreenMatches(
             matchesCompleted = emptyList(),
+            topInset = Dp.Unspecified,
             matchesAhead = getMockMatches().matchesByTourAhead,
             isLoadingMatches = false,
             expandedItemId = -1,

@@ -1,9 +1,7 @@
 package ru.asmelnikov.competitions_main
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +43,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -54,7 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competitions_main.components.CompetitionItem
 import ru.asmelnikov.competitions_main.components.CompetitionsScaffoldTopBar
-import ru.asmelnikov.competitions_main.components.LiquidPullToRefreshWrapper
+import ru.asmelnikov.utils.composables.liquid.LiquidPullToRefreshWrapper
 import ru.asmelnikov.competitions_main.components.MainBackVideo
 import ru.asmelnikov.competitions_main.components.SearchBarScrollState
 import ru.asmelnikov.competitions_main.components.ShimmerListItem
@@ -62,13 +59,11 @@ import ru.asmelnikov.competitions_main.components.rememberSearchBarScrollState
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenSideEffects
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenViewModel
 import ru.asmelnikov.domain.models.Competition
-import ru.asmelnikov.domain.models.getMockCompetitionsList
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
-import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable

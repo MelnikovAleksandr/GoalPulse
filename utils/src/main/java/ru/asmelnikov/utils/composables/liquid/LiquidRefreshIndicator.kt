@@ -1,4 +1,4 @@
-package ru.asmelnikov.competitions_main.components
+package ru.asmelnikov.utils.composables.liquid
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -35,9 +35,6 @@ import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import ru.asmelnikov.utils.R
-import ru.asmelnikov.utils.composables.liquid.LiquidGlassDefaults
-import ru.asmelnikov.utils.composables.liquid.drawLiquidGlassSurface
-import ru.asmelnikov.utils.composables.liquid.rememberLiquidGlassCompactSpec
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable

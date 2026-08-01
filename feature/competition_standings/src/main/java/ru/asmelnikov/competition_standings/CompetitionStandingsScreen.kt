@@ -168,6 +168,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     )
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     var blockOuterPagerScroll by remember { mutableStateOf(false) }
+    var isPullActive by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = configuration.orientation) {
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             collapsingState.toolbarState.collapse()
@@ -183,7 +184,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
             state = collapsingState,
-            enabled = isPortrait(),
+            enabled = isPortrait() && !isPullActive,
             scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
             toolbar = {
                 Toolbar(
@@ -255,26 +256,31 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                             0 -> {
                                 FirstPagerScreenStandings(
                                     topInset = topInset,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     competitionStandings = competitionStandings,
                                     isLoading = isLoadingStandings,
                                     onTeamClick = onTeamClick,
-                                    onReloadClick = onReloadStandingsClick
+                                    onReloadClick = onReloadStandingsClick,
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
 
                             1 -> {
                                 SecondPagerScreenScorers(
                                     scorers = scorers,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     topInset = topInset,
                                     isLoadingScorers = isLoadingScorers,
                                     onReloadClick = onReloadScorersClick,
-                                    onPersonClick = onPersonClick
+                                    onPersonClick = onPersonClick,
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
 
                             2 -> {
                                 ThirdPagerScreenMatches(
                                     matchesCompleted = matchesCompleted,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     topInset = topInset,
                                     matchesAhead = matchesAhead,
                                     isLoadingMatches = isLoadingMatches,
@@ -283,7 +289,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
                                     onReloadClick = onReloadMatchesClick,
-                                    onOuterPagerScrollBlocked = { blockOuterPagerScroll = it }
+                                    onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
                         }

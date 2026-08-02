@@ -162,6 +162,7 @@
     <string name="team_news">Team news</string>
 
     <!-- Person Screen -->
+    <string name="player_number">Number</string>
     <string name="player_position">Position</string>
 
     <!-- Common -->

@@ -105,12 +105,12 @@ fun CompetitionsHeader(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = stringResource(R.string.available_competitions_count, competitionsCount),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.55f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f)
                 )
             }
         }

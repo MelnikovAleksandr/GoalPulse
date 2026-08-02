@@ -71,6 +71,10 @@ dependencies {
     // Collapsing Toolbar
     implementation(libs.toolbar.compose)
 
+    // Liquid Glass
+    implementation(libs.backdrop)
+    implementation(libs.kyant.shapes)
+
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)

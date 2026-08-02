@@ -22,7 +22,7 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun EmptyContent(
     modifier: Modifier = Modifier,
-    withScroll: Boolean = false,
+    withScroll: Boolean = true,
     onReloadClick: () -> Unit
 ) {
     Column(

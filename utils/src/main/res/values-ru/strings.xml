@@ -161,6 +161,7 @@
     <string name="team_news">Новости команды</string>
 
     <!-- Person Screen -->
+    <string name="player_number">Номер</string>
     <string name="player_position">Позиция</string>
 
     <!-- Common -->

@@ -1,7 +1,10 @@
 package ru.asmelnikov.competitions_main
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -30,19 +32,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Velocity
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -51,19 +55,21 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.competitions_main.components.CompetitionItem
 import ru.asmelnikov.competitions_main.components.CompetitionsScaffoldTopBar
-import ru.asmelnikov.utils.composables.liquid.LiquidPullToRefreshWrapper
-import ru.asmelnikov.competitions_main.components.MainBackVideo
 import ru.asmelnikov.competitions_main.components.SearchBarScrollState
 import ru.asmelnikov.competitions_main.components.ShimmerListItem
 import ru.asmelnikov.competitions_main.components.rememberSearchBarScrollState
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenSideEffects
 import ru.asmelnikov.competitions_main.view_model.CompetitionsScreenViewModel
 import ru.asmelnikov.domain.models.Competition
+import ru.asmelnikov.domain.models.getMockCompetitionsList
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.MainAppState
+import ru.asmelnikov.utils.composables.MainBackVideo
+import ru.asmelnikov.utils.composables.liquid.LiquidPullToRefreshWrapper
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
@@ -164,9 +170,11 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         }
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         MainBackVideo(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,7 +186,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = Color.Transparent,
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
+            contentWindowInsets = WindowInsets(),
             topBar = {
                 CompetitionsScaffoldTopBar(
                     modifier = Modifier
@@ -211,7 +219,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                         modifier = Modifier.fillMaxSize(),
                         targetState = when {
                             isLoading && comps.isEmpty() -> ContentState.Loading
-                            comps.isEmpty() -> ContentState.Empty
+                            !isLoading && comps.isEmpty() -> ContentState.Empty
                             filteredComps.isEmpty() -> ContentState.NotFound
                             else -> ContentState.List
                         },
@@ -253,7 +261,6 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .padding(top = paddingValues.calculateTopPadding())
                                 ) {
                                     EmptyContent(
-                                        withScroll = true,
                                         onReloadClick = updateComps
                                     )
                                 }
@@ -353,3 +360,95 @@ private fun Modifier.competitionsListScrollEffects(
     }
 )
 
+
+@Preview(
+    showBackground = true, locale = "ru", showSystemUi = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun CompetitionsScreenContentPreview1() {
+    GoalPulseTheme(darkTheme = true) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionsScreenContent(
+                    comps = getMockCompetitionsList(),
+                    updateComps = {},
+                    isLoading = false,
+                    onCompClick = { _, _ -> },
+                    animatedVisibilityScope = this
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun CompetitionsScreenContentPreview2() {
+    GoalPulseTheme(darkTheme = false) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionsScreenContent(
+                    comps = getMockCompetitionsList(),
+                    updateComps = {},
+                    isLoading = false,
+                    onCompClick = { _, _ -> },
+                    animatedVisibilityScope = this
+                )
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun CompetitionsScreenContentPreview3() {
+    GoalPulseTheme(darkTheme = true) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionsScreenContent(
+                    comps = emptyList(),
+                    updateComps = {},
+                    isLoading = true,
+                    onCompClick = { _, _ -> },
+                    animatedVisibilityScope = this
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, locale = "ru")
+@Composable
+private fun CompetitionsScreenContentPreview4() {
+    GoalPulseTheme(darkTheme = true) {
+        SharedTransitionLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            AnimatedVisibility(visible = true) {
+                CompetitionsScreenContent(
+                    comps = emptyList(),
+                    updateComps = {},
+                    isLoading = false,
+                    onCompClick = { _, _ -> },
+                    animatedVisibilityScope = this
+                )
+            }
+        }
+    }
+}

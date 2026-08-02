@@ -1,4 +1,4 @@
-package ru.asmelnikov.competitions_main.components
+package ru.asmelnikov.utils.composables
 
 import androidx.annotation.OptIn
 import androidx.annotation.RawRes
@@ -20,7 +20,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.ContentFrame
 import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import ru.asmelnikov.utils.R
-import ru.asmelnikov.utils.composables.isInPreview
 
 private fun resourceUri(packageName: String, @RawRes resId: Int): String =
     "android.resource://$packageName/$resId"

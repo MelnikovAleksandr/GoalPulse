@@ -101,6 +101,10 @@ dependencies {
     // Liquid Glass
     implementation(libs.backdrop)
     implementation(libs.kyant.shapes)
+
+    // Video background
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.ui.compose)
 }
 
 fun getApiKey(propertyKey: String): String {

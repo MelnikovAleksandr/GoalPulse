@@ -1,45 +1,46 @@
 package ru.asmelnikov.person_info
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberCombinedBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.orbitmvi.orbit.compose.collectSideEffect
 import ru.asmelnikov.domain.models.Person
-import ru.asmelnikov.domain.models.PlayerPosition
 import ru.asmelnikov.domain.models.getMockPlayer
+import ru.asmelnikov.person_info.ContentState.Empty
+import ru.asmelnikov.person_info.ContentState.List
+import ru.asmelnikov.person_info.ContentState.Loading
+import ru.asmelnikov.person_info.components.PersonTopBar
+import ru.asmelnikov.person_info.components.TextItem
 import ru.asmelnikov.person_info.view_model.PersonSideEffects
 import ru.asmelnikov.person_info.view_model.PersonViewModel
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.LoadingBall
 import ru.asmelnikov.utils.composables.MainAppState
-import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
+import ru.asmelnikov.utils.composables.MainBackVideo
 import ru.asmelnikov.utils.navigation.popUp
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
@@ -74,7 +75,8 @@ fun PersonInfoScreen(
     PersonInfoContent(
         isLoading = state.isLoading,
         person = state.person,
-        onReload = viewModel::getPersonFromRemote
+        onReload = viewModel::getPersonFromRemote,
+        onBackClick = viewModel::onBackClick
     )
 
 }
@@ -83,156 +85,147 @@ fun PersonInfoScreen(
 fun PersonInfoContent(
     isLoading: Boolean,
     person: Person,
-    onReload: () -> Unit
+    onReload: () -> Unit,
+    onBackClick: () -> Unit
 ) {
 
-    Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    val videoBackdrop = rememberLayerBackdrop()
+    val listBackdrop = rememberLayerBackdrop()
+    val topBarBackdrop = rememberLayerBackdrop()
+    val contentBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop)
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
+        MainBackVideo(
+            modifier = Modifier
+                .fillMaxSize()
+                .layerBackdrop(videoBackdrop),
+            videoResId = R.raw.player_video,
+            reverseVideoResId = R.raw.player_video_reverse
+        )
 
-        if (isLoading) {
-            LoadingBall()
-        } else if (person.name.isBlank()) {
-            EmptyContent(onReloadClick = onReload)
-        } else {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Image(
-                    modifier = Modifier.fillMaxWidth(),
-                    painter = painterResource(id = R.drawable.football_player),
-                    contentDescription = null
-                )
-
-                Text(
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = Color.Transparent,
+            contentWindowInsets = WindowInsets(),
+            topBar = {
+                PersonTopBar(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = dimens.extraSmall1),
-                    text = if (person.shirtNumber != -1) person.shirtNumber.toString() else "",
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = Color.Black
-                )
-
-                SubComposeAsyncImageCommon(
-                    imageUri = person.currentTeam.crest,
-                    shape = CircleShape,
-                    size = dimens.medium4,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(start = 120.dp),
-                    loading = {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(dimens.large)
-                            )
-                        }
-                    }
+                        .layerBackdrop(topBarBackdrop),
+                    backdrop = contentBackdrop,
+                    name = person.name,
+                    teamUrl = person.currentTeam.crest,
+                    onBackClick = onBackClick
                 )
             }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = dimens.small3),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = person.name,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = stringResource(R.string.player_age),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Text(
-                        modifier = Modifier,
-                        text = person.age,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        modifier = Modifier,
-                        text = stringResource(R.string.player_nationality),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Text(
-                        modifier = Modifier,
-                        text = person.nationality,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                if (person.position != PlayerPosition.NON)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            modifier = Modifier,
-                            text = stringResource(R.string.player_position),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Text(
-                            modifier = Modifier,
-                            text = stringResource(person.position.stringResId),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelMedium,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.secondary
+        ) { paddingValues ->
+            val topInsets = paddingValues.calculateTopPadding()
+
+            AnimatedContent(
+                modifier = Modifier.fillMaxSize(),
+                targetState = when {
+                    isLoading && person.name.isEmpty() -> Loading
+                    !isLoading && person.name.isEmpty() -> Empty
+                    else -> List
+                },
+                label = "competitions_content"
+            ) { state ->
+                when (state) {
+                    Loading -> {
+                        LoadingBall(
+                            modifier = Modifier.padding(top = topInsets)
                         )
                     }
+                    Empty -> EmptyContent(
+                        modifier = Modifier.padding(top = topInsets),
+                        onReloadClick = onReload
+                    )
+
+                    List -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .layerBackdrop(listBackdrop),
+                            verticalArrangement = Arrangement.spacedBy(dimens.small3),
+                            contentPadding = PaddingValues(
+                                start = dimens.medium1,
+                                end = dimens.medium1,
+                                bottom = dimens.medium1,
+                                top = topInsets + dimens.medium1,
+                            )
+                        ) {
+                            item {
+                                TextItem(
+                                    backdrop = videoBackdrop,
+                                    title = stringResource(R.string.player_name),
+                                    text = person.name
+                                )
+                            }
+
+                            item {
+                                TextItem(
+                                    backdrop = videoBackdrop,
+                                    title = stringResource(R.string.player_age),
+                                    text = person.age
+                                )
+                            }
+
+                            item {
+                                TextItem(
+                                    backdrop = videoBackdrop,
+                                    title = stringResource(R.string.player_nationality),
+                                    text = person.nationality
+                                )
+                            }
+
+                            item {
+                                TextItem(
+                                    backdrop = videoBackdrop,
+                                    title = stringResource(R.string.player_position),
+                                    text = stringResource(person.position.stringResId)
+                                )
+                            }
+
+                            if (person.shirtNumber > 0) {
+                                item {
+                                    TextItem(
+                                        backdrop = videoBackdrop,
+                                        title = stringResource(R.string.player_number),
+                                        text = person.shirtNumber.toString()
+                                    )
+                                }
+                            }
+
+                            item {
+                                Spacer(modifier = Modifier.navigationBarsPadding())
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
-@Preview
+private enum class ContentState {
+    Loading,
+    Empty,
+    List
+}
+
+@Preview(showSystemUi = false, showBackground = false, locale = "ru")
 @Composable
 private fun PersonInfoContentPreview1() {
     GoalPulseTheme(darkTheme = true) {
         PersonInfoContent(
             isLoading = false,
             person = getMockPlayer(),
-            onReload = {}
+            onReload = {},
+            onBackClick = {}
         )
     }
 }
@@ -244,7 +237,34 @@ private fun PersonInfoContentPreview2() {
         PersonInfoContent(
             isLoading = false,
             person = getMockPlayer(),
-            onReload = {}
+            onReload = {},
+            onBackClick = {}
+        )
+    }
+}
+
+@Preview(showSystemUi = false, showBackground = false, locale = "ru")
+@Composable
+private fun PersonInfoContentPreview3() {
+    GoalPulseTheme(darkTheme = true) {
+        PersonInfoContent(
+            isLoading = true,
+            person = getMockPlayer().copy(name = ""),
+            onReload = {},
+            onBackClick = {}
+        )
+    }
+}
+
+@Preview(showSystemUi = false, showBackground = false, locale = "ru")
+@Composable
+private fun PersonInfoContentPreview4() {
+    GoalPulseTheme(darkTheme = true) {
+        PersonInfoContent(
+            isLoading = false,
+            person = getMockPlayer().copy(name = ""),
+            onReload = {},
+            onBackClick = {}
         )
     }
 }

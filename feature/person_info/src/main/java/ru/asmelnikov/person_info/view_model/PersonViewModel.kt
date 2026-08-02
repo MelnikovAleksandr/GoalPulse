@@ -47,6 +47,10 @@ class PersonViewModel(
         }
     }
 
+    fun onBackClick() = intent {
+        postSideEffect(PersonSideEffects.BackClick)
+    }
+
     private fun handleError(error: ErrorsTypesHttp?) = intent {
         reduce {
             state.copy(

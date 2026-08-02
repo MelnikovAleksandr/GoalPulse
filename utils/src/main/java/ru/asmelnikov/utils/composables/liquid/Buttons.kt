@@ -124,7 +124,7 @@ fun LiquidButtonRow(
                     Modifier
                 }
             ),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         content = content
     )

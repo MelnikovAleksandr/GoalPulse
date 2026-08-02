@@ -24,6 +24,7 @@ import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.domain.models.getMockStandings
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.liquid.LiquidPullToRefreshWrapper
+import ru.asmelnikov.utils.composables.stickyHeaderContentPaddingAware
 import ru.asmelnikov.utils.getCompColor
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 

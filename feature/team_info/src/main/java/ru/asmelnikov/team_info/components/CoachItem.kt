@@ -36,7 +36,7 @@ fun CoachItem(
             modifier = Modifier.padding(dimens.small3),
             text = coach.name,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.titleSmall.copy(),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

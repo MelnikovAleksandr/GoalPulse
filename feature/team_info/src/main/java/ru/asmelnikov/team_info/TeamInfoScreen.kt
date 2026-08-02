@@ -1,23 +1,20 @@
 package ru.asmelnikov.team_info
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,11 +25,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.graphics.toColorInt
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ExperimentalToolbarApi
@@ -56,8 +57,10 @@ import ru.asmelnikov.team_info.components.Toolbar
 import ru.asmelnikov.team_info.view_model.TeamInfoSideEffects
 import ru.asmelnikov.team_info.view_model.TeamInfoViewModel
 import ru.asmelnikov.utils.composables.MainAppState
-import ru.asmelnikov.utils.composables.PagerTabRow
 import ru.asmelnikov.utils.composables.isPortrait
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
+import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
+import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
@@ -139,7 +142,11 @@ fun TeamInfoScreenContent(
     news: News,
     isLoadingNews: Boolean
 ) {
-
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val backdrop = rememberLayerBackdrop {
+        drawRect(backgroundColor)
+        drawContent()
+    }
     val isMaterialColors = remember(teamInfo.crest) { teamInfo.crest.endsWith(".svg") }
     var vibrant by remember { mutableStateOf("#ffffff") }
     var lightMutedSwatch by remember { mutableStateOf("#ffffff") }
@@ -151,6 +158,8 @@ fun TeamInfoScreenContent(
         initialPage = 0,
         pageCount = { TabsTeam.entries.count() }
     )
+    var isPullActive by remember { mutableStateOf(false) }
+    var blockOuterPagerScroll by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = configuration.orientation) {
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             collapsingState.toolbarState.collapse()
@@ -159,86 +168,146 @@ fun TeamInfoScreenContent(
     LaunchedEffect(key1 = colors) {
         if (colors.isNotEmpty()) {
             vibrant = colors["vibrant"] ?: ""
-            lightMutedSwatch = colors["lightMuted"] ?: ""
+            lightMutedSwatch = colors["mutedSwatch"] ?: ""
             onDarkVibrant = colors["onDarkVibrant"] ?: ""
         }
     }
 
+    val defaultColor = MaterialTheme.colorScheme.background
+    val targetVibrant = Color(
+        vibrant.ifBlank { "#ffffff" }.toColorInt()
+    ).takeIf { vibrant.isNotBlank() } ?: defaultColor
+    val targetLightMuted = Color(
+        lightMutedSwatch.ifBlank { "#ffffff" }.toColorInt()
+    ).takeIf { lightMutedSwatch.isNotBlank() } ?: defaultColor
+    val targetOnDarkVibrant = Color(
+        onDarkVibrant.ifBlank { "#ffffff" }.toColorInt()
+    ).takeIf { onDarkVibrant.isNotBlank() } ?: defaultColor
+    val animatedVibrant by animateColorAsState(
+        targetValue = if (colors.isNotEmpty()) targetVibrant else defaultColor,
+        animationSpec = tween(durationMillis = 700),
+        label = "vibrant"
+    )
+    val animatedLightMuted by animateColorAsState(
+        targetValue = if (colors.isNotEmpty()) targetLightMuted else defaultColor,
+        animationSpec = tween(durationMillis = 700),
+        label = "lightMuted"
+    )
+    val animatedOnDarkVibrant by animateColorAsState(
+        targetValue = if (colors.isNotEmpty()) targetOnDarkVibrant else defaultColor,
+        animationSpec = tween(durationMillis = 700),
+        label = "onDarkVibrant"
+    )
+    val gradientBrush = Brush.verticalGradient(
+        colors = listOf(
+            animatedVibrant,
+            animatedLightMuted,
+            animatedOnDarkVibrant
+        )
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
     ) {
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
             state = collapsingState,
-            enabled = isPortrait(),
+            enabled = isPortrait() && !isPullActive,
             scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
             toolbar = {
                 Toolbar(
                     collapsingState = collapsingState,
+                    mainColor = animatedVibrant,
+                    secondColor = animatedLightMuted,
                     teamName = teamInfo.name,
                     teamCrest = teamInfo.crest,
-                    lightMutedSwatch = lightMutedSwatch,
-                    onDarkVibrant = onDarkVibrant,
-                    isMaterialColors = isMaterialColors
+                    onBackClick = onBackClick
                 )
             },
             body = {
-                Column(modifier = Modifier.fillMaxSize()) {
 
-                    AnimatedVisibility(visible = isLoading) {
-                        LinearProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(dimens.extraSmall1),
-                            color = MaterialTheme.colorScheme.primary,
-                            trackColor = if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else Color(
-                                lightMutedSwatch.toColorInt()
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = Color.Transparent,
+                    contentWindowInsets = WindowInsets(),
+                    topBar = {
+                        val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
+
+                        val tabTitles = TabsTeam.entries.map { stringResource(it.stringResId) }
+
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .drawProgressivePlainBackdrop(
+                                        backdrop = backdrop,
+                                        blurRadiusPx = blurRadiusPx,
+                                        tint = animatedLightMuted
+                                    )
                             )
-                        )
+
+                            LiquidBottomTabs(
+                                pagerState = pagerState,
+                                backdrop = backdrop,
+                                tabsCount = tabTitles.size,
+                                background = animatedLightMuted,
+                                modifier = Modifier.padding(
+                                    horizontal = dimens.medium2,
+                                    vertical = dimens.small3
+                                )
+                            ) {
+                                tabTitles.forEachIndexed { index, title ->
+                                    LiquidBottomTab({
+                                        scope.launch { pagerState.animateScrollToPage(index) }
+                                    }) {
+                                        Text(
+                                            text = title,
+                                            color = MaterialTheme.colorScheme.onBackground,
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
-
-                    PagerTabRow(
-                        tabTitles = TabsTeam.entries.map { stringResource(it.stringResId) },
-                        selectedIndex = pagerState.currentPage,
-                        modifier = Modifier.fillMaxWidth(),
-                        onTabSelected = { scope.launch { pagerState.animateScrollToPage(it) } },
-                        containerColor = if (isMaterialColors) MaterialTheme.colorScheme.background else Color(
-                            vibrant.toColorInt()
-                        )
-                    )
-
+                ) { paddingValues ->
+                    val topInset = paddingValues.calculateTopPadding()
                     HorizontalPager(
                         modifier = Modifier
+                            .layerBackdrop(backdrop)
+                            .background(gradientBrush)
                             .fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 1,
+                        userScrollEnabled = !blockOuterPagerScroll,
                         verticalAlignment = Alignment.Top
                     ) { page ->
                         when (page) {
                             0 -> {
                                 SquadPagerList(
                                     teamInfo = teamInfo,
-                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
-                                    itemColor = Color(vibrant.toColorInt()),
-                                    isMaterialColors = isMaterialColors,
+                                    topInset = topInset,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     isLoading = isLoading,
+                                    itemColor = animatedLightMuted,
+                                    isMaterialColors = isMaterialColors,
                                     onReloadClick = onTeamInfoReload,
-                                    onPersonClick = onPersonClick
+                                    onPersonClick = onPersonClick,
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
 
                             1 -> {
                                 TeamInfoPage(
                                     teamInfo = teamInfo,
+                                    topInset = topInset,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     isLoading = isLoading,
                                     onReloadClick = onTeamInfoReload,
-                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
-                                    itemColor = Color(vibrant.toColorInt()),
-                                    isMaterialColors = isMaterialColors,
                                     news = news,
-                                    isLoadingNews = isLoadingNews
+                                    isLoadingNews = isLoadingNews,
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
 
@@ -247,15 +316,16 @@ fun TeamInfoScreenContent(
                                     matchesCompleted = matchesComplete,
                                     matchesAhead = matchesAhead,
                                     isLoading = isMatchesLoading,
+                                    topInset = topInset,
+                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     onReloadClick = onMatchesReload,
-                                    isMaterialColors = isMaterialColors,
-                                    stickyHeaderColor = Color(lightMutedSwatch.toColorInt()),
-                                    itemColor = Color(vibrant.toColorInt()),
                                     expandedItemId = expandedItemId,
                                     onMatchItemClick = onMatchItemClick,
                                     teamId = teamId,
                                     head2head = head2head,
-                                    isHead2headLoading = isHead2headLoading
+                                    isHead2headLoading = isHead2headLoading,
+                                    onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
+                                    onPullActiveChange = { isPullActive = it }
                                 )
                             }
                         }
@@ -263,18 +333,6 @@ fun TeamInfoScreenContent(
                 }
             }
         )
-        IconButton(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .systemBarsPadding(),
-            onClick = onBackClick
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
     }
 }
 

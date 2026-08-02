@@ -20,6 +20,7 @@ import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.getMockHead2Head
 import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.composables.MatchItem
+import ru.asmelnikov.utils.composables.stickyHeaderContentPaddingAware
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 
 @Composable

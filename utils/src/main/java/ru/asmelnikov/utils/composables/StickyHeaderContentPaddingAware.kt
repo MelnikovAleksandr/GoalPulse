@@ -1,4 +1,4 @@
-package ru.asmelnikov.competition_standings.components
+package ru.asmelnikov.utils.composables
 
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope

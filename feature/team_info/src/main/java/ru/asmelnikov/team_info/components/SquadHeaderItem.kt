@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,13 +24,12 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SquadHeaderItem(
     squadByPosition: SquadByPosition,
-    itemColor: Color,
-    isMaterialColors: Boolean
+    itemColor: Color
 ) {
 
     Column(
         modifier = Modifier
-            .background(if (isMaterialColors) MaterialTheme.colorScheme.primaryContainer else itemColor)
+            .background(itemColor)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
@@ -39,7 +40,13 @@ fun SquadHeaderItem(
             ),
             text = stringResource(squadByPosition.position.stringResId),
             textAlign = TextAlign.Start,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium.copy(
+                shadow = Shadow(
+                    color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                    offset = Offset(0f, 1f),
+                    blurRadius = 4f
+                )
+            ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -60,7 +67,13 @@ fun SquadHeaderItem(
                     .weight(1f),
                 text = stringResource(R.string.player_name),
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    shadow = Shadow(
+                        color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                        offset = Offset(0f, 1f),
+                        blurRadius = 4f
+                    )
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -74,7 +87,13 @@ fun SquadHeaderItem(
                     .weight(1f),
                 text = stringResource(R.string.player_nationality),
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    shadow = Shadow(
+                        color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                        offset = Offset(0f, 1f),
+                        blurRadius = 4f
+                    )
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -88,7 +107,13 @@ fun SquadHeaderItem(
                     .weight(0.5f),
                 text = stringResource(R.string.player_age),
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    shadow = Shadow(
+                        color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
+                        offset = Offset(0f, 1f),
+                        blurRadius = 4f
+                    )
+                ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onPrimaryContainer

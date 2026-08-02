@@ -30,6 +30,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -88,7 +89,13 @@ fun CollapsingToolbarScope.Toolbar(
             .fillMaxWidth()
             .size(dimens.emptyContentImageSize)
             .pin()
-            .background(mainColor)
+            .background(
+                lerp(
+                    start = secondColor,
+                    stop = mainColor,
+                    fraction = collapsingState.toolbarState.progress
+                )
+            )
     )
     Box(
         modifier = Modifier

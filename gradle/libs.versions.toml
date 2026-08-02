@@ -35,6 +35,7 @@ kyantShapes = "1.2.0"
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-animation = { module = "androidx.compose.animation:animation" }
 androidx-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }
 androidx-ui = { module = "androidx.compose.ui:ui" }
@@ -86,7 +87,6 @@ media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", ver
 backdrop = { group = "io.github.kyant0", name = "backdrop", version.ref = "backdrop" }
 kyant-shapes = { group = "io.github.kyant0", name = "shapes", version.ref = "kyantShapes" }
 kmpalette-core = { module = "com.materialkolor.palette:core", version.ref = "kmpalette" }
-kmpalette-extensions-network = { module = "com.materialkolor.palette:extensions-network", version.ref = "kmpalette" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

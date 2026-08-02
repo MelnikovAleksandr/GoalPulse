@@ -61,11 +61,12 @@ fun LiquidBottomTabs(
     modifier: Modifier = Modifier,
     heightMain: Dp = 64f.dp,
     heightInner: Dp = 56f.dp,
+    background: Color? = null,
     content: @Composable RowScope.() -> Unit
 ) {
     val accentColor = MaterialTheme.colorScheme.primary
     val containerColor = MaterialTheme.colorScheme.background.copy(0.4f)
-    val backgroundColor = MaterialTheme.colorScheme.background
+    val backgroundColor = background ?: MaterialTheme.colorScheme.background
     val tabsBackdrop = rememberLayerBackdrop {
         drawRect(backgroundColor)
         drawContent()

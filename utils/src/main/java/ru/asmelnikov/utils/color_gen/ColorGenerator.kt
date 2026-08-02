@@ -10,7 +10,6 @@ import coil.request.SuccessResult
 
 interface ColorGenerator {
 
-
     suspend fun convertImageUrlToBitmap(
         imageUrl: String
     ): Bitmap?
@@ -64,7 +63,7 @@ interface ColorGenerator {
         private fun parseColorSwatch(color: Palette.Swatch?): String {
             return if (color != null) {
                 val parsedColor = Integer.toHexString(color.rgb)
-                return "#$parsedColor"
+                "#$parsedColor"
             } else {
                 "#000000"
             }

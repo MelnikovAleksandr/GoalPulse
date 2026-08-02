@@ -16,8 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.SquadByPosition
-import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.R
+import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun SquadHeaderItem(

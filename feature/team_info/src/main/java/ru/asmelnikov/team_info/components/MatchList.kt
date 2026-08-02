@@ -2,7 +2,10 @@ package ru.asmelnikov.team_info.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
@@ -11,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.Winner
@@ -24,6 +29,7 @@ import ru.asmelnikov.utils.ui.theme.lastRed
 @Composable
 fun MatchList(
     matches: List<Match>,
+    topInset: Dp = 0.dp,
     isAhead: Boolean,
     expandedItemId: Int,
     onMatchItemClick: (Int) -> Unit,
@@ -33,7 +39,8 @@ fun MatchList(
 ) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        contentPadding = PaddingValues(top = topInset)
     ) {
         itemsIndexed(
             items = matches,
@@ -70,6 +77,9 @@ fun MatchList(
                 HorizontalDivider(color = MaterialTheme.colorScheme.primary)
             }
         }
+        item {
+            Spacer(modifier = Modifier.navigationBarsPadding())
+        }
     }
 }
 
@@ -95,9 +105,11 @@ private fun getResultColor(match: Match, teamId: String): Color {
 @Composable
 private fun MatchListPreview1() {
     GoalPulseTheme(darkTheme = true) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             MatchList(
                 matches = getMockMatchesComplete(),
                 isAhead = false,
@@ -115,9 +127,11 @@ private fun MatchListPreview1() {
 @Composable
 private fun MatchListPreview2() {
     GoalPulseTheme {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             MatchList(
                 matches = getMockMatchesAhead(),
                 isAhead = true,

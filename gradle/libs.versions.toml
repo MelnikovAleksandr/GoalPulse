@@ -15,6 +15,7 @@ material3WindowSizeClass = "1.4.0"
 moshi = "1.15.2"
 orbit = "11.0.0"
 paletteKtx = "1.0.0"
+kmpalette = "4.0.0-beta02"
 agp = "8.12.3"
 kotlin = "2.2.10"
 ksp = "2.3.5"
@@ -84,6 +85,8 @@ media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", versi
 media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", version.ref = "media3" }
 backdrop = { group = "io.github.kyant0", name = "backdrop", version.ref = "backdrop" }
 kyant-shapes = { group = "io.github.kyant0", name = "shapes", version.ref = "kyantShapes" }
+kmpalette-core = { module = "com.materialkolor.palette:core", version.ref = "kmpalette" }
+kmpalette-extensions-network = { module = "com.materialkolor.palette:extensions-network", version.ref = "kmpalette" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -16,7 +16,6 @@ data class TeamInfoState(
     val teamInfo: TeamInfo = TeamInfo(),
     val isInfoLoading: Boolean = true,
     val isMatchesLoading: Boolean = true,
-    val colorPalette: Map<String, String> = mapOf(),
     val matchesComplete: List<Match> = emptyList(),
     val matchesAhead: List<Match> = emptyList(),
     val expandedItem: Int = -1,

@@ -34,7 +34,6 @@ fun SquadPagerList(
     teamInfo: TeamInfo,
     topInset: Dp,
     itemColor: Color,
-    isMaterialColors: Boolean,
     isLoading: Boolean,
     isPullToRefreshEnabled: Boolean,
     onReloadClick: () -> Unit,
@@ -92,8 +91,7 @@ fun SquadPagerList(
                             ) {
                                 SquadHeaderItem(
                                     squadByPosition = squadByPosition,
-                                    itemColor = itemColor,
-                                    isMaterialColors = isMaterialColors
+                                    itemColor = itemColor
                                 )
                             }
                         }
@@ -134,7 +132,6 @@ private fun SquadPagerListPreview() {
             topInset = Dp.Hairline,
             isLoading = false,
             itemColor = MaterialTheme.colorScheme.primaryContainer,
-            isMaterialColors = true,
             isPullToRefreshEnabled = true,
             onReloadClick = {},
             onPersonClick = {}

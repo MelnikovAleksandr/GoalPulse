@@ -2,6 +2,7 @@ package ru.asmelnikov.team_info.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
@@ -58,12 +59,12 @@ fun TeamMatchesList(
     head2head: Head2head,
     isHead2headLoading: Boolean,
     teamId: String,
+    color: Color,
     onOuterPagerScrollBlocked: (Boolean) -> Unit = {},
     onPullActiveChange: (Boolean) -> Unit = {}
 ) {
-    val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
-        drawRect(backgroundColor)
+        drawRect(color)
         drawContent()
     }
     val scope = rememberCoroutineScope()
@@ -132,6 +133,7 @@ fun TeamMatchesList(
                                         heightMain = 44f.dp,
                                         heightInner = 38f.dp,
                                         tabsCount = tabTitles.size,
+                                        background = color,
                                         modifier = Modifier
                                             .fillMaxWidth(0.7f)
                                             .padding(top = topInset, bottom = dimens.small3)
@@ -204,19 +206,26 @@ fun TeamMatchesList(
 @Composable
 private fun MatchesPreview1() {
     GoalPulseTheme(darkTheme = true) {
-        TeamMatchesList(
-            matchesCompleted = getMockMatchesComplete(),
-            matchesAhead = getMockMatchesAhead(),
-            isPullToRefreshEnabled = true,
-            topInset = Dp.Hairline,
-            expandedItemId = -1,
-            onMatchItemClick = {},
-            isHead2headLoading = false,
-            onReloadClick = {},
-            isLoading = false,
-            head2head = getMockHead2Head(),
-            teamId = "66"
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            TeamMatchesList(
+                matchesCompleted = getMockMatchesComplete(),
+                matchesAhead = getMockMatchesAhead(),
+                isPullToRefreshEnabled = true,
+                topInset = Dp.Hairline,
+                expandedItemId = -1,
+                onMatchItemClick = {},
+                isHead2headLoading = false,
+                onReloadClick = {},
+                isLoading = false,
+                head2head = getMockHead2Head(),
+                teamId = "66",
+                color = MaterialTheme.colorScheme.background
+            )
+        }
     }
 }
 
@@ -224,19 +233,26 @@ private fun MatchesPreview1() {
 @Composable
 private fun MatchesPreview2() {
     GoalPulseTheme {
-        TeamMatchesList(
-            matchesCompleted = getMockMatchesComplete(),
-            matchesAhead = emptyList(),
-            isPullToRefreshEnabled = true,
-            topInset = Dp.Hairline,
-            expandedItemId = -1,
-            onMatchItemClick = {},
-            isHead2headLoading = false,
-            onReloadClick = {},
-            isLoading = false,
-            head2head = getMockHead2Head(),
-            teamId = "66"
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            TeamMatchesList(
+                matchesCompleted = getMockMatchesComplete(),
+                matchesAhead = emptyList(),
+                isPullToRefreshEnabled = true,
+                topInset = Dp.Hairline,
+                expandedItemId = -1,
+                onMatchItemClick = {},
+                isHead2headLoading = false,
+                onReloadClick = {},
+                isLoading = false,
+                head2head = getMockHead2Head(),
+                teamId = "66",
+                color = MaterialTheme.colorScheme.background
+            )
+        }
     }
 }
 
@@ -244,18 +260,25 @@ private fun MatchesPreview2() {
 @Composable
 private fun MatchesPreview3() {
     GoalPulseTheme(darkTheme = true) {
-        TeamMatchesList(
-            matchesCompleted = emptyList(),
-            matchesAhead = getMockMatchesAhead(),
-            isPullToRefreshEnabled = true,
-            topInset = Dp.Hairline,
-            expandedItemId = -1,
-            onMatchItemClick = {},
-            isHead2headLoading = false,
-            onReloadClick = {},
-            isLoading = false,
-            head2head = getMockHead2Head(),
-            teamId = "66"
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            TeamMatchesList(
+                matchesCompleted = emptyList(),
+                matchesAhead = getMockMatchesAhead(),
+                isPullToRefreshEnabled = true,
+                topInset = Dp.Hairline,
+                expandedItemId = -1,
+                onMatchItemClick = {},
+                isHead2headLoading = false,
+                onReloadClick = {},
+                isLoading = false,
+                head2head = getMockHead2Head(),
+                teamId = "66",
+                color = MaterialTheme.colorScheme.background
+            )
+        }
     }
 }

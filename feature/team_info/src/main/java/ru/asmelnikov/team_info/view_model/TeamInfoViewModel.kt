@@ -12,7 +12,6 @@ import ru.asmelnikov.domain.repository.TeamInfoRepository
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
 import ru.asmelnikov.utils.StringResourceProvider
-import ru.asmelnikov.utils.color_gen.ColorGenerator
 import ru.asmelnikov.utils.getErrorMessage
 
 class TeamInfoViewModel(
@@ -20,7 +19,6 @@ class TeamInfoViewModel(
     private val stringResourceProvider: StringResourceProvider,
     private val standingsRepository: CompetitionStandingsRepository,
     private val newsRepository: NewsRepository,
-    private val colorGenerator: ColorGenerator,
     private val teamId: String
 ) : ViewModel(),
     ContainerHost<TeamInfoState, TeamInfoSideEffects> {
@@ -134,7 +132,6 @@ class TeamInfoViewModel(
                     teamInfo = teamInfo ?: TeamInfo()
                 )
             }
-            if (!teamInfo?.crest.isNullOrEmpty()) generateColors()
             if (!teamInfo?.name.isNullOrEmpty()) getNews()
         }
     }
@@ -173,25 +170,6 @@ class TeamInfoViewModel(
                 }
                 handleError(news.httpErrors)
             }
-        }
-    }
-
-    private fun generateColors() = intent {
-        try {
-            val bitmap = colorGenerator.convertImageUrlToBitmap(
-                imageUrl = state.teamInfo.crest
-            )
-            if (bitmap != null) {
-                reduce {
-                    state.copy(
-                        colorPalette = colorGenerator.extractColorsFromBitmap(
-                            bitmap = bitmap
-                        )
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

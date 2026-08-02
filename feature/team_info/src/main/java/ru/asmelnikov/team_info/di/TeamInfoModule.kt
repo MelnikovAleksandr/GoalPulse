@@ -12,7 +12,6 @@ val teamInfoModule = module {
             stringResourceProvider = get(),
             standingsRepository = get(),
             newsRepository = get(),
-            colorGenerator = get(),
             teamId = teamId
         )
     }

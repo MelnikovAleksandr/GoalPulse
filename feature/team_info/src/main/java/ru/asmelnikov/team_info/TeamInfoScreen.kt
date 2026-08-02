@@ -1,6 +1,7 @@
 package ru.asmelnikov.team_info
 
 import android.content.res.Configuration
+import android.graphics.drawable.BitmapDrawable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -27,11 +28,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.graphics.toColorInt
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
+import com.kmpalette.color
+import com.kmpalette.rememberPaletteState
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
@@ -103,7 +110,6 @@ fun TeamInfoScreen(
         teamInfo = state.teamInfo,
         isLoading = state.isInfoLoading,
         onBackClick = viewModel::onBackClick,
-        colors = state.colorPalette,
         onTeamInfoReload = viewModel::getTeamInfoFromRemoteToLocal,
         isMatchesLoading = state.isMatchesLoading,
         expandedItemId = state.expandedItem,
@@ -127,7 +133,6 @@ fun TeamInfoScreenContent(
     teamInfo: TeamInfo,
     isLoading: Boolean,
     onBackClick: () -> Unit,
-    colors: Map<String, String>,
     onTeamInfoReload: () -> Unit,
     isMatchesLoading: Boolean,
     matchesComplete: List<Match>,
@@ -147,10 +152,7 @@ fun TeamInfoScreenContent(
         drawRect(backgroundColor)
         drawContent()
     }
-    val isMaterialColors = remember(teamInfo.crest) { teamInfo.crest.endsWith(".svg") }
-    var vibrant by remember { mutableStateOf("#ffffff") }
-    var lightMutedSwatch by remember { mutableStateOf("#ffffff") }
-    var onDarkVibrant by remember { mutableStateOf("#ffffff") }
+
     val configuration = LocalConfiguration.current
     val scope = rememberCoroutineScope()
     val collapsingState = rememberCollapsingToolbarScaffoldState()
@@ -165,45 +167,55 @@ fun TeamInfoScreenContent(
             collapsingState.toolbarState.collapse()
         }
     }
-    LaunchedEffect(key1 = colors) {
-        if (colors.isNotEmpty()) {
-            vibrant = colors["vibrant"] ?: ""
-            lightMutedSwatch = colors["mutedSwatch"] ?: ""
-            onDarkVibrant = colors["onDarkVibrant"] ?: ""
-        }
+
+    val context = LocalContext.current
+    val paletteState = rememberPaletteState()
+
+    LaunchedEffect(teamInfo.crest) {
+        if (teamInfo.crest.isBlank()) return@LaunchedEffect
+        val result = ImageLoader(context).execute(
+            ImageRequest.Builder(context)
+                .data(teamInfo.crest)
+                .allowHardware(false)
+                .build()
+        )
+        val bitmap = (result as? SuccessResult)
+            ?.drawable
+            ?.let { (it as BitmapDrawable).bitmap }
+            ?.asImageBitmap()
+            ?: return@LaunchedEffect
+        paletteState.generate(bitmap)
     }
 
+    val topColors = paletteState.palette
+        ?.swatches
+        ?.sortedByDescending { it.population }
+        ?.take(3)
+        ?.map { it.color }
+        ?: emptyList()
+
     val defaultColor = MaterialTheme.colorScheme.background
-    val targetVibrant = Color(
-        vibrant.ifBlank { "#ffffff" }.toColorInt()
-    ).takeIf { vibrant.isNotBlank() } ?: defaultColor
-    val targetLightMuted = Color(
-        lightMutedSwatch.ifBlank { "#ffffff" }.toColorInt()
-    ).takeIf { lightMutedSwatch.isNotBlank() } ?: defaultColor
-    val targetOnDarkVibrant = Color(
-        onDarkVibrant.ifBlank { "#ffffff" }.toColorInt()
-    ).takeIf { onDarkVibrant.isNotBlank() } ?: defaultColor
-    val animatedVibrant by animateColorAsState(
-        targetValue = if (colors.isNotEmpty()) targetVibrant else defaultColor,
-        animationSpec = tween(durationMillis = 700),
-        label = "vibrant"
+
+    val color1 by animateColorAsState(
+        targetValue = topColors.getOrElse(0) { defaultColor },
+        animationSpec = tween(durationMillis = 500),
+        label = "color1"
     )
-    val animatedLightMuted by animateColorAsState(
-        targetValue = if (colors.isNotEmpty()) targetLightMuted else defaultColor,
-        animationSpec = tween(durationMillis = 700),
-        label = "lightMuted"
+
+    val color2 by animateColorAsState(
+        targetValue = topColors.getOrElse(1) { color1 },
+        animationSpec = tween(durationMillis = 500),
+        label = "color2"
     )
-    val animatedOnDarkVibrant by animateColorAsState(
-        targetValue = if (colors.isNotEmpty()) targetOnDarkVibrant else defaultColor,
-        animationSpec = tween(durationMillis = 700),
-        label = "onDarkVibrant"
+
+    val color3 by animateColorAsState(
+        targetValue = topColors.getOrElse(2) { color1 },
+        animationSpec = tween(durationMillis = 500),
+        label = "color3"
     )
+
     val gradientBrush = Brush.verticalGradient(
-        colors = listOf(
-            animatedVibrant,
-            animatedLightMuted,
-            animatedOnDarkVibrant
-        )
+        colors = listOf(color1, color2, color3)
     )
 
     Box(
@@ -218,8 +230,8 @@ fun TeamInfoScreenContent(
             toolbar = {
                 Toolbar(
                     collapsingState = collapsingState,
-                    mainColor = animatedVibrant,
-                    secondColor = animatedLightMuted,
+                    mainColor = color1,
+                    secondColor = color2,
                     teamName = teamInfo.name,
                     teamCrest = teamInfo.crest,
                     onBackClick = onBackClick
@@ -243,7 +255,7 @@ fun TeamInfoScreenContent(
                                     .drawProgressivePlainBackdrop(
                                         backdrop = backdrop,
                                         blurRadiusPx = blurRadiusPx,
-                                        tint = animatedLightMuted
+                                        tint = color2
                                     )
                             )
 
@@ -251,7 +263,7 @@ fun TeamInfoScreenContent(
                                 pagerState = pagerState,
                                 backdrop = backdrop,
                                 tabsCount = tabTitles.size,
-                                background = animatedLightMuted,
+                                background = color2,
                                 modifier = Modifier.padding(
                                     horizontal = dimens.medium2,
                                     vertical = dimens.small3
@@ -290,8 +302,7 @@ fun TeamInfoScreenContent(
                                     topInset = topInset,
                                     isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     isLoading = isLoading,
-                                    itemColor = animatedLightMuted,
-                                    isMaterialColors = isMaterialColors,
+                                    itemColor = color2,
                                     onReloadClick = onTeamInfoReload,
                                     onPersonClick = onPersonClick,
                                     onPullActiveChange = { isPullActive = it }
@@ -324,6 +335,7 @@ fun TeamInfoScreenContent(
                                     teamId = teamId,
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
+                                    color = color2,
                                     onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
                                     onPullActiveChange = { isPullActive = it }
                                 )
@@ -344,7 +356,6 @@ private fun TeamInfoPreview1() {
             teamInfo = getMockTeam(),
             isLoading = false,
             onBackClick = {},
-            colors = emptyMap(),
             onTeamInfoReload = {},
             isMatchesLoading = false,
             matchesComplete = getMockMatchesComplete(),

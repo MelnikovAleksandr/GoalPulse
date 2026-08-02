@@ -97,6 +97,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core)
 
+    // Palette
+    implementation(libs.kmpalette.core)
+
     // Module
     implementation(project(":domain"))
     implementation(project(":utils"))

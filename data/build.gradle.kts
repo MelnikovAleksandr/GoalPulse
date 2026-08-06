@@ -57,6 +57,11 @@ dependencies {
     // Realm
     implementation(libs.realm.kotlin.library.base)
 
+    // Tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+
     // module
     implementation(project(":domain"))
     implementation(project(":utils"))

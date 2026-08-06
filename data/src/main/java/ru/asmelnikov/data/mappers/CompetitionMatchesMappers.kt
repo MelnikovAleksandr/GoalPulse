@@ -158,7 +158,8 @@ private fun groupMatchesByTour(
     seasonType: String,
     ascending: Boolean
 ): List<MatchesByTour> {
-    return matches
+    val isLeague = seasonType == TournamentType.LEAGUE.name
+    val tours = matches
         .groupBy { it.stage to it.matchDay }
         .map { (key, tourMatches) ->
             val (stage, matchDay) = key
@@ -167,22 +168,27 @@ private fun groupMatchesByTour(
             } else {
                 tourMatches.sortedByDescending { it.utcDate }
             }
-            val groupSortKey = sortedMatches.firstOrNull()?.utcDate.orEmpty()
-            groupSortKey to MatchesByTour(
+            MatchesByTour(
                 matchDay = matchDay,
                 stage = Stage.safeValueOf(stage),
                 seasonType = TournamentType.safeValueOf(seasonType),
                 matches = sortedMatches.map { it.toMatches() }
-            )
+            ) to sortedMatches.firstOrNull()?.utcDate.orEmpty()
         }
-        .let { tours ->
-            if (ascending) {
-                tours.sortedBy { it.first }
-            } else {
-                tours.sortedByDescending { it.first }
-            }
+
+    return if (isLeague) {
+        if (ascending) {
+            tours.sortedBy { it.first.matchDay }
+        } else {
+            tours.sortedByDescending { it.first.matchDay }
         }
-        .map { it.second }
+    } else {
+        if (ascending) {
+            tours.sortedBy { it.second }
+        } else {
+            tours.sortedByDescending { it.second }
+        }
+    }.map { it.first }
 }
 
 fun MatchEntity.toMatches(): Match {

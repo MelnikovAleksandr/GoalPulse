@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.animation)
     implementation(libs.androidx.material.icons.core)
     testImplementation(libs.junit)
+    testImplementation(libs.orbit.test)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))

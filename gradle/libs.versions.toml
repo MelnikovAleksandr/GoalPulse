@@ -18,6 +18,7 @@ paletteKtx = "1.0.0"
 kmpalette = "4.0.0-beta02"
 agp = "8.12.3"
 kotlin = "2.2.10"
+kotlinxCoroutines = "1.10.2"
 ksp = "2.3.5"
 retrofit = "3.0.0"
 toolbarCompose = "2.3.5"
@@ -68,7 +69,9 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }
 orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
+orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 toolbar-compose = { module = "me.onebone:toolbar-compose", version.ref = "toolbarCompose" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }

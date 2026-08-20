@@ -2,16 +2,17 @@ A simple Android application for displaying statistics of major football competi
 
 ## 🚀 Recent Updates
 
-• Nav3 migration  
-• AndroidX Shared Transition  
-• TOMP dependency management  
-• New module structure  
-• Updated all dependencies  
-• Kotlin Realm migration  
-• Localization added  
-• Refactored data models  
-• Refactored Compose screens
-• Redesign Compose screens
+- Nav3 migration
+- AndroidX Shared Transition
+- TOMP dependency management
+- New module structure
+- Updated all dependencies
+- Kotlin Realm migration
+- Localization added
+- Refactored data models
+- Refactored Compose screens
+- Redesign Compose screens (+Liquid glass shaders)
+- Tests
 
 ## Content
 - [Technologies](#technologies)

@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import me.onebone.toolbar.CollapsingToolbarScaffoldState
 import me.onebone.toolbar.CollapsingToolbarScope
+import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.composables.liquid.LiquidBox
 import ru.asmelnikov.utils.composables.liquid.LiquidButtonBox
@@ -199,7 +201,7 @@ fun CollapsingToolbarScope.Toolbar(
                     .clip(CircleShape)
                     .fillMaxSize(0.8f),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.back),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

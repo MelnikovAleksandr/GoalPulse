@@ -166,4 +166,5 @@
 
     <!-- Common -->
     <string name="reload">Обновить</string>
+    <string name="back">Назад</string>
 </resources>

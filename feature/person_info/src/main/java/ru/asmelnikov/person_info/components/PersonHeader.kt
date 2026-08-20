@@ -23,11 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.composables.liquid.LiquidButtonBox
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
@@ -63,7 +65,7 @@ fun PersonHeader(
                     .clip(CircleShape)
                     .fillMaxSize(0.8f),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.back),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

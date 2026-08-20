@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -206,7 +207,7 @@ fun CollapsingToolbarScope.Toolbar(
                         .clip(CircleShape)
                         .fillMaxSize(0.8f),
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

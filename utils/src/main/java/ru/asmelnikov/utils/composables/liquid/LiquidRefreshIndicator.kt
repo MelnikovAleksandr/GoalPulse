@@ -154,8 +154,13 @@ private fun BallRefreshIndicator(
         modifier = Modifier
             .size(dimens.medium2)
             .clearAndSetSemantics {
-                if (progress > 0f && !isRefreshing) {
-                    progressBarRangeInfo = ProgressBarRangeInfo(progress, 0f..1f, 0)
+                when {
+                    isRefreshing -> {
+                        progressBarRangeInfo = ProgressBarRangeInfo.Indeterminate
+                    }
+                    progress > 0f -> {
+                        progressBarRangeInfo = ProgressBarRangeInfo(progress, 0f..1f, 0)
+                    }
                 }
             }
             .rotate(rotation)

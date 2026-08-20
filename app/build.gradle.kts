@@ -33,8 +33,8 @@ android {
         applicationId = "ru.asmelnikov.goalpulse"
         minSdk = 33
         targetSdk = 37
-        versionCode = 4
-        versionName = "4.0"
+        versionCode = 5
+        versionName = "5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

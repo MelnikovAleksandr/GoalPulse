@@ -167,4 +167,5 @@
 
     <!-- Common -->
     <string name="reload">Reload</string>
+    <string name="back">Back</string>
 </resources>

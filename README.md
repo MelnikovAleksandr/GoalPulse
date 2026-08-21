@@ -3,6 +3,7 @@ A simple Android application for displaying statistics of major football competi
 ## 🚀 Recent Updates
 
 - Nav3 migration
+- Calendar reminder
 - AndroidX Shared Transition
 - TOMP dependency management
 - New module structure
@@ -62,6 +63,7 @@ NEW_API_KEY = XXXXXXXXXXXXXXXXXXXXXXXX
   <tr>
     <td><video src="https://github.com/user-attachments/assets/b4bbefeb-2e26-4ff7-aef1-b77f50aa0d3b" width="250"></video></td>
     <td><video src="https://github.com/user-attachments/assets/6ad5f741-48cc-4ece-9925-7263ccdd49cc" width="250"></video></td>
+    <td><video src="https://github.com/user-attachments/assets/409164d7-132c-424a-ad89-c14fdb0cf74b" width="250"></video></td>
   </tr>
 </table>
 

@@ -142,6 +142,9 @@
     <string name="tab_matches_ahead">Предстоящие</string>
     <string name="tour">тур</string>
     <string name="first_match_no_statistics">Нет статистики, это первый матч.</string>
+    <string name="calendar_add_event">Добавить матч в календарь</string>
+    <string name="calendar_remove_event">Удалить матч из календаря</string>
+    <string name="calendar_event_failed">Не удалось обновить событие в календаре. Попробуйте ещё раз.</string>
     <string name="stat_home_wins_hyphen">Побед хозяев -</string>
     <string name="stat_draws_hyphen">Ничьи -</string>
     <string name="stat_away_wins_hyphen">Побед гостей -</string>

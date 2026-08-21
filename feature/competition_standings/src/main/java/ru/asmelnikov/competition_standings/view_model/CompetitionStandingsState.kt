@@ -8,6 +8,7 @@ import ru.asmelnikov.domain.models.Area
 import ru.asmelnikov.domain.models.Competition
 import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.domain.models.Head2head
+import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.Scorer
 import java.util.UUID
@@ -31,7 +32,10 @@ data class CompetitionStandingsState(
     val scorers: List<Scorer> = emptyList(),
     val expandedItem: Int = -1,
     val head2head: Head2head = Head2head(),
-    val isHead2headLoading: Boolean = false
+    val isHead2headLoading: Boolean = false,
+    val calendarMatchIds: Set<Int> = emptySet(),
+    val calendarBusyMatchIds: Set<Int> = emptySet(),
+    val pendingCalendarMatch: Match? = null
 ) : Parcelable
 
 sealed class CompetitionStandingSideEffects {
@@ -45,5 +49,7 @@ sealed class CompetitionStandingSideEffects {
 
     data class OnPersonInfoNavigate(val personId: String) :
         CompetitionStandingSideEffects()
+
+    data object RequestCalendarPermission : CompetitionStandingSideEffects()
 
 }

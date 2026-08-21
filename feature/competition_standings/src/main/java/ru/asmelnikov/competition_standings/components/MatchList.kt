@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Head2head
+import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.getMockHead2Head
 import ru.asmelnikov.domain.models.getMockMatches
@@ -31,7 +32,10 @@ fun MatchList(
     expandedItemId: Int,
     onMatchItemClick: (Int) -> Unit,
     head2head: Head2head,
-    isHead2headLoading: Boolean
+    isHead2headLoading: Boolean,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -76,7 +80,10 @@ fun MatchList(
                     homeWins = head2head.aggregates.homeTeam.wins,
                     homeDraws = head2head.aggregates.homeTeam.draws,
                     homeLosses = head2head.aggregates.homeTeam.losses,
-                    head2headId = head2head.id
+                    head2headId = head2head.id,
+                    isInCalendar = calendarMatchIds.contains(match.id),
+                    isCalendarLoading = calendarBusyMatchIds.contains(match.id),
+                    onCalendarClick = { onCalendarClick(match) }
                 )
                 if (index < matchesByTour.matches.size - 1) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.primary)

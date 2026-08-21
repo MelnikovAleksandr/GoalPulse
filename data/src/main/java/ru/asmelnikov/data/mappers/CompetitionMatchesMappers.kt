@@ -207,7 +207,8 @@ fun MatchEntity.toMatches(): Match {
         stage = Stage.safeValueOf(stage),
         status = MatchStatus.safeValueOf(status),
         utcDate = matchInstant?.formatTo("dd MMMM yyyy, HH:mm") ?: "",
-        bigDate = matchInstant?.formatTo("dd.MM") ?: ""
+        bigDate = matchInstant?.formatTo("dd.MM") ?: "",
+        startEpochMillis = matchInstant?.toEpochMilli() ?: 0L
     )
 }
 

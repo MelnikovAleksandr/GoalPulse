@@ -285,6 +285,81 @@ class TeamInfoScreenContentTest {
         composeTestRule.onNodeWithText(firstMatchLabel).assertIsDisplayed()
     }
 
+    @Test
+    fun completedMatch_doesNotShowCalendarButton() {
+        setScreen(matchesComplete = listOf(completedMatch))
+
+        composeTestRule.onNodeWithText(matchesTabLabel).performClick()
+
+        composeTestRule.onNodeWithContentDescription(calendarAddLabel).assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription(calendarRemoveLabel).assertDoesNotExist()
+    }
+
+    @Test
+    fun aheadMatch_showsAddCalendarButton() {
+        setScreen(
+            matchesComplete = listOf(completedMatch),
+            matchesAhead = listOf(aheadMatch)
+        )
+
+        composeTestRule.onNodeWithText(matchesTabLabel).performClick()
+        composeTestRule.onNodeWithText(aheadTabLabel).performClick()
+
+        composeTestRule.onNodeWithContentDescription(calendarAddLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription(calendarRemoveLabel).assertDoesNotExist()
+    }
+
+    @Test
+    fun scheduledAheadMatch_showsRemoveCalendarButton() {
+        setScreen(
+            matchesComplete = listOf(completedMatch),
+            matchesAhead = listOf(aheadMatch),
+            calendarMatchIds = setOf(AHEAD_MATCH_ID)
+        )
+
+        composeTestRule.onNodeWithText(matchesTabLabel).performClick()
+        composeTestRule.onNodeWithText(aheadTabLabel).performClick()
+
+        composeTestRule.onNodeWithContentDescription(calendarRemoveLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription(calendarAddLabel).assertDoesNotExist()
+    }
+
+    @Test
+    fun clickCalendar_sendsMatch_doesNotExpandMatch() {
+        var clickedMatchId: Int? = null
+        var calendarMatch: Match? = null
+
+        setScreen(
+            matchesComplete = listOf(completedMatch),
+            matchesAhead = listOf(aheadMatch),
+            onMatchItemClick = { clickedMatchId = it },
+            onCalendarClick = { calendarMatch = it }
+        )
+
+        composeTestRule.onNodeWithText(matchesTabLabel).performClick()
+        composeTestRule.onNodeWithText(aheadTabLabel).performClick()
+        composeTestRule.onNodeWithContentDescription(calendarAddLabel).performClick()
+
+        assertEquals(AHEAD_MATCH_ID, calendarMatch?.id)
+        assertEquals(null, clickedMatchId)
+    }
+
+    @Test
+    fun calendarLoading_hidesIcon_showsProgress() {
+        setScreen(
+            matchesComplete = listOf(completedMatch),
+            matchesAhead = listOf(aheadMatch),
+            calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
+        )
+
+        composeTestRule.onNodeWithText(matchesTabLabel).performClick()
+        composeTestRule.onNodeWithText(aheadTabLabel).performClick()
+
+        composeTestRule.onNodeWithContentDescription(calendarAddLabel).assertDoesNotExist()
+        composeTestRule.onNodeWithContentDescription(calendarRemoveLabel).assertDoesNotExist()
+        assertEquals(1, displayedProgressCount())
+    }
+
     // region Helpers
 
     private val reloadLabel: String
@@ -314,6 +389,12 @@ class TeamInfoScreenContentTest {
     private val firstMatchLabel: String
         get() = composeTestRule.activity.getString(R.string.first_match_no_statistics)
 
+    private val calendarAddLabel: String
+        get() = composeTestRule.activity.getString(R.string.calendar_add_event)
+
+    private val calendarRemoveLabel: String
+        get() = composeTestRule.activity.getString(R.string.calendar_remove_event)
+
     private fun displayedProgressCount(): Int {
         val indicators = composeTestRule
             .onAllNodes(hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate))
@@ -342,7 +423,10 @@ class TeamInfoScreenContentTest {
         onMatchesReload: () -> Unit = {},
         onPersonClick: (Int) -> Unit = {},
         onMatchItemClick: (Int) -> Unit = {},
-        onBackClick: () -> Unit = {}
+        onBackClick: () -> Unit = {},
+        calendarMatchIds: Set<Int> = emptySet(),
+        calendarBusyMatchIds: Set<Int> = emptySet(),
+        onCalendarClick: (Match) -> Unit = {}
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -363,7 +447,10 @@ class TeamInfoScreenContentTest {
                         onMatchesReload = onMatchesReload,
                         onPersonClick = onPersonClick,
                         news = news,
-                        isLoadingNews = false
+                        isLoadingNews = false,
+                        calendarMatchIds = calendarMatchIds,
+                        calendarBusyMatchIds = calendarBusyMatchIds,
+                        onCalendarClick = onCalendarClick
                     )
                 }
             }

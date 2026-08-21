@@ -22,7 +22,10 @@ data class TeamInfoState(
     val head2head: Head2head = Head2head(),
     val isHead2headLoading: Boolean = false,
     val isNewsLoading: Boolean = false,
-    val news: News = News()
+    val news: News = News(),
+    val calendarMatchIds: Set<Int> = emptySet(),
+    val calendarBusyMatchIds: Set<Int> = emptySet(),
+    val pendingCalendarMatch: Match? = null
 ) : Parcelable
 
 sealed class TeamInfoSideEffects {
@@ -33,4 +36,6 @@ sealed class TeamInfoSideEffects {
 
     data class OnPersonInfoNavigate(val personId: String) :
         TeamInfoSideEffects()
+
+    data object RequestCalendarPermission : TeamInfoSideEffects()
 }

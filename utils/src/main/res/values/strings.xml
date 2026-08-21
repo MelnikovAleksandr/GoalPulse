@@ -143,6 +143,9 @@
     <string name="tab_matches_ahead">Ahead</string>
     <string name="tour">tour</string>
     <string name="first_match_no_statistics">There are no statistics, this is the first match.</string>
+    <string name="calendar_add_event">Add match to calendar</string>
+    <string name="calendar_remove_event">Remove match from calendar</string>
+    <string name="calendar_event_failed">Could not update the calendar event. Please try again.</string>
     <string name="stat_home_wins_hyphen">Home wins -</string>
     <string name="stat_draws_hyphen">Draws -</string>
     <string name="stat_away_wins_hyphen">Away wins -</string>

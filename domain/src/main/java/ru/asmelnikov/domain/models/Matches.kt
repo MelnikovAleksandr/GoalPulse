@@ -33,7 +33,8 @@ data class Match(
     val stage: Stage = Stage.NON,
     val status: MatchStatus = MatchStatus.NON,
     val utcDate: String = "",
-    val bigDate: String = ""
+    val bigDate: String = "",
+    val startEpochMillis: Long = 0L
 ) : Parcelable
 
 @Parcelize

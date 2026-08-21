@@ -60,6 +60,9 @@ fun TeamMatchesList(
     isHead2headLoading: Boolean,
     teamId: String,
     color: Color,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {},
     onOuterPagerScrollBlocked: (Boolean) -> Unit = {},
     onPullActiveChange: (Boolean) -> Unit = {}
 ) {
@@ -191,7 +194,10 @@ fun TeamMatchesList(
                                     onMatchItemClick = onMatchItemClick,
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
-                                    teamId = teamId
+                                    teamId = teamId,
+                                    calendarMatchIds = calendarMatchIds,
+                                    calendarBusyMatchIds = calendarBusyMatchIds,
+                                    onCalendarClick = onCalendarClick
                                 )
                             }
                         }

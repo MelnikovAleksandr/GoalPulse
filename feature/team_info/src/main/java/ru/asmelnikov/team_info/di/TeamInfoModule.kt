@@ -12,6 +12,7 @@ val teamInfoModule = module {
             stringResourceProvider = get(),
             standingsRepository = get(),
             newsRepository = get(),
+            matchCalendarRepository = get(),
             teamId = teamId
         )
     }

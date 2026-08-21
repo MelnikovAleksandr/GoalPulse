@@ -1,6 +1,5 @@
 package ru.asmelnikov.competition_standings.view_model
 
-import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -20,6 +19,7 @@ import ru.asmelnikov.domain.models.Standing
 import ru.asmelnikov.domain.models.Table
 import ru.asmelnikov.domain.models.Team
 import ru.asmelnikov.domain.repository.CompetitionStandingsRepository
+import ru.asmelnikov.domain.repository.MatchCalendarRepository
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.Resource
@@ -216,16 +216,117 @@ class CompetitionStandingsViewModelTest {
         }
     }
 
+    @Test
+    fun calendarClick_withoutPermission_requestsSystemPermission() = runTest {
+        viewModel().test(
+            this,
+            CompetitionStandingsState(
+                compId = "2021",
+                isLoadingStandings = false,
+                isLoadingScorers = false,
+                isLoadingMatches = false
+            )
+        ) {
+            containerHost.onCalendarClick(aheadMatch)
+
+            expectState { copy(pendingCalendarMatch = aheadMatch) }
+            expectSideEffect(CompetitionStandingSideEffects.RequestCalendarPermission)
+        }
+    }
+
+    @Test
+    fun calendarPermissionDenied_clearsPendingMatch() = runTest {
+        viewModel().test(
+            this,
+            CompetitionStandingsState(
+                compId = "2021",
+                isLoadingStandings = false,
+                isLoadingScorers = false,
+                isLoadingMatches = false,
+                pendingCalendarMatch = aheadMatch
+            )
+        ) {
+            containerHost.onCalendarPermissionResult(granted = false)
+
+            expectState { copy(pendingCalendarMatch = null) }
+        }
+    }
+
+    @Test
+    fun calendarPermissionGranted_addsMatchAndMarksItScheduled() = runTest {
+        val calendarRepository = FakeMatchCalendarRepository(hasPermission = true)
+
+        viewModel(matchCalendarRepository = calendarRepository).test(
+            this,
+            CompetitionStandingsState(
+                compId = "2021",
+                isLoadingStandings = false,
+                isLoadingScorers = false,
+                isLoadingMatches = false,
+                matchesAhead = listOf(aheadTour),
+                pendingCalendarMatch = aheadMatch
+            )
+        ) {
+            containerHost.onCalendarPermissionResult(granted = true)
+
+            expectState { copy(pendingCalendarMatch = null) }
+            expectState {
+                copy(
+                    pendingCalendarMatch = null,
+                    calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
+                )
+            }
+            expectState {
+                copy(
+                    pendingCalendarMatch = null,
+                    calendarBusyMatchIds = emptySet(),
+                    calendarMatchIds = setOf(AHEAD_MATCH_ID)
+                )
+            }
+        }
+    }
+
+    @Test
+    fun calendarClick_whenAlreadyScheduled_removesMatch() = runTest {
+        val calendarRepository = FakeMatchCalendarRepository(
+            hasPermission = true,
+            scheduledIds = setOf(AHEAD_MATCH_ID)
+        )
+
+        viewModel(matchCalendarRepository = calendarRepository).test(
+            this,
+            CompetitionStandingsState(
+                compId = "2021",
+                isLoadingStandings = false,
+                isLoadingScorers = false,
+                isLoadingMatches = false,
+                matchesAhead = listOf(aheadTour),
+                calendarMatchIds = setOf(AHEAD_MATCH_ID)
+            )
+        ) {
+            containerHost.onCalendarClick(aheadMatch)
+
+            expectState { copy(calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)) }
+            expectState {
+                copy(
+                    calendarBusyMatchIds = emptySet(),
+                    calendarMatchIds = emptySet()
+                )
+            }
+        }
+    }
+
     // region Helpers
 
     private fun viewModel(
-        repository: FakeStandingsRepository = FakeStandingsRepository()
+        repository: FakeStandingsRepository = FakeStandingsRepository(),
+        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository()
     ) = CompetitionStandingsViewModel(
         standingsRepository = repository,
+        matchCalendarRepository = matchCalendarRepository,
         stringResourceProvider = FakeStringResourceProvider(),
         compId = "2021",
-        compUrl = PL_CREST,
-        savedStateHandle = SavedStateHandle()
+        compUrl = PL_CREST
     )
 
     // endregion
@@ -290,6 +391,28 @@ private class FakeStandingsRepository(
     }
 }
 
+private class FakeMatchCalendarRepository(
+    private var hasPermission: Boolean = false,
+    private var scheduledIds: Set<Int> = emptySet()
+) : MatchCalendarRepository {
+
+    override fun hasCalendarPermission(): Boolean = hasPermission
+
+    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> {
+        return scheduledIds.intersect(matchIds.toSet())
+    }
+
+    override suspend fun addMatch(match: Match): Resource<Unit> {
+        scheduledIds = scheduledIds + match.id
+        return Resource.Success(Unit)
+    }
+
+    override suspend fun removeMatch(matchId: Int): Resource<Unit> {
+        scheduledIds = scheduledIds - matchId
+        return Resource.Success(Unit)
+    }
+}
+
 private class FakeStringResourceProvider : StringResourceProvider {
     override fun getString(resourceId: Int): String {
         return when (resourceId) {
@@ -310,6 +433,7 @@ private class FakeStringResourceProvider : StringResourceProvider {
 private const val RATE_LIMIT_MESSAGE = "too many requests"
 private const val COMPLETED_MATCH_ID = 100
 private const val OTHER_MATCH_ID = 200
+private const val AHEAD_MATCH_ID = 300
 private const val PL_CREST = "https://crests.football-data.org/PL.png"
 
 private val premierLeagueStandings = CompetitionStandings(
@@ -340,5 +464,7 @@ private val premierLeagueMatches = Matches(
 
 private val match100Head2head = Head2head(id = COMPLETED_MATCH_ID)
 private val match200Head2head = Head2head(id = OTHER_MATCH_ID)
+private val aheadMatch = Match(id = AHEAD_MATCH_ID)
+private val aheadTour = MatchesByTour(matchDay = 2, matches = listOf(aheadMatch))
 
 // endregion

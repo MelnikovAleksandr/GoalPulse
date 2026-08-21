@@ -68,6 +68,8 @@ import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
 import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
+import ru.asmelnikov.utils.composables.SyncMatchCalendarOnReturn
+import ru.asmelnikov.utils.composables.rememberMatchCalendarPermissionHandler
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
@@ -88,6 +90,10 @@ fun TeamInfoScreen(
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()
+    val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
+        onPermissionResult = viewModel::onCalendarPermissionResult
+    )
+    SyncMatchCalendarOnReturn(onReturn = viewModel::syncCalendarEvents)
 
     viewModel.collectSideEffect {
         when (it) {
@@ -103,6 +109,9 @@ fun TeamInfoScreen(
                 appState.navigate(route = Routes.Person(it.personId))
             }
 
+            is TeamInfoSideEffects.RequestCalendarPermission -> {
+                calendarPermissionHandler.launchSystemPermission()
+            }
         }
     }
 
@@ -122,7 +131,10 @@ fun TeamInfoScreen(
         onMatchesReload = viewModel::getTeamMatchesFromRemoteToLocal,
         onPersonClick = viewModel::onPersonClick,
         news = state.news,
-        isLoadingNews = state.isNewsLoading
+        isLoadingNews = state.isNewsLoading,
+        calendarMatchIds = state.calendarMatchIds,
+        calendarBusyMatchIds = state.calendarBusyMatchIds,
+        onCalendarClick = viewModel::onCalendarClick
     )
 
 }
@@ -145,7 +157,10 @@ fun TeamInfoScreenContent(
     onMatchesReload: () -> Unit,
     onPersonClick: (Int) -> Unit,
     news: News,
-    isLoadingNews: Boolean
+    isLoadingNews: Boolean,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {}
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -336,6 +351,9 @@ fun TeamInfoScreenContent(
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
                                     color = color2,
+                                    calendarMatchIds = calendarMatchIds,
+                                    calendarBusyMatchIds = calendarBusyMatchIds,
+                                    onCalendarClick = onCalendarClick,
                                     onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
                                     onPullActiveChange = { isPullActive = it }
                                 )

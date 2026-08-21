@@ -5,23 +5,27 @@ import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.asmelnikov.data.api.FootballApi
 import ru.asmelnikov.data.api.NewsApi
+import ru.asmelnikov.data.calendar.ContentResolverMatchCalendarStore
 import ru.asmelnikov.data.local.CompetitionsRealmOptions
 import ru.asmelnikov.data.local.StandingsRealmOptions
 import ru.asmelnikov.data.local.TeamInfoRealmOptions
 import ru.asmelnikov.data.repository.CompetitionStandingsRepositoryImpl
 import ru.asmelnikov.data.repository.CompetitionsRepositoryImpl
+import ru.asmelnikov.data.repository.MatchCalendarRepositoryImpl
 import ru.asmelnikov.data.repository.NewsRepositoryImpl
 import ru.asmelnikov.data.repository.PersonRepositoryImpl
 import ru.asmelnikov.data.repository.TeamInfoRepositoryImpl
 import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.domain.repository.CompetitionStandingsRepository
 import ru.asmelnikov.domain.repository.CompetitionsRepository
+import ru.asmelnikov.domain.repository.MatchCalendarRepository
 import ru.asmelnikov.domain.repository.NewsRepository
 import ru.asmelnikov.domain.repository.PersonRepository
 import ru.asmelnikov.domain.repository.TeamInfoRepository
@@ -94,6 +98,14 @@ val dataModule = module {
         PersonRepositoryImpl(
             footballApi = get(),
             retrofitErrorsHandler = get()
+        )
+    }
+
+    single<MatchCalendarRepository> {
+        val context = androidContext()
+        MatchCalendarRepositoryImpl(
+            appPackageName = context.packageName,
+            store = ContentResolverMatchCalendarStore(context)
         )
     }
 

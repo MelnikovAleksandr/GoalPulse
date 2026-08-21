@@ -9,10 +9,10 @@ val competitionStandingsModule = module {
     viewModel { (compId: String, compUrl: String, savedStateHandle: SavedStateHandle) ->
         CompetitionStandingsViewModel(
             standingsRepository = get(),
+            matchCalendarRepository = get(),
             stringResourceProvider = get(),
             compId = compId,
-            compUrl = compUrl,
-            savedStateHandle = savedStateHandle
+            compUrl = compUrl
         )
     }
 }

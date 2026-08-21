@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import ru.asmelnikov.domain.models.Head2head
+import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.domain.models.TeamInfo
 import ru.asmelnikov.domain.repository.CompetitionStandingsRepository
+import ru.asmelnikov.domain.repository.MatchCalendarRepository
 import ru.asmelnikov.domain.repository.NewsRepository
 import ru.asmelnikov.domain.repository.TeamInfoRepository
 import ru.asmelnikov.utils.ErrorsTypesHttp
+import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.Resource
 import ru.asmelnikov.utils.StringResourceProvider
 import ru.asmelnikov.utils.getErrorMessage
@@ -19,6 +22,7 @@ class TeamInfoViewModel(
     private val stringResourceProvider: StringResourceProvider,
     private val standingsRepository: CompetitionStandingsRepository,
     private val newsRepository: NewsRepository,
+    private val matchCalendarRepository: MatchCalendarRepository,
     private val teamId: String
 ) : ViewModel(),
     ContainerHost<TeamInfoState, TeamInfoSideEffects> {
@@ -69,6 +73,33 @@ class TeamInfoViewModel(
 
     fun onPersonClick(personId: Int) = intent {
         postSideEffect(TeamInfoSideEffects.OnPersonInfoNavigate(personId.toString()))
+    }
+
+    fun onCalendarClick(match: Match) = intent {
+        if (state.calendarBusyMatchIds.contains(match.id)) return@intent
+        if (matchCalendarRepository.hasCalendarPermission()) {
+            toggleCalendarEvent(match)
+            return@intent
+        }
+        reduce { state.copy(pendingCalendarMatch = match) }
+        postSideEffect(TeamInfoSideEffects.RequestCalendarPermission)
+    }
+
+    fun onCalendarPermissionResult(granted: Boolean) = intent {
+        val match = state.pendingCalendarMatch
+        reduce { state.copy(pendingCalendarMatch = null) }
+        if (!granted) return@intent
+        if (match != null) {
+            toggleCalendarEvent(match)
+        } else {
+            val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
+            reduce { state.copy(calendarMatchIds = scheduledIds) }
+        }
+    }
+
+    fun syncCalendarEvents() = intent {
+        val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
+        reduce { state.copy(calendarMatchIds = scheduledIds) }
     }
 
     fun getTeamInfoFromRemoteToLocal() = intent {
@@ -138,13 +169,44 @@ class TeamInfoViewModel(
 
     private fun collectTeamMatchesFlowFromLocal() = intent {
         teamRepository.getTeamMatchesFlowFromLocal(state.teamId).collect { matches ->
+            val ahead = matches?.matchesAhead ?: emptyList()
+            val scheduledIds = scheduledMatchIds(ahead.map { it.id })
             reduce {
                 state.copy(
                     matchesComplete = matches?.matchesCompleted ?: emptyList(),
-                    matchesAhead = matches?.matchesAhead ?: emptyList()
+                    matchesAhead = ahead,
+                    calendarMatchIds = scheduledIds
                 )
             }
         }
+    }
+
+    private fun toggleCalendarEvent(match: Match) = intent {
+        reduce { state.copy(calendarBusyMatchIds = state.calendarBusyMatchIds + match.id) }
+        val result = if (state.calendarMatchIds.contains(match.id)) {
+            matchCalendarRepository.removeMatch(match.id)
+        } else {
+            matchCalendarRepository.addMatch(match)
+        }
+        val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
+        reduce {
+            state.copy(
+                calendarBusyMatchIds = state.calendarBusyMatchIds - match.id,
+                calendarMatchIds = scheduledIds
+            )
+        }
+        if (result is Resource.Error) {
+            postSideEffect(
+                TeamInfoSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+        }
+    }
+
+    private suspend fun scheduledMatchIds(matchIds: Collection<Int>): Set<Int> {
+        if (!matchCalendarRepository.hasCalendarPermission()) return emptySet()
+        return matchCalendarRepository.findScheduledMatchIds(matchIds)
     }
 
     private fun getNews() = intent {

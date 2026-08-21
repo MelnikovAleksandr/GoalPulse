@@ -50,6 +50,7 @@ import ru.asmelnikov.competition_standings.view_model.CompetitionStandingSideEff
 import ru.asmelnikov.competition_standings.view_model.CompetitionStandingsViewModel
 import ru.asmelnikov.domain.models.CompetitionStandings
 import ru.asmelnikov.domain.models.Head2head
+import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.Scorer
 import ru.asmelnikov.domain.models.getMockMatches
@@ -60,6 +61,8 @@ import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
 import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
+import ru.asmelnikov.utils.composables.SyncMatchCalendarOnReturn
+import ru.asmelnikov.utils.composables.rememberMatchCalendarPermissionHandler
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
 import ru.asmelnikov.utils.navigation.popUp
@@ -87,6 +90,10 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 ) {
 
     val state by viewModel.container.stateFlow.collectAsState()
+    val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
+        onPermissionResult = viewModel::onCalendarPermissionResult
+    )
+    SyncMatchCalendarOnReturn(onReturn = viewModel::syncCalendarEvents)
 
     viewModel.collectSideEffect {
         when (it) {
@@ -104,6 +111,10 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 
             is CompetitionStandingSideEffects.OnPersonInfoNavigate -> {
                 appState.navigate(route = Routes.Person(it.personId))
+            }
+
+            is CompetitionStandingSideEffects.RequestCalendarPermission -> {
+                calendarPermissionHandler.launchSystemPermission()
             }
         }
     }
@@ -127,7 +138,10 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
         onReloadMatchesClick = viewModel::updateMatchesFromRemoteToLocal,
         onReloadScorersClick = viewModel::updateScorersFromRemoteToLocal,
         onPersonClick = viewModel::onPersonClick,
-        animatedVisibilityScope = animatedVisibilityScope
+        animatedVisibilityScope = animatedVisibilityScope,
+        calendarMatchIds = state.calendarMatchIds,
+        calendarBusyMatchIds = state.calendarBusyMatchIds,
+        onCalendarClick = viewModel::onCalendarClick
     )
 }
 
@@ -153,7 +167,10 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     onReloadScorersClick: () -> Unit,
     onReloadMatchesClick: () -> Unit,
     onPersonClick: (Int) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {}
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -289,6 +306,9 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
                                     onReloadClick = onReloadMatchesClick,
+                                    calendarMatchIds = calendarMatchIds,
+                                    calendarBusyMatchIds = calendarBusyMatchIds,
+                                    onCalendarClick = onCalendarClick,
                                     onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
                                     onPullActiveChange = { isPullActive = it }
                                 )

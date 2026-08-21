@@ -35,7 +35,10 @@ fun MatchList(
     onMatchItemClick: (Int) -> Unit,
     head2head: Head2head,
     isHead2headLoading: Boolean,
-    teamId: String
+    teamId: String,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier
@@ -70,7 +73,10 @@ fun MatchList(
                 homeLosses = head2head.aggregates.homeTeam.losses,
                 head2headId = head2head.id,
                 compName = match.competition.name,
-                color = getResultColor(match, teamId)
+                color = getResultColor(match, teamId),
+                isInCalendar = calendarMatchIds.contains(match.id),
+                isCalendarLoading = calendarBusyMatchIds.contains(match.id),
+                onCalendarClick = { onCalendarClick(match) }
             )
 
             if (index < matches.size - 1) {

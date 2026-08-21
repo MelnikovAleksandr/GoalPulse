@@ -13,6 +13,7 @@ import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.domain.models.TeamInfo
 import ru.asmelnikov.domain.models.TeamMatches
 import ru.asmelnikov.domain.repository.CompetitionStandingsRepository
+import ru.asmelnikov.domain.repository.MatchCalendarRepository
 import ru.asmelnikov.domain.repository.NewsRepository
 import ru.asmelnikov.domain.repository.TeamInfoRepository
 import ru.asmelnikov.utils.ErrorsTypesHttp
@@ -179,17 +180,113 @@ class TeamInfoViewModelTest {
         }
     }
 
+    @Test
+    fun calendarClick_withoutPermission_requestsSystemPermission() = runTest {
+        viewModel().test(
+            this,
+            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false)
+        ) {
+            containerHost.onCalendarClick(aheadMatch)
+
+            expectState { copy(pendingCalendarMatch = aheadMatch) }
+            expectSideEffect(TeamInfoSideEffects.RequestCalendarPermission)
+        }
+    }
+
+    @Test
+    fun calendarPermissionDenied_clearsPendingMatch() = runTest {
+        viewModel().test(
+            this,
+            TeamInfoState(
+                teamId = "57",
+                isInfoLoading = false,
+                isMatchesLoading = false,
+                pendingCalendarMatch = aheadMatch
+            )
+        ) {
+            containerHost.onCalendarPermissionResult(granted = false)
+
+            expectState {
+                copy(pendingCalendarMatch = null)
+            }
+        }
+    }
+
+    @Test
+    fun calendarPermissionGranted_addsMatchAndMarksItScheduled() = runTest {
+        val calendarRepository = FakeMatchCalendarRepository(hasPermission = true)
+
+        viewModel(matchCalendarRepository = calendarRepository).test(
+            this,
+            TeamInfoState(
+                teamId = "57",
+                isInfoLoading = false,
+                isMatchesLoading = false,
+                matchesAhead = listOf(aheadMatch),
+                pendingCalendarMatch = aheadMatch
+            )
+        ) {
+            containerHost.onCalendarPermissionResult(granted = true)
+
+            expectState { copy(pendingCalendarMatch = null) }
+            expectState {
+                copy(
+                    pendingCalendarMatch = null,
+                    calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
+                )
+            }
+            expectState {
+                copy(
+                    pendingCalendarMatch = null,
+                    calendarBusyMatchIds = emptySet(),
+                    calendarMatchIds = setOf(AHEAD_MATCH_ID)
+                )
+            }
+        }
+    }
+
+    @Test
+    fun calendarClick_whenAlreadyScheduled_removesMatch() = runTest {
+        val calendarRepository = FakeMatchCalendarRepository(
+            hasPermission = true,
+            scheduledIds = setOf(AHEAD_MATCH_ID)
+        )
+
+        viewModel(matchCalendarRepository = calendarRepository).test(
+            this,
+            TeamInfoState(
+                teamId = "57",
+                isInfoLoading = false,
+                isMatchesLoading = false,
+                matchesAhead = listOf(aheadMatch),
+                calendarMatchIds = setOf(AHEAD_MATCH_ID)
+            )
+        ) {
+            containerHost.onCalendarClick(aheadMatch)
+
+            expectState { copy(calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)) }
+            expectState {
+                copy(
+                    calendarBusyMatchIds = emptySet(),
+                    calendarMatchIds = emptySet()
+                )
+            }
+        }
+    }
+
     // region Helpers
 
     private fun viewModel(
         teamRepository: FakeTeamInfoRepository = FakeTeamInfoRepository(),
         newsRepository: FakeNewsRepository = FakeNewsRepository(),
-        standingsRepository: FakeStandingsRepository = FakeStandingsRepository()
+        standingsRepository: FakeStandingsRepository = FakeStandingsRepository(),
+        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository()
     ) = TeamInfoViewModel(
         teamRepository = teamRepository,
         stringResourceProvider = FakeStringResourceProvider(),
         standingsRepository = standingsRepository,
         newsRepository = newsRepository,
+        matchCalendarRepository = matchCalendarRepository,
         teamId = "57"
     )
 
@@ -273,10 +370,33 @@ private class FakeStandingsRepository(
     override suspend fun getAllMatchesFlowFromLocal(compId: String) = error("not used")
 }
 
+private class FakeMatchCalendarRepository(
+    private var hasPermission: Boolean = false,
+    private var scheduledIds: Set<Int> = emptySet()
+) : MatchCalendarRepository {
+
+    override fun hasCalendarPermission(): Boolean = hasPermission
+
+    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> {
+        return scheduledIds.intersect(matchIds.toSet())
+    }
+
+    override suspend fun addMatch(match: Match): Resource<Unit> {
+        scheduledIds = scheduledIds + match.id
+        return Resource.Success(Unit)
+    }
+
+    override suspend fun removeMatch(matchId: Int): Resource<Unit> {
+        scheduledIds = scheduledIds - matchId
+        return Resource.Success(Unit)
+    }
+}
+
 private class FakeStringResourceProvider : StringResourceProvider {
     override fun getString(resourceId: Int): String {
         return when (resourceId) {
             R.string.http_429_errors -> RATE_LIMIT_MESSAGE
+            R.string.calendar_event_failed -> CALENDAR_FAILED_MESSAGE
             else -> error("unexpected string resource $resourceId")
         }
     }
@@ -291,8 +411,10 @@ private class FakeStringResourceProvider : StringResourceProvider {
 // region Test data
 
 private const val RATE_LIMIT_MESSAGE = "too many requests"
+private const val CALENDAR_FAILED_MESSAGE = "calendar failed"
 private const val COMPLETED_MATCH_ID = 100
 private const val OTHER_MATCH_ID = 200
+private const val AHEAD_MATCH_ID = 300
 private const val ARSENAL_NEWS_TITLE = "Arteta praises Saka"
 
 private val arsenal = TeamInfo(
@@ -311,5 +433,6 @@ private val arsenalNews = News(
 
 private val match100Head2head = Head2head(id = COMPLETED_MATCH_ID)
 private val match200Head2head = Head2head(id = OTHER_MATCH_ID)
+private val aheadMatch = Match(id = AHEAD_MATCH_ID)
 
 // endregion

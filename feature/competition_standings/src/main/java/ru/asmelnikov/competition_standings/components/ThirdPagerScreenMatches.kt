@@ -33,6 +33,7 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import kotlinx.coroutines.launch
 import ru.asmelnikov.domain.models.Head2head
+import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.getMockMatches
 import ru.asmelnikov.utils.composables.EmptyContent
@@ -55,6 +56,9 @@ fun ThirdPagerScreenMatches(
     head2head: Head2head = Head2head(),
     isHead2headLoading: Boolean = false,
     onReloadClick: () -> Unit,
+    calendarMatchIds: Set<Int> = emptySet(),
+    calendarBusyMatchIds: Set<Int> = emptySet(),
+    onCalendarClick: (Match) -> Unit = {},
     onOuterPagerScrollBlocked: (Boolean) -> Unit = {},
     onPullActiveChange: (Boolean) -> Unit = {}
 ) {
@@ -184,7 +188,10 @@ fun ThirdPagerScreenMatches(
                                     expandedItemId = expandedItemId,
                                     onMatchItemClick = onMatchItemClick,
                                     head2head = head2head,
-                                    isHead2headLoading = isHead2headLoading
+                                    isHead2headLoading = isHead2headLoading,
+                                    calendarMatchIds = calendarMatchIds,
+                                    calendarBusyMatchIds = calendarBusyMatchIds,
+                                    onCalendarClick = onCalendarClick
                                 )
                             }
                         }

@@ -97,11 +97,6 @@ class TeamInfoViewModel(
         }
     }
 
-    fun syncCalendarEvents() = intent {
-        val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
-        reduce { state.copy(calendarMatchIds = scheduledIds) }
-    }
-
     fun getTeamInfoFromRemoteToLocal() = intent {
         reduce { state.copy(isInfoLoading = true) }
         when (val team =
@@ -168,15 +163,17 @@ class TeamInfoViewModel(
     }
 
     private fun collectTeamMatchesFlowFromLocal() = intent {
-        teamRepository.getTeamMatchesFlowFromLocal(state.teamId).collect { matches ->
-            val ahead = matches?.matchesAhead ?: emptyList()
-            val scheduledIds = scheduledMatchIds(ahead.map { it.id })
-            reduce {
-                state.copy(
-                    matchesComplete = matches?.matchesCompleted ?: emptyList(),
-                    matchesAhead = ahead,
-                    calendarMatchIds = scheduledIds
-                )
+        repeatOnSubscription {
+            teamRepository.getTeamMatchesFlowFromLocal(state.teamId).collect { matches ->
+                val ahead = matches?.matchesAhead ?: emptyList()
+                val scheduledIds = scheduledMatchIds(ahead.map { it.id })
+                reduce {
+                    state.copy(
+                        matchesComplete = matches?.matchesCompleted ?: emptyList(),
+                        matchesAhead = ahead,
+                        calendarMatchIds = scheduledIds
+                    )
+                }
             }
         }
     }

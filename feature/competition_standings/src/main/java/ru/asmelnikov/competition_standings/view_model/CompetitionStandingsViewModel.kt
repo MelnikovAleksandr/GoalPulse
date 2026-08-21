@@ -91,11 +91,6 @@ class CompetitionStandingsViewModel(
         }
     }
 
-    fun syncCalendarEvents() = intent {
-        val scheduledIds = scheduledMatchIds(aheadMatchIds(state.matchesAhead))
-        reduce { state.copy(calendarMatchIds = scheduledIds) }
-    }
-
     fun onBackClick() = intent {
         postSideEffect(CompetitionStandingSideEffects.BackClick)
     }
@@ -203,15 +198,17 @@ class CompetitionStandingsViewModel(
     }
 
     private fun collectMatchesFlowFromLocal() = intent {
-        standingsRepository.getAllMatchesFlowFromLocal(state.compId).collect { matches ->
-            val ahead = matches?.matchesByTourAhead ?: emptyList()
-            val scheduledIds = scheduledMatchIds(aheadMatchIds(ahead))
-            reduce {
-                state.copy(
-                    matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
-                    matchesAhead = ahead,
-                    calendarMatchIds = scheduledIds
-                )
+        repeatOnSubscription {
+            standingsRepository.getAllMatchesFlowFromLocal(state.compId).collect { matches ->
+                val ahead = matches?.matchesByTourAhead ?: emptyList()
+                val scheduledIds = scheduledMatchIds(aheadMatchIds(ahead))
+                reduce {
+                    state.copy(
+                        matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
+                        matchesAhead = ahead,
+                        calendarMatchIds = scheduledIds
+                    )
+                }
             }
         }
     }

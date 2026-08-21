@@ -61,7 +61,6 @@ import ru.asmelnikov.utils.composables.isPortrait
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTab
 import ru.asmelnikov.utils.composables.liquid.LiquidBottomTabs
 import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
-import ru.asmelnikov.utils.composables.SyncMatchCalendarOnReturn
 import ru.asmelnikov.utils.composables.rememberMatchCalendarPermissionHandler
 import ru.asmelnikov.utils.navigation.Routes
 import ru.asmelnikov.utils.navigation.navigate
@@ -93,7 +92,6 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
     val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
         onPermissionResult = viewModel::onCalendarPermissionResult
     )
-    SyncMatchCalendarOnReturn(onReturn = viewModel::syncCalendarEvents)
 
     viewModel.collectSideEffect {
         when (it) {

@@ -77,24 +77,99 @@ class TeamInfoViewModel(
 
     fun onCalendarClick(match: Match) = intent {
         if (state.calendarBusyMatchIds.contains(match.id)) return@intent
-        if (matchCalendarRepository.hasCalendarPermission()) {
-            toggleCalendarEvent(match)
+        if (!matchCalendarRepository.hasCalendarPermission()) {
+            reduce { state.copy(pendingCalendarMatch = match) }
+            postSideEffect(TeamInfoSideEffects.RequestCalendarPermission)
             return@intent
         }
-        reduce { state.copy(pendingCalendarMatch = match) }
-        postSideEffect(TeamInfoSideEffects.RequestCalendarPermission)
+        if (!state.calendarMatchIds.contains(match.id)) {
+            val intent = matchCalendarRepository.insertIntent(match)
+            if (intent == null) {
+                postSideEffect(
+                    TeamInfoSideEffects.Snackbar(
+                        stringResourceProvider.getString(R.string.calendar_event_failed)
+                    )
+                )
+                return@intent
+            }
+            postSideEffect(TeamInfoSideEffects.OpenCalendar(intent))
+            return@intent
+        }
+        if (matchCalendarRepository.findEventId(match.id) == null) {
+            val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
+            reduce { state.copy(calendarMatchIds = scheduledIds) }
+            postSideEffect(
+                TeamInfoSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        val intent = matchCalendarRepository.viewIntent(match)
+        if (intent == null) {
+            postSideEffect(
+                TeamInfoSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        postSideEffect(TeamInfoSideEffects.OpenCalendar(intent))
     }
 
     fun onCalendarPermissionResult(granted: Boolean) = intent {
         val match = state.pendingCalendarMatch
-        reduce { state.copy(pendingCalendarMatch = null) }
-        if (!granted) return@intent
-        if (match != null) {
-            toggleCalendarEvent(match)
-        } else {
-            val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
-            reduce { state.copy(calendarMatchIds = scheduledIds) }
+        if (!granted) {
+            reduce { state.copy(pendingCalendarMatch = null) }
+            return@intent
         }
+        val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
+        reduce {
+            state.copy(
+                pendingCalendarMatch = null,
+                calendarMatchIds = scheduledIds
+            )
+        }
+        if (match == null) return@intent
+        if (!scheduledIds.contains(match.id)) {
+            val intent = matchCalendarRepository.insertIntent(match)
+            if (intent == null) {
+                postSideEffect(
+                    TeamInfoSideEffects.Snackbar(
+                        stringResourceProvider.getString(R.string.calendar_event_failed)
+                    )
+                )
+                return@intent
+            }
+            postSideEffect(TeamInfoSideEffects.OpenCalendar(intent))
+            return@intent
+        }
+        if (matchCalendarRepository.findEventId(match.id) == null) {
+            postSideEffect(
+                TeamInfoSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        val intent = matchCalendarRepository.viewIntent(match)
+        if (intent == null) {
+            postSideEffect(
+                TeamInfoSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        postSideEffect(TeamInfoSideEffects.OpenCalendar(intent))
+    }
+
+    fun onCalendarInsertFailed() = intent {
+        postSideEffect(
+            TeamInfoSideEffects.Snackbar(
+                stringResourceProvider.getString(R.string.calendar_event_failed)
+            )
+        )
     }
 
     fun getTeamInfoFromRemoteToLocal() = intent {
@@ -175,29 +250,6 @@ class TeamInfoViewModel(
                     )
                 }
             }
-        }
-    }
-
-    private fun toggleCalendarEvent(match: Match) = intent {
-        reduce { state.copy(calendarBusyMatchIds = state.calendarBusyMatchIds + match.id) }
-        val result = if (state.calendarMatchIds.contains(match.id)) {
-            matchCalendarRepository.removeMatch(match.id)
-        } else {
-            matchCalendarRepository.addMatch(match)
-        }
-        val scheduledIds = scheduledMatchIds(state.matchesAhead.map { it.id })
-        reduce {
-            state.copy(
-                calendarBusyMatchIds = state.calendarBusyMatchIds - match.id,
-                calendarMatchIds = scheduledIds
-            )
-        }
-        if (result is Resource.Error) {
-            postSideEffect(
-                TeamInfoSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
-            )
         }
     }
 

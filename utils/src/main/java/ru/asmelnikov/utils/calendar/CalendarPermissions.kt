@@ -8,8 +8,7 @@ import android.provider.Settings
 
 object CalendarPermissions {
     val REQUIRED = arrayOf(
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR
+        Manifest.permission.READ_CALENDAR
     )
 }
 

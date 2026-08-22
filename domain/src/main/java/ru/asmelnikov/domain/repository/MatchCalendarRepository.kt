@@ -1,7 +1,7 @@
 package ru.asmelnikov.domain.repository
 
+import android.content.Intent
 import ru.asmelnikov.domain.models.Match
-import ru.asmelnikov.utils.Resource
 
 interface MatchCalendarRepository {
 
@@ -9,7 +9,9 @@ interface MatchCalendarRepository {
 
     suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int>
 
-    suspend fun addMatch(match: Match): Resource<Unit>
+    suspend fun findEventId(matchId: Int): Long?
 
-    suspend fun removeMatch(matchId: Int): Resource<Unit>
+    fun insertIntent(match: Match): Intent?
+
+    fun viewIntent(match: Match): Intent?
 }

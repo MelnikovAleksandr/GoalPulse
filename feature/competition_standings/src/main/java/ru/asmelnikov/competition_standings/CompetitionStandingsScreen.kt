@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,6 +93,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
     val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
         onPermissionResult = viewModel::onCalendarPermissionResult
     )
+    val context = LocalContext.current
 
     viewModel.collectSideEffect {
         when (it) {
@@ -113,6 +115,11 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
 
             is CompetitionStandingSideEffects.RequestCalendarPermission -> {
                 calendarPermissionHandler.launchSystemPermission()
+            }
+
+            is CompetitionStandingSideEffects.OpenCalendar -> {
+                runCatching { context.startActivity(it.intent) }
+                    .onFailure { viewModel.onCalendarInsertFailed() }
             }
         }
     }

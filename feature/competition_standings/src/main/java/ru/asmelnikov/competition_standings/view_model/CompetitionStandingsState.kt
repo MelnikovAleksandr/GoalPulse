@@ -1,5 +1,6 @@
 package ru.asmelnikov.competition_standings.view_model
 
+import android.content.Intent
 import android.os.Parcelable
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Immutable
@@ -52,4 +53,5 @@ sealed class CompetitionStandingSideEffects {
 
     data object RequestCalendarPermission : CompetitionStandingSideEffects()
 
+    data class OpenCalendar(val intent: Intent) : CompetitionStandingSideEffects()
 }

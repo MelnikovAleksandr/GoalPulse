@@ -71,24 +71,99 @@ class CompetitionStandingsViewModel(
 
     fun onCalendarClick(match: Match) = intent {
         if (state.calendarBusyMatchIds.contains(match.id)) return@intent
-        if (matchCalendarRepository.hasCalendarPermission()) {
-            toggleCalendarEvent(match)
+        if (!matchCalendarRepository.hasCalendarPermission()) {
+            reduce { state.copy(pendingCalendarMatch = match) }
+            postSideEffect(CompetitionStandingSideEffects.RequestCalendarPermission)
             return@intent
         }
-        reduce { state.copy(pendingCalendarMatch = match) }
-        postSideEffect(CompetitionStandingSideEffects.RequestCalendarPermission)
+        if (!state.calendarMatchIds.contains(match.id)) {
+            val intent = matchCalendarRepository.insertIntent(match)
+            if (intent == null) {
+                postSideEffect(
+                    CompetitionStandingSideEffects.Snackbar(
+                        stringResourceProvider.getString(R.string.calendar_event_failed)
+                    )
+                )
+                return@intent
+            }
+            postSideEffect(CompetitionStandingSideEffects.OpenCalendar(intent))
+            return@intent
+        }
+        if (matchCalendarRepository.findEventId(match.id) == null) {
+            val scheduledIds = scheduledMatchIds(aheadMatchIds(state.matchesAhead))
+            reduce { state.copy(calendarMatchIds = scheduledIds) }
+            postSideEffect(
+                CompetitionStandingSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        val intent = matchCalendarRepository.viewIntent(match)
+        if (intent == null) {
+            postSideEffect(
+                CompetitionStandingSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        postSideEffect(CompetitionStandingSideEffects.OpenCalendar(intent))
     }
 
     fun onCalendarPermissionResult(granted: Boolean) = intent {
         val match = state.pendingCalendarMatch
-        reduce { state.copy(pendingCalendarMatch = null) }
-        if (!granted) return@intent
-        if (match != null) {
-            toggleCalendarEvent(match)
-        } else {
-            val scheduledIds = scheduledMatchIds(aheadMatchIds(state.matchesAhead))
-            reduce { state.copy(calendarMatchIds = scheduledIds) }
+        if (!granted) {
+            reduce { state.copy(pendingCalendarMatch = null) }
+            return@intent
         }
+        val scheduledIds = scheduledMatchIds(aheadMatchIds(state.matchesAhead))
+        reduce {
+            state.copy(
+                pendingCalendarMatch = null,
+                calendarMatchIds = scheduledIds
+            )
+        }
+        if (match == null) return@intent
+        if (!scheduledIds.contains(match.id)) {
+            val intent = matchCalendarRepository.insertIntent(match)
+            if (intent == null) {
+                postSideEffect(
+                    CompetitionStandingSideEffects.Snackbar(
+                        stringResourceProvider.getString(R.string.calendar_event_failed)
+                    )
+                )
+                return@intent
+            }
+            postSideEffect(CompetitionStandingSideEffects.OpenCalendar(intent))
+            return@intent
+        }
+        if (matchCalendarRepository.findEventId(match.id) == null) {
+            postSideEffect(
+                CompetitionStandingSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        val intent = matchCalendarRepository.viewIntent(match)
+        if (intent == null) {
+            postSideEffect(
+                CompetitionStandingSideEffects.Snackbar(
+                    stringResourceProvider.getString(R.string.calendar_event_failed)
+                )
+            )
+            return@intent
+        }
+        postSideEffect(CompetitionStandingSideEffects.OpenCalendar(intent))
+    }
+
+    fun onCalendarInsertFailed() = intent {
+        postSideEffect(
+            CompetitionStandingSideEffects.Snackbar(
+                stringResourceProvider.getString(R.string.calendar_event_failed)
+            )
+        )
     }
 
     fun onBackClick() = intent {
@@ -210,29 +285,6 @@ class CompetitionStandingsViewModel(
                     )
                 }
             }
-        }
-    }
-
-    private fun toggleCalendarEvent(match: Match) = intent {
-        reduce { state.copy(calendarBusyMatchIds = state.calendarBusyMatchIds + match.id) }
-        val result = if (state.calendarMatchIds.contains(match.id)) {
-            matchCalendarRepository.removeMatch(match.id)
-        } else {
-            matchCalendarRepository.addMatch(match)
-        }
-        val scheduledIds = scheduledMatchIds(aheadMatchIds(state.matchesAhead))
-        reduce {
-            state.copy(
-                calendarBusyMatchIds = state.calendarBusyMatchIds - match.id,
-                calendarMatchIds = scheduledIds
-            )
-        }
-        if (result is Resource.Error) {
-            postSideEffect(
-                CompetitionStandingSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
-            )
         }
     }
 

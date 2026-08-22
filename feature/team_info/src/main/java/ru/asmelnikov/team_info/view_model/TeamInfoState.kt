@@ -1,5 +1,6 @@
 package ru.asmelnikov.team_info.view_model
 
+import android.content.Intent
 import android.os.Parcelable
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Immutable
@@ -38,4 +39,6 @@ sealed class TeamInfoSideEffects {
         TeamInfoSideEffects()
 
     data object RequestCalendarPermission : TeamInfoSideEffects()
+
+    data class OpenCalendar(val intent: Intent) : TeamInfoSideEffects()
 }

@@ -1,5 +1,6 @@
 package ru.asmelnikov.competition_standings.view_model
 
+import android.content.Intent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -253,7 +254,7 @@ class CompetitionStandingsViewModelTest {
     }
 
     @Test
-    fun calendarPermissionGranted_addsMatchAndMarksItScheduled() = runTest {
+    fun calendarPermissionGranted_opensCalendarInsert() = runTest {
         val calendarRepository = FakeMatchCalendarRepository(hasPermission = true)
 
         viewModel(matchCalendarRepository = calendarRepository).test(
@@ -270,27 +271,16 @@ class CompetitionStandingsViewModelTest {
             containerHost.onCalendarPermissionResult(granted = true)
 
             expectState { copy(pendingCalendarMatch = null) }
-            expectState {
-                copy(
-                    pendingCalendarMatch = null,
-                    calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
-                )
-            }
-            expectState {
-                copy(
-                    pendingCalendarMatch = null,
-                    calendarBusyMatchIds = emptySet(),
-                    calendarMatchIds = setOf(AHEAD_MATCH_ID)
-                )
-            }
+            expectSideEffect(CompetitionStandingSideEffects.OpenCalendar(calendarRepository.insertIntent(aheadMatch)))
         }
     }
 
     @Test
-    fun calendarClick_whenAlreadyScheduled_removesMatch() = runTest {
+    fun calendarClick_whenAlreadyScheduled_opensCalendarAtMatchTime() = runTest {
         val calendarRepository = FakeMatchCalendarRepository(
             hasPermission = true,
-            scheduledIds = setOf(AHEAD_MATCH_ID)
+            scheduledIds = setOf(AHEAD_MATCH_ID),
+            eventIds = mapOf(AHEAD_MATCH_ID to 7L)
         )
 
         viewModel(matchCalendarRepository = calendarRepository).test(
@@ -306,13 +296,7 @@ class CompetitionStandingsViewModelTest {
         ) {
             containerHost.onCalendarClick(aheadMatch)
 
-            expectState { copy(calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)) }
-            expectState {
-                copy(
-                    calendarBusyMatchIds = emptySet(),
-                    calendarMatchIds = emptySet()
-                )
-            }
+            expectSideEffect(CompetitionStandingSideEffects.OpenCalendar(calendarRepository.viewIntent(aheadMatch)))
         }
     }
 
@@ -393,7 +377,8 @@ private class FakeStandingsRepository(
 
 private class FakeMatchCalendarRepository(
     private var hasPermission: Boolean = false,
-    private var scheduledIds: Set<Int> = emptySet()
+    private var scheduledIds: Set<Int> = emptySet(),
+    private val eventIds: Map<Int, Long> = emptyMap()
 ) : MatchCalendarRepository {
 
     override fun hasCalendarPermission(): Boolean = hasPermission
@@ -402,21 +387,25 @@ private class FakeMatchCalendarRepository(
         return scheduledIds.intersect(matchIds.toSet())
     }
 
-    override suspend fun addMatch(match: Match): Resource<Unit> {
-        scheduledIds = scheduledIds + match.id
-        return Resource.Success(Unit)
+    override suspend fun findEventId(matchId: Int): Long? = eventIds[matchId]
+
+    override fun insertIntent(match: Match) = insertIntents.getOrPut(match.id) {
+        Intent(Intent.ACTION_INSERT)
     }
 
-    override suspend fun removeMatch(matchId: Int): Resource<Unit> {
-        scheduledIds = scheduledIds - matchId
-        return Resource.Success(Unit)
+    override fun viewIntent(match: Match) = viewIntents.getOrPut(match.id) {
+        Intent(Intent.ACTION_VIEW)
     }
+
+    private val insertIntents = mutableMapOf<Int, Intent>()
+    private val viewIntents = mutableMapOf<Int, Intent>()
 }
 
 private class FakeStringResourceProvider : StringResourceProvider {
     override fun getString(resourceId: Int): String {
         return when (resourceId) {
             R.string.http_429_errors -> RATE_LIMIT_MESSAGE
+            R.string.calendar_event_failed -> "calendar failed"
             else -> error("unexpected string resource $resourceId")
         }
     }

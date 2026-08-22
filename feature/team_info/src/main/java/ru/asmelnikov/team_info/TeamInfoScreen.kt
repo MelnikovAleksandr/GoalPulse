@@ -92,6 +92,7 @@ fun TeamInfoScreen(
     val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
         onPermissionResult = viewModel::onCalendarPermissionResult
     )
+    val context = LocalContext.current
 
     viewModel.collectSideEffect {
         when (it) {
@@ -109,6 +110,11 @@ fun TeamInfoScreen(
 
             is TeamInfoSideEffects.RequestCalendarPermission -> {
                 calendarPermissionHandler.launchSystemPermission()
+            }
+
+            is TeamInfoSideEffects.OpenCalendar -> {
+                runCatching { context.startActivity(it.intent) }
+                    .onFailure { viewModel.onCalendarInsertFailed() }
             }
         }
     }

@@ -33,8 +33,8 @@ android {
         applicationId = "ru.asmelnikov.goalpulse"
         minSdk = 33
         targetSdk = 37
-        versionCode = 7
-        versionName = "7.0"
+        versionCode = 8
+        versionName = "8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,7 +44,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

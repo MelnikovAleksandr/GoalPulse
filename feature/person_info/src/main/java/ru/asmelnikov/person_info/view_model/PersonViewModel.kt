@@ -15,12 +15,13 @@ class PersonViewModel(
     private val repository: PersonRepository,
     private val stringResourceProvider: StringResourceProvider,
     private val personId: String,
-    savedStateHandle: SavedStateHandle
-) : ViewModel(), ContainerHost<PersonState, PersonSideEffects> {
+    savedStateHandle: SavedStateHandle,
+) : ViewModel(),
+    ContainerHost<PersonState, PersonSideEffects> {
 
     override val container = container<PersonState, PersonSideEffects>(
         initialState = PersonState(),
-        savedStateHandle = savedStateHandle
+        savedStateHandle = savedStateHandle,
     ) {
         reduce { state.copy(personId = personId) }
         getPersonFromRemote()
@@ -28,15 +29,17 @@ class PersonViewModel(
 
     fun getPersonFromRemote() = intent {
         reduce { state.copy(isLoading = true) }
-        when (val person =
-            repository.getPersonInfo(
-                personId = state.personId
-            )) {
+        when (
+            val person =
+                repository.getPersonInfo(
+                    personId = state.personId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
                         isLoading = false,
-                        person = person.data ?: Person()
+                        person = person.data ?: Person(),
                     )
                 }
             }
@@ -54,17 +57,16 @@ class PersonViewModel(
     private fun handleError(error: ErrorsTypesHttp?) = intent {
         reduce {
             state.copy(
-                isLoading = false
+                isLoading = false,
             )
         }
 
         postSideEffect(
             PersonSideEffects.Snackbar(
                 error.getErrorMessage(
-                    stringResourceProvider
-                )
-            )
+                    stringResourceProvider,
+                ),
+            ),
         )
     }
-
 }

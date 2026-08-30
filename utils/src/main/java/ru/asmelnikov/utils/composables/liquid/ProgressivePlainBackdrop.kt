@@ -60,7 +60,7 @@ fun Modifier.drawProgressivePlainBackdrop(
                 setColorUniform("tint", tint)
                 setFloatUniform("tintIntensity", tintIntensity)
             }
-        }
+        },
     )
 
 fun Modifier.drawProgressivePlainBackdropReverse(
@@ -84,6 +84,5 @@ fun Modifier.drawProgressivePlainBackdropReverse(
                 setColorUniform("tint", tint)
                 setFloatUniform("tintIntensity", tintIntensity)
             }
-        }
+        },
     )
-

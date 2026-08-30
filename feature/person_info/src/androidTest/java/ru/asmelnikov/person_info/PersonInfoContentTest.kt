@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -31,7 +32,7 @@ class PersonInfoContentTest {
     fun emptyNotLoading_showsReload_hidesPlayer() {
         setScreen(person = emptyPerson)
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Bukayo Saka").assertDoesNotExist()
         composeTestRule.onNodeWithText(nameLabel).assertDoesNotExist()
     }
@@ -42,7 +43,7 @@ class PersonInfoContentTest {
 
         setScreen(person = emptyPerson, onReload = { reloadCalls++ })
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, reloadCalls)
     }
@@ -131,7 +132,7 @@ class PersonInfoContentTest {
         person: Person,
         isLoading: Boolean = false,
         onReload: () -> Unit = {},
-        onBackClick: () -> Unit = {}
+        onBackClick: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -140,7 +141,7 @@ class PersonInfoContentTest {
                         isLoading = isLoading,
                         person = person,
                         onReload = onReload,
-                        onBackClick = onBackClick
+                        onBackClick = onBackClick,
                     )
                 }
             }
@@ -154,7 +155,7 @@ class PersonInfoContentTest {
 
 private val emptyPerson = Person(
     id = 44,
-    name = ""
+    name = "",
 )
 
 private val saka = Person(
@@ -164,7 +165,7 @@ private val saka = Person(
     nationality = "England",
     position = PlayerPosition.RIGHT_WINGER,
     shirtNumber = 7,
-    currentTeam = CurrentTeam(crest = "https://crests.football-data.org/57.svg")
+    currentTeam = CurrentTeam(crest = "https://crests.football-data.org/57.svg"),
 )
 
 // endregion

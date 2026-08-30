@@ -18,11 +18,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layout
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -34,12 +29,16 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import kotlin.math.roundToInt
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +51,7 @@ import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import com.kyant.shapes.Capsule
+import kotlin.math.roundToInt
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.liquid.LiquidButtonBox
 import ru.asmelnikov.utils.composables.liquid.LiquidGlassDefaults
@@ -66,7 +66,7 @@ fun CompetitionsHeader(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     searchBarScrollState: SearchBarScrollState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -74,19 +74,18 @@ fun CompetitionsHeader(
             .fillMaxWidth()
             .padding(
                 horizontal = dimens.medium1,
-                vertical = dimens.small3
-            )
+                vertical = dimens.small3,
+            ),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-
             LiquidButtonBox(
                 modifier = Modifier
                     .size(dimens.medium5),
                 onClick = {},
-                backdrop = backdrop
+                backdrop = backdrop,
             ) {
                 Image(
                     painter = painterResource(R.mipmap.ic_launcher),
@@ -94,7 +93,7 @@ fun CompetitionsHeader(
                     modifier = Modifier
                         .clip(CircleShape)
                         .fillMaxSize(0.8f),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Fit,
                 )
             }
 
@@ -105,12 +104,12 @@ fun CompetitionsHeader(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
                     text = stringResource(R.string.available_competitions_count, competitionsCount),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.55f),
                 )
             }
         }
@@ -131,19 +130,19 @@ fun CompetitionsHeader(
                         drawLiquidGlassSurface(
                             surfaceAlpha = LiquidGlassDefaults.COMPACT_SURFACE_ALPHA,
                             overlayAlpha = LiquidGlassDefaults.COMPACT_OVERLAY_ALPHA,
-                            surfaceColor = Color.White
+                            surfaceColor = Color.White,
                         )
-                    }
+                    },
                 )
                 .fillMaxWidth()
-                .clipToBounds()
+                .clipToBounds(),
         ) {
             CollapsibleSearchBarSection(
-                searchBarScrollState = searchBarScrollState
+                searchBarScrollState = searchBarScrollState,
             ) {
                 CompetitionsSearchBar(
                     query = searchQuery,
-                    onQueryChange = onSearchQueryChange
+                    onQueryChange = onSearchQueryChange,
                 )
             }
         }
@@ -153,7 +152,7 @@ fun CompetitionsHeader(
 @Composable
 private fun CollapsibleSearchBarSection(
     searchBarScrollState: SearchBarScrollState,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val sectionHeight = remember { SectionHeightHolder() }
 
@@ -188,7 +187,7 @@ private fun CollapsibleSearchBarSection(
                 transformOrigin = TransformOrigin(0.5f, 0f)
                 rotationX = -90f * progress
                 cameraDistance = 12f * density
-            }
+            },
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             content()
@@ -203,7 +202,7 @@ private class SectionHeightHolder(var px: Float = 0f)
 private fun CompetitionsSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val isImeVisible = WindowInsets.isImeVisible
@@ -232,7 +231,7 @@ private fun CompetitionsSearchBar(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    modifier = Modifier.size(dimens.searchBarIconSize)
+                    modifier = Modifier.size(dimens.searchBarIconSize),
                 )
             },
             trailingIcon = if (query.isNotEmpty()) {
@@ -241,7 +240,7 @@ private fun CompetitionsSearchBar(
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = stringResource(R.string.clear_search),
-                            modifier = Modifier.size(dimens.searchBarIconSize)
+                            modifier = Modifier.size(dimens.searchBarIconSize),
                         )
                     }
                 }
@@ -252,13 +251,13 @@ private fun CompetitionsSearchBar(
                 Text(
                     text = stringResource(R.string.search_competitions),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White.copy(alpha = 0.55f)
+                    color = Color.White.copy(alpha = 0.55f),
                 )
             },
             interactionSource = remember { MutableInteractionSource() },
             contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(
                 top = 0.dp,
-                bottom = 0.dp
+                bottom = 0.dp,
             ),
             shape = Capsule(),
             colors = TextFieldDefaults.colors(
@@ -279,8 +278,7 @@ private fun CompetitionsSearchBar(
                 unfocusedTrailingIconColor = Color.White,
                 focusedPlaceholderColor = Color.White,
                 unfocusedPlaceholderColor = Color.White,
-            )
+            ),
         )
     }
-
 }

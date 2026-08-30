@@ -19,7 +19,7 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SquadItem(
     squad: Squad,
-    onPersonClick: (Int) -> Unit
+    onPersonClick: (Int) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -27,7 +27,7 @@ fun SquadItem(
             .background(Color.Transparent)
             .clickable {
                 onPersonClick(squad.id)
-            }
+            },
     ) {
         Text(
             modifier = Modifier
@@ -38,7 +38,7 @@ fun SquadItem(
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             modifier = Modifier
@@ -48,7 +48,7 @@ fun SquadItem(
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             modifier = Modifier
@@ -58,7 +58,7 @@ fun SquadItem(
             textAlign = TextAlign.Start,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

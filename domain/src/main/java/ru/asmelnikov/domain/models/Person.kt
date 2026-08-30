@@ -1,8 +1,8 @@
 package ru.asmelnikov.domain.models
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.util.UUID
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Person(
@@ -16,7 +16,7 @@ data class Person(
     val nationality: String = "",
     val position: PlayerPosition = PlayerPosition.NON,
     val section: String = "",
-    val shirtNumber: Int = -1
+    val shirtNumber: Int = -1,
 ) : Parcelable
 
 @Parcelize
@@ -31,5 +31,5 @@ data class CurrentTeam(
     val shortName: String = "",
     val tla: String = "",
     val venue: String = "",
-    val website: String = ""
+    val website: String = "",
 ) : Parcelable

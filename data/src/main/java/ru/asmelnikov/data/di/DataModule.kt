@@ -38,8 +38,7 @@ private const val SCHEMA_VERSION = 1L
 val dataModule = module {
 
     single<Configuration> {
-        RealmConfiguration.Builder(
-            schema = entities)
+        RealmConfiguration.Builder(schema = entities)
             .name(DB_NAME)
             .deleteRealmIfMigrationNeeded()
             .schemaVersion(SCHEMA_VERSION)
@@ -74,7 +73,7 @@ val dataModule = module {
         CompetitionsRepositoryImpl(
             footballApi = get(),
             realmOptions = get(),
-            retrofitErrorsHandler = get()
+            retrofitErrorsHandler = get(),
         )
     }
 
@@ -82,7 +81,7 @@ val dataModule = module {
         CompetitionStandingsRepositoryImpl(
             footballApi = get(),
             realmOptions = get(),
-            retrofitErrorsHandler = get()
+            retrofitErrorsHandler = get(),
         )
     }
 
@@ -90,14 +89,14 @@ val dataModule = module {
         TeamInfoRepositoryImpl(
             footballApi = get(),
             realmOptions = get(),
-            retrofitErrorsHandler = get()
+            retrofitErrorsHandler = get(),
         )
     }
 
     single<PersonRepository> {
         PersonRepositoryImpl(
             footballApi = get(),
-            retrofitErrorsHandler = get()
+            retrofitErrorsHandler = get(),
         )
     }
 
@@ -105,10 +104,9 @@ val dataModule = module {
         val context = androidContext()
         MatchCalendarRepositoryImpl(
             appPackageName = context.packageName,
-            store = ContentResolverMatchCalendarStore(context)
+            store = ContentResolverMatchCalendarStore(context),
         )
     }
-
 }
 
 private fun moshiConverterFactory(): MoshiConverterFactory =
@@ -122,7 +120,7 @@ private fun okHttp(): OkHttpClient =
 private fun retrofit(
     moshiConverterFactory: MoshiConverterFactory,
     okHttpClient: OkHttpClient,
-    url: String
+    url: String,
 ) = Retrofit.Builder()
     .baseUrl(url)
     .addConverterFactory(moshiConverterFactory)

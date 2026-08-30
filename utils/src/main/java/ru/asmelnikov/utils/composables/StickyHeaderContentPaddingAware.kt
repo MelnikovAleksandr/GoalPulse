@@ -17,7 +17,7 @@ fun LazyListScope.stickyHeaderContentPaddingAware(
     listState: LazyListState,
     key: Any,
     contentType: Any? = null,
-    content: @Composable LazyItemScope.() -> Unit
+    content: @Composable LazyItemScope.() -> Unit,
 ) {
     stickyHeader(
         key = key,
@@ -25,7 +25,8 @@ fun LazyListScope.stickyHeaderContentPaddingAware(
         content = {
             Layout(
                 modifier = Modifier.zIndex(1f),
-                content = { content() }) { measurables, constraints ->
+                content = { content() },
+            ) { measurables, constraints ->
                 val placeable = measurables.first().measure(constraints)
                 val width = constraints.constrainWidth(placeable.width)
                 val height = constraints.constrainHeight(placeable.height)
@@ -47,6 +48,6 @@ fun LazyListScope.stickyHeaderContentPaddingAware(
                     placeable.place(0, top)
                 }
             }
-        }
+        },
     )
 }

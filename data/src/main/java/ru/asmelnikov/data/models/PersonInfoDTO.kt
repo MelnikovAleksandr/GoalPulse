@@ -16,5 +16,5 @@ data class PersonInfoDTO(
     @Json(name = "position") val position: String?,
     @Json(name = "section") val section: String?,
     @Json(name = "shirtNumber") val shirtNumber: Int?,
-    @Json(name = "contract") val contract: ContractDTO?
+    @Json(name = "contract") val contract: ContractDTO?,
 )

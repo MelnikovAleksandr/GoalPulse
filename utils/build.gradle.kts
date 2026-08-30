@@ -27,7 +27,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             buildConfigField("String", "NEW_API_KEY", getApiKey("NEW_API_KEY"))
             buildConfigField("String", "FOOTBALL_API_KEY", getApiKey("FOOTBALL_API_KEY"))

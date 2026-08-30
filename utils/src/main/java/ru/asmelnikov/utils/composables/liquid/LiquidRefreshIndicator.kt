@@ -44,7 +44,7 @@ fun LiquidRefreshIndicator(
     backdrop: Backdrop,
     modifier: Modifier = Modifier,
     topOffset: Dp = 0.dp,
-    maxDistance: Dp = IndicatorMaxDistance
+    maxDistance: Dp = IndicatorMaxDistance,
 ) {
     LiquidRefreshIndicatorBox(
         modifier = modifier,
@@ -52,11 +52,11 @@ fun LiquidRefreshIndicator(
         isRefreshing = isRefreshing,
         backdrop = backdrop,
         topOffset = topOffset,
-        maxDistance = maxDistance
+        maxDistance = maxDistance,
     ) {
         BallRefreshIndicator(
             progress = state.distanceFraction,
-            isRefreshing = isRefreshing
+            isRefreshing = isRefreshing,
         )
     }
 }
@@ -69,7 +69,7 @@ private fun LiquidRefreshIndicatorBox(
     modifier: Modifier = Modifier,
     topOffset: Dp = 0.dp,
     maxDistance: Dp = IndicatorMaxDistance,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val shape = PullToRefreshDefaults.indicatorShape
     val glassSpec = rememberLiquidGlassCompactSpec()
@@ -119,28 +119,28 @@ private fun LiquidRefreshIndicatorBox(
                     drawLiquidGlassSurface(
                         surfaceAlpha = LiquidGlassDefaults.CARD_SURFACE_ALPHA,
                         overlayAlpha = LiquidGlassDefaults.CARD_OVERLAY_ALPHA,
-                        surfaceColor = liquidColor
+                        surfaceColor = liquidColor,
                     )
-                }
+                },
             ),
         contentAlignment = Alignment.Center,
-        content = content
+        content = content,
     )
 }
 
 @Composable
 private fun BallRefreshIndicator(
     progress: Float,
-    isRefreshing: Boolean
+    isRefreshing: Boolean,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "ball_refresh_spin")
     val spinRotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1688, easing = LinearEasing)
+            animation = tween(durationMillis = 1688, easing = LinearEasing),
         ),
-        label = "spin"
+        label = "spin",
     )
 
     val pullRotation = progress.coerceAtLeast(0f) * 360f
@@ -163,12 +163,15 @@ private fun BallRefreshIndicator(
                     }
                 }
             }
-            .rotate(rotation)
+            .rotate(rotation),
     )
 }
 
 private const val SCALE_GROWTH_FACTOR = 1.75f
 
-private fun scaleForPullProgress(pullProgress: Float): Float {
-    return (pullProgress.coerceIn(0f, 1f) * SCALE_GROWTH_FACTOR).coerceAtMost(1f)
-}
+private fun scaleForPullProgress(pullProgress: Float): Float = (
+    pullProgress.coerceIn(
+        0f,
+        1f,
+    ) * SCALE_GROWTH_FACTOR
+    ).coerceAtMost(1f)

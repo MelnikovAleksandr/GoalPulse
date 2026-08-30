@@ -17,20 +17,19 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import ru.asmelnikov.goalpulse.navigation.NavGraph
-import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.composables.rememberAppState
+import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
         )
         window.isNavigationBarContrastEnforced = false
         installSplashScreen()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-
             val appState = rememberAppState()
 
             GoalPulseTheme {
@@ -41,9 +40,9 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = {
                         SnackbarHost(
                             hostState = appState.snackbarState,
-                            modifier = Modifier.navigationBarsPadding()
+                            modifier = Modifier.navigationBarsPadding(),
                         )
-                    }
+                    },
                 ) { paddingValues ->
                     SharedTransitionLayout {
                         NavGraph(
@@ -54,9 +53,9 @@ class MainActivity : ComponentActivity() {
                                     message = message,
                                     duration = duration,
                                     actionLabel = label,
-                                    actionPerformed = action
+                                    actionPerformed = action,
                                 )
-                            }
+                            },
                         )
                     }
                 }

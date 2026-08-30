@@ -8,7 +8,7 @@ import android.provider.Settings
 
 object CalendarPermissions {
     val REQUIRED = arrayOf(
-        Manifest.permission.READ_CALENDAR
+        Manifest.permission.READ_CALENDAR,
     )
 }
 
@@ -16,13 +16,11 @@ fun Activity.openCalendarPermissionSettings() {
     startActivity(
         Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", packageName, null)
-        )
+            Uri.fromParts("package", packageName, null),
+        ),
     )
 }
 
-fun Activity.isCalendarPermissionPermanentlyDeclined(): Boolean {
-    return CalendarPermissions.REQUIRED.any { permission ->
-        !shouldShowRequestPermissionRationale(permission)
-    }
+fun Activity.isCalendarPermissionPermanentlyDeclined(): Boolean = CalendarPermissions.REQUIRED.any { permission ->
+    !shouldShowRequestPermissionRationale(permission)
 }

@@ -10,7 +10,6 @@ import com.kyant.backdrop.Backdrop
 import ru.asmelnikov.utils.composables.liquid.drawProgressivePlainBackdrop
 import ru.asmelnikov.utils.ui.theme.dimens
 
-
 @Composable
 fun CompetitionsScaffoldTopBar(
     backdrop: Backdrop,
@@ -18,7 +17,7 @@ fun CompetitionsScaffoldTopBar(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     searchBarScrollState: SearchBarScrollState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
     val tint = MaterialTheme.colorScheme.background
@@ -30,8 +29,8 @@ fun CompetitionsScaffoldTopBar(
                     backdrop = backdrop,
                     blurRadiusPx = blurRadiusPx,
                     tint = tint,
-                    tintIntensity = 0.9f
-                )
+                    tintIntensity = 0.9f,
+                ),
         )
 
         CompetitionsHeader(
@@ -39,7 +38,7 @@ fun CompetitionsScaffoldTopBar(
             competitionsCount = competitionsCount,
             searchQuery = searchQuery,
             onSearchQueryChange = onSearchQueryChange,
-            searchBarScrollState = searchBarScrollState
+            searchBarScrollState = searchBarScrollState,
         )
     }
 }

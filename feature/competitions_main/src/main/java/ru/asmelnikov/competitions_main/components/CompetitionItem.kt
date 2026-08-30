@@ -42,19 +42,19 @@ fun SharedTransitionScope.CompetitionItem(
     competition: Competition,
     backdrop: LayerBackdrop,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    onCompClick: (String, String) -> Unit
+    onCompClick: (String, String) -> Unit,
 ) {
     LiquidCompetitionCard(
         backdrop = backdrop,
         modifier = modifier,
-        onClick = { onCompClick(competition.id.toString(), competition.emblem) }
+        onClick = { onCompClick(competition.id.toString(), competition.emblem) },
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimens.medium1),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             SubComposeAsyncImageCommon(
                 modifier = Modifier.sharedElement(
@@ -62,46 +62,52 @@ fun SharedTransitionScope.CompetitionItem(
                     animatedVisibilityScope = animatedVisibilityScope,
                     boundsTransform = { _, _ ->
                         tween(durationMillis = 1000)
-                    }
+                    },
                 ),
                 imageUri = competition.emblem,
-                shape = RoundedCornerShape(0.dp)
+                shape = RoundedCornerShape(0.dp),
             )
 
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row {
                     Text(
                         modifier = Modifier.weight(1f).basicMarquee(Int.MAX_VALUE),
                         text = competition.name,
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
+                        color = Color.White,
                     )
                     Spacer(modifier = Modifier.width(dimens.small1))
 
                     SubComposeAsyncImageCommon(
                         imageUri = competition.area.flag.ifBlank { R.drawable.united_nations },
                         shape = CircleShape,
-                        size = dimens.medium2
+                        size = dimens.medium2,
                     )
                 }
 
                 Text(
-                    text = "${stringResource(R.string.current_match_day)} - ${competition.currentSeason.currentMatchDay}",
+                    text = "${stringResource(
+                        R.string.current_match_day,
+                    )} - ${competition.currentSeason.currentMatchDay}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.85f)
+                    color = Color.White.copy(alpha = 0.85f),
                 )
                 Text(
-                    text = "${stringResource(R.string.label_start_date)} - ${competition.currentSeason.startDate.toLocalizedUiDate()}",
+                    text = "${stringResource(
+                        R.string.label_start_date,
+                    )} - ${competition.currentSeason.startDate.toLocalizedUiDate()}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.85f)
+                    color = Color.White.copy(alpha = 0.85f),
                 )
                 Text(
-                    text = "${stringResource(R.string.label_end_date)} - ${competition.currentSeason.endDate.toLocalizedUiDate()}",
+                    text = "${stringResource(
+                        R.string.label_end_date,
+                    )} - ${competition.currentSeason.endDate.toLocalizedUiDate()}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.85f)
+                    color = Color.White.copy(alpha = 0.85f),
                 )
             }
         }
@@ -115,7 +121,7 @@ private fun CompetitionItemPreview() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(Color.Black),
         ) {
             AnimatedVisibility(visible = true) {
                 val backdrop = rememberLayerBackdrop()
@@ -123,7 +129,7 @@ private fun CompetitionItemPreview() {
                     competition = getMockCompetitionsList().first().copy(name = "Very long name of some competition"),
                     backdrop = backdrop,
                     animatedVisibilityScope = this,
-                    onCompClick = { _, _ -> }
+                    onCompClick = { _, _ -> },
                 )
             }
         }

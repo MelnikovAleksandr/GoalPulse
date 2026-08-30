@@ -22,7 +22,7 @@ class CompetitionsScreenViewModelTest {
         val repository = FakeCompetitionsRepository(
             localCompetitions = MutableStateFlow(listOf(premierLeague, laLiga)),
             remoteGate = network,
-            remoteResult = Resource.Success(true)
+            remoteResult = Resource.Success(true),
         )
 
         viewModel(repository).test(this) {
@@ -45,8 +45,8 @@ class CompetitionsScreenViewModelTest {
             localCompetitions = MutableStateFlow(listOf(premierLeague)),
             remoteGate = network,
             remoteResult = Resource.Error(
-                httpErrors = ErrorsTypesHttp.Https400Errors(errorCode = 429)
-            )
+                httpErrors = ErrorsTypesHttp.Https400Errors(errorCode = 429),
+            ),
         )
 
         viewModel(repository).test(this) {
@@ -67,8 +67,8 @@ class CompetitionsScreenViewModelTest {
     fun onOpen_whenNetworkFailsAndCacheEmpty_hidesSpinner_showsEmptyAndError() = runTest {
         val repository = FakeCompetitionsRepository(
             remoteResult = Resource.Error(
-                httpErrors = ErrorsTypesHttp.Https400Errors(errorCode = 429)
-            )
+                httpErrors = ErrorsTypesHttp.Https400Errors(errorCode = 429),
+            ),
         )
 
         viewModel(repository).test(this) {
@@ -86,7 +86,7 @@ class CompetitionsScreenViewModelTest {
         val localCompetitions = MutableStateFlow<List<Competition>>(emptyList())
         val repository = FakeCompetitionsRepository(
             localCompetitions = localCompetitions,
-            remoteResult = Resource.Success(true)
+            remoteResult = Resource.Success(true),
         )
 
         viewModel(repository).test(this) {
@@ -107,12 +107,12 @@ class CompetitionsScreenViewModelTest {
         val network = CompletableDeferred<Unit>()
         val repository = FakeCompetitionsRepository(
             remoteGate = network,
-            remoteResult = Resource.Success(true)
+            remoteResult = Resource.Success(true),
         )
 
         viewModel(repository).test(
             this,
-            CompetitionsScreenState(comps = listOf(premierLeague), isLoading = false)
+            CompetitionsScreenState(comps = listOf(premierLeague), isLoading = false),
         ) {
             containerHost.updateCompetitionsFromRemoteToLocal()
 
@@ -129,14 +129,14 @@ class CompetitionsScreenViewModelTest {
         viewModel(FakeCompetitionsRepository()).test(this) {
             containerHost.onCompClick(
                 compId = "2021",
-                compUrl = "https://crests.football-data.org/PL.png"
+                compUrl = "https://crests.football-data.org/PL.png",
             )
 
             expectSideEffect(
                 CompetitionsScreenSideEffects.OnCompetitionNavigate(
                     compId = "2021",
-                    compUrl = "https://crests.football-data.org/PL.png"
-                )
+                    compUrl = "https://crests.football-data.org/PL.png",
+                ),
             )
         }
     }
@@ -146,7 +146,7 @@ class CompetitionsScreenViewModelTest {
     private fun viewModel(repository: FakeCompetitionsRepository) = CompetitionsScreenViewModel(
         footballRepository = repository,
         stringResourceProvider = FakeStringResourceProvider(),
-        savedStateHandle = SavedStateHandle()
+        savedStateHandle = SavedStateHandle(),
     )
 
     // endregion
@@ -157,7 +157,7 @@ class CompetitionsScreenViewModelTest {
 private class FakeCompetitionsRepository(
     val localCompetitions: MutableStateFlow<List<Competition>> = MutableStateFlow(emptyList()),
     var remoteResult: Resource<Boolean> = Resource.Success(true),
-    private val remoteGate: CompletableDeferred<Unit>? = null
+    private val remoteGate: CompletableDeferred<Unit>? = null,
 ) : CompetitionsRepository {
 
     override suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<Boolean> {
@@ -165,17 +165,13 @@ private class FakeCompetitionsRepository(
         return remoteResult
     }
 
-    override suspend fun getAllCompetitionsFlowFromLocal(): Flow<List<Competition>> {
-        return localCompetitions
-    }
+    override suspend fun getAllCompetitionsFlowFromLocal(): Flow<List<Competition>> = localCompetitions
 }
 
 private class FakeStringResourceProvider : StringResourceProvider {
-    override fun getString(resourceId: Int): String {
-        return when (resourceId) {
-            R.string.http_429_errors -> RATE_LIMIT_MESSAGE
-            else -> error("unexpected string resource $resourceId")
-        }
+    override fun getString(resourceId: Int): String = when (resourceId) {
+        R.string.http_429_errors -> RATE_LIMIT_MESSAGE
+        else -> error("unexpected string resource $resourceId")
     }
 
     override fun getString(resourceId: Int, vararg arguments: Any): String {
@@ -192,13 +188,13 @@ private const val RATE_LIMIT_MESSAGE = "too many requests"
 private val premierLeague = Competition(
     id = 2021,
     name = "Premier League",
-    emblem = "https://crests.football-data.org/PL.png"
+    emblem = "https://crests.football-data.org/PL.png",
 )
 
 private val laLiga = Competition(
     id = 2014,
     name = "La Liga",
-    emblem = "https://crests.football-data.org/PD.png"
+    emblem = "https://crests.football-data.org/PD.png",
 )
 
 // endregion

@@ -29,9 +29,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.asmelnikov.domain.models.Table
+import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.composables.SubComposeAsyncImageCommon
 import ru.asmelnikov.utils.ui.theme.dimens
-import ru.asmelnikov.utils.R
 
 @Composable
 fun StandingItem(
@@ -39,9 +39,8 @@ fun StandingItem(
     table: Table,
     dataWeight: Float = 0.08f,
     firstBoxColor: Color = Color.Transparent,
-    onTeamClick: (Int) -> Unit
+    onTeamClick: (Int) -> Unit,
 ) {
-
     val itemsRow = remember(table) {
         listOf(
             table.position.toString(),
@@ -52,7 +51,7 @@ fun StandingItem(
             table.lost.toString(),
             table.goalsFor.toString(),
             table.goalsAgainst.toString(),
-            table.points.toString()
+            table.points.toString(),
         )
     }
 
@@ -63,7 +62,7 @@ fun StandingItem(
             .clickable(enabled = table.team.name.isNotEmpty()) {
                 onTeamClick(table.team.id)
             },
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         itemsRow.forEachIndexed { index, item ->
             when (index) {
@@ -74,16 +73,16 @@ fun StandingItem(
                             .weight(0.37f)
                             .rightBorder(
                                 strokeWidth = dimens.borderSize,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary,
                             ),
-                        contentAlignment = Alignment.CenterStart
+                        contentAlignment = Alignment.CenterStart,
                     ) {
                         Row {
                             SubComposeAsyncImageCommon(
                                 modifier = Modifier.padding(horizontal = dimens.small1),
                                 imageUri = table.team.crest,
                                 shape = RoundedCornerShape(0.dp),
-                                size = dimens.medium2
+                                size = dimens.medium2,
                             )
 
                             Text(
@@ -92,10 +91,9 @@ fun StandingItem(
                                 style = MaterialTheme.typography.labelMedium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                             )
                         }
-
                     }
                 }
 
@@ -107,15 +105,15 @@ fun StandingItem(
                             .leftRoundedBorder(color = if (index == 0) firstBoxColor else Color.Transparent)
                             .rightBorder(
                                 strokeWidth = dimens.borderSize,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                                color = MaterialTheme.colorScheme.primary,
+                            ),
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
                             text = item,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
@@ -128,15 +126,14 @@ fun StandingItem(
 fun StandingTopItem(
     modifier: Modifier = Modifier,
     tableName: String,
-    dataWeight: Float = 0.08f
+    dataWeight: Float = 0.08f,
 ) {
-
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .height(dimens.medium4),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         TableColumn.entries.forEachIndexed { index, item ->
             when (index) {
@@ -147,8 +144,8 @@ fun StandingTopItem(
                             .weight(0.37f)
                             .rightBorder(
                                 strokeWidth = dimens.borderSize,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                                color = MaterialTheme.colorScheme.primary,
+                            ),
                     ) {
                         Text(
                             modifier = Modifier
@@ -157,7 +154,7 @@ fun StandingTopItem(
                             text = tableName,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
@@ -169,20 +166,19 @@ fun StandingTopItem(
                             .weight(dataWeight)
                             .rightBorder(
                                 strokeWidth = dimens.borderSize,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                                color = MaterialTheme.colorScheme.primary,
+                            ),
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
                             text = stringResource(item.titleResId),
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
                     }
                 }
             }
-
         }
     }
 }
@@ -199,7 +195,7 @@ fun BottomStandingItem() {
         modifier = Modifier.padding(dimens.small1).navigationBarsPadding(),
         textAlign = TextAlign.Start,
         style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.secondary,
     )
 }
 
@@ -218,17 +214,16 @@ fun Modifier.rightBorder(strokeWidth: Dp, color: Color) =
                         color = color,
                         start = Offset(x = width, y = 0f),
                         end = Offset(x = width, y = height),
-                        strokeWidth = strokeWidthPx
+                        strokeWidth = strokeWidthPx,
                     )
                 }
-            }
+            },
         )
     }
 
-
 fun Modifier.leftRoundedBorder(
     strokeWidth: Dp = 6.dp,
-    color: Color
+    color: Color,
 ) = composed {
     composed(
         factory = {
@@ -242,57 +237,54 @@ fun Modifier.leftRoundedBorder(
                 drawRoundRect(
                     color = color,
                     topLeft = Offset(0f, 0f),
-                    size = Size(strokeWidthPx, height)
+                    size = Size(strokeWidthPx, height),
                 )
 
                 drawRect(
                     color = Color.Transparent,
                     topLeft = Offset(strokeWidthPx, 0f),
-                    size = Size(width - strokeWidthPx, height)
+                    size = Size(width - strokeWidthPx, height),
                 )
             }
-        }
+        },
     )
 }
 
-enum class TableColumn(
-    @StringRes val titleResId: Int,
-    @StringRes val descriptionResId: Int
-) {
+enum class TableColumn(@StringRes val titleResId: Int, @StringRes val descriptionResId: Int) {
     POSITION(
         titleResId = R.string.table_column_position,
-        descriptionResId = R.string.table_description_position
+        descriptionResId = R.string.table_description_position,
     ),
     TEAM(
         titleResId = R.string.table_column_team,
-        descriptionResId = R.string.table_description_team
+        descriptionResId = R.string.table_description_team,
     ),
     MATCHES(
         titleResId = R.string.table_column_matches,
-        descriptionResId = R.string.table_description_matches
+        descriptionResId = R.string.table_description_matches,
     ),
     WINS(
         titleResId = R.string.table_column_wins,
-        descriptionResId = R.string.table_description_wins
+        descriptionResId = R.string.table_description_wins,
     ),
     DRAWS(
         titleResId = R.string.table_column_draws,
-        descriptionResId = R.string.table_description_draws
+        descriptionResId = R.string.table_description_draws,
     ),
     LOSSES(
         titleResId = R.string.table_column_losses,
-        descriptionResId = R.string.table_description_losses
+        descriptionResId = R.string.table_description_losses,
     ),
     GOALS_FOR(
         titleResId = R.string.table_column_goals_for,
-        descriptionResId = R.string.table_description_goals_for
+        descriptionResId = R.string.table_description_goals_for,
     ),
     GOALS_AGAINST(
         titleResId = R.string.table_column_goals_against,
-        descriptionResId = R.string.table_description_goals_against
+        descriptionResId = R.string.table_description_goals_against,
     ),
     POINTS(
         titleResId = R.string.table_column_points,
-        descriptionResId = R.string.table_description_points
-    )
+        descriptionResId = R.string.table_description_points,
+    ),
 }

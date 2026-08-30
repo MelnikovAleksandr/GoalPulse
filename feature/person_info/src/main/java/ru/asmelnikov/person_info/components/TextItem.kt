@@ -24,19 +24,19 @@ fun TextItem(
     modifier: Modifier = Modifier,
     backdrop: Backdrop,
     title: String,
-    text: String
+    text: String,
 ) {
     LiquidButtonRow(
         modifier = modifier,
         onClick = {},
-        backdrop = backdrop
+        backdrop = backdrop,
     ) {
         Text(
             modifier = Modifier.padding(vertical = dimens.small2, horizontal = dimens.small2),
             text = title,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
-            maxLines = 1
+            maxLines = 1,
         )
         Text(
             modifier = Modifier
@@ -47,7 +47,7 @@ fun TextItem(
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
-            textAlign = TextAlign.End
+            textAlign = TextAlign.End,
         )
     }
 }
@@ -60,13 +60,13 @@ private fun TextItemPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             TextItem(
                 modifier = Modifier.padding(dimens.small3),
                 backdrop = rememberLayerBackdrop { },
                 title = "Name",
-                text = "Some name Some name Some name Some name Some name Some name Some name"
+                text = "Some name Some name Some name Some name Some name Some name Some name",
             )
         }
     }

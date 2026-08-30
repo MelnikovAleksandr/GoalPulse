@@ -23,16 +23,16 @@ fun MatchCalendarButton(
     isInCalendar: Boolean,
     isLoading: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         modifier = modifier,
         enabled = !isLoading,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = Modifier.size(dimens.medium2),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             if (isLoading) {
                 CircularProgressIndicator(
@@ -40,7 +40,7 @@ fun MatchCalendarButton(
                         .matchParentSize()
                         .padding(dimens.extraSmall1),
                     strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
@@ -50,13 +50,13 @@ fun MatchCalendarButton(
                             R.string.calendar_remove_event
                         } else {
                             R.string.calendar_add_event
-                        }
+                        },
                     ),
                     tint = if (isInCalendar) {
                         calendarGold
                     } else {
                         MaterialTheme.colorScheme.outline
-                    }
+                    },
                 )
             }
         }

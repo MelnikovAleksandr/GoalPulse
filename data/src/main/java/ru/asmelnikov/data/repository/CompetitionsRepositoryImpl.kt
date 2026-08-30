@@ -16,11 +16,11 @@ import ru.asmelnikov.utils.Resource
 class CompetitionsRepositoryImpl(
     private val footballApi: FootballApi,
     private val realmOptions: CompetitionsRealmOptions,
-    private val retrofitErrorsHandler: RetrofitErrorsHandler
+    private val retrofitErrorsHandler: RetrofitErrorsHandler,
 ) : CompetitionsRepository {
 
-    override suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<Boolean> {
-        return retrofitErrorsHandler.executeSafely {
+    override suspend fun getAllCompetitionsFromRemoteToLocal(): Resource<Boolean> =
+        retrofitErrorsHandler.executeSafely {
             val response: Response<CompetitionModelDTO> = footballApi.getAllFootballCompetitions()
             if (response.isSuccessful && response.code() == 200) {
                 val competitions = response.body()?.competitions?.map {
@@ -32,10 +32,8 @@ class CompetitionsRepositoryImpl(
                 retrofitErrorsHandler.responseFailureHandler(response)
             }
         }
-    }
 
-    override suspend fun getAllCompetitionsFlowFromLocal(): Flow<List<Competition>> {
-        return realmOptions.getCompetitionsFlowFromLocal()
+    override suspend fun getAllCompetitionsFlowFromLocal(): Flow<List<Competition>> =
+        realmOptions.getCompetitionsFlowFromLocal()
             .map { comps -> comps.map { comp -> comp.toCompetition() } }
-    }
 }

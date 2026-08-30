@@ -27,18 +27,18 @@ import ru.asmelnikov.utils.ui.theme.lastRed
 fun ScoreItem(
     scoreHome: String,
     scoreAway: String,
-    color: Color
+    color: Color,
 ) {
     Card(
         modifier = Modifier.padding(horizontal = dimens.medium1),
         colors = CardDefaults.cardColors(
-            containerColor = color
-        )
+            containerColor = color,
+        ),
     ) {
         Row(
             modifier = Modifier.padding(dimens.small1),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "$scoreHome - $scoreAway",
@@ -46,7 +46,7 @@ fun ScoreItem(
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
             )
         }
     }
@@ -56,14 +56,18 @@ fun ScoreItem(
 @Composable
 private fun ScorePreview1() {
     GoalPulseTheme(darkTheme = true) {
-        Column (modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "2", scoreAway = "1", color = lastRed.copy(alpha = 0.5f)
+                scoreHome = "2",
+                scoreAway = "1",
+                color = lastRed.copy(alpha = 0.5f),
             )
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "0", scoreAway = "0", color = MaterialTheme.colorScheme.primary
+                scoreHome = "0",
+                scoreAway = "0",
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(6.dp))
         }
@@ -74,14 +78,18 @@ private fun ScorePreview1() {
 @Composable
 private fun ScorePreview2() {
     GoalPulseTheme {
-        Column (modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "2", scoreAway = "1", color = MaterialTheme.colorScheme.secondary
+                scoreHome = "2",
+                scoreAway = "1",
+                color = MaterialTheme.colorScheme.secondary,
             )
             Spacer(modifier = Modifier.height(6.dp))
             ScoreItem(
-                scoreHome = "0", scoreAway = "0", color = MaterialTheme.colorScheme.primary
+                scoreHome = "0",
+                scoreAway = "0",
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(6.dp))
         }

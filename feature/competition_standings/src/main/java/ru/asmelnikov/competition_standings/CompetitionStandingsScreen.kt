@@ -78,20 +78,19 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
         String,
         SnackbarDuration,
         String?,
-        actionPerformed: () -> Unit
+        actionPerformed: () -> Unit,
     ) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: CompetitionStandingsViewModel = koinViewModel(parameters = {
         parametersOf(
             compId,
-            compUrl
+            compUrl,
         )
-    })
+    }),
 ) {
-
     val state by viewModel.container.stateFlow.collectAsState()
     val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
-        onPermissionResult = viewModel::onCalendarPermissionResult
+        onPermissionResult = viewModel::onCalendarPermissionResult,
     )
     val context = LocalContext.current
 
@@ -100,7 +99,7 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
             is CompetitionStandingSideEffects.Snackbar -> showSnackbar(
                 it.text,
                 it.duration,
-                null
+                null,
             ) {}
 
             is CompetitionStandingSideEffects.BackClick -> appState.popUp()
@@ -146,10 +145,9 @@ fun SharedTransitionScope.CompetitionStandingsScreen(
         animatedVisibilityScope = animatedVisibilityScope,
         calendarMatchIds = state.calendarMatchIds,
         calendarBusyMatchIds = state.calendarBusyMatchIds,
-        onCalendarClick = viewModel::onCalendarClick
+        onCalendarClick = viewModel::onCalendarClick,
     )
 }
-
 
 @OptIn(ExperimentalToolbarApi::class)
 @Composable
@@ -175,7 +173,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     animatedVisibilityScope: AnimatedVisibilityScope,
     calendarMatchIds: Set<Int> = emptySet(),
     calendarBusyMatchIds: Set<Int> = emptySet(),
-    onCalendarClick: (Match) -> Unit = {}
+    onCalendarClick: (Match) -> Unit = {},
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -186,7 +184,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { TabsStandings.entries.count() }
+        pageCount = { TabsStandings.entries.count() },
     )
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     var blockOuterPagerScroll by remember { mutableStateOf(false) }
@@ -200,9 +198,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(backgroundColor),
     ) {
-
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
             state = collapsingState,
@@ -216,7 +213,7 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                     compName = competitionStandings.competition.name,
                     sharedTransitionScope = this@CompetitionStandingsContent,
                     animatedVisibilityScope = animatedVisibilityScope,
-                    onBackClick = onBackClick
+                    onBackClick = onBackClick,
                 )
             },
             body = {
@@ -236,8 +233,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                     .drawProgressivePlainBackdrop(
                                         backdrop = backdrop,
                                         blurRadiusPx = blurRadiusPx,
-                                        tint = tint
-                                    )
+                                        tint = tint,
+                                    ),
                             )
 
                             LiquidBottomTabs(
@@ -246,8 +243,8 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                 tabsCount = tabTitles.size,
                                 modifier = Modifier.padding(
                                     horizontal = dimens.medium2,
-                                    vertical = dimens.small3
-                                )
+                                    vertical = dimens.small3,
+                                ),
                             ) {
                                 tabTitles.forEachIndexed { index, title ->
                                     LiquidBottomTab({
@@ -256,13 +253,13 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                         Text(
                                             text = title,
                                             color = MaterialTheme.colorScheme.onBackground,
-                                            style = MaterialTheme.typography.labelMedium
+                                            style = MaterialTheme.typography.labelMedium,
                                         )
                                     }
                                 }
                             }
                         }
-                    }
+                    },
                 ) { paddingValues ->
                     val topInset = paddingValues.calculateTopPadding()
                     HorizontalPager(
@@ -272,37 +269,40 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                         state = pagerState,
                         beyondViewportPageCount = 1,
                         userScrollEnabled = !blockOuterPagerScroll,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.Top,
                     ) { page ->
                         when (page) {
                             0 -> {
                                 FirstPagerScreenStandings(
                                     topInset = topInset,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     competitionStandings = competitionStandings,
                                     isLoading = isLoadingStandings,
                                     onTeamClick = onTeamClick,
                                     onReloadClick = onReloadStandingsClick,
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
 
                             1 -> {
                                 SecondPagerScreenScorers(
                                     scorers = scorers,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     topInset = topInset,
                                     isLoadingScorers = isLoadingScorers,
                                     onReloadClick = onReloadScorersClick,
                                     onPersonClick = onPersonClick,
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
 
                             2 -> {
                                 ThirdPagerScreenMatches(
                                     matchesCompleted = matchesCompleted,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     topInset = topInset,
                                     matchesAhead = matchesAhead,
                                     isLoadingMatches = isLoadingMatches,
@@ -315,20 +315,22 @@ fun SharedTransitionScope.CompetitionStandingsContent(
                                     calendarBusyMatchIds = calendarBusyMatchIds,
                                     onCalendarClick = onCalendarClick,
                                     onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
                         }
                     }
                 }
-            }
+            },
         )
     }
 }
 
 @Preview(
-    showBackground = true, locale = "ru", showSystemUi = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+    showBackground = true,
+    locale = "ru",
+    showSystemUi = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
 )
 @Composable
 private fun StandingsPreview1() {
@@ -336,7 +338,7 @@ private fun StandingsPreview1() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionStandingsContent(
@@ -357,7 +359,7 @@ private fun StandingsPreview1() {
                     onReloadScorersClick = {},
                     onReloadMatchesClick = {},
                     onPersonClick = {},
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }
@@ -371,7 +373,7 @@ private fun StandingsPreview2() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionStandingsContent(
@@ -392,7 +394,7 @@ private fun StandingsPreview2() {
                     onReloadScorersClick = {},
                     onReloadMatchesClick = {},
                     onPersonClick = {},
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }

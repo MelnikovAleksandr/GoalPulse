@@ -1,8 +1,8 @@
 package ru.asmelnikov.domain.models
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.util.UUID
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Competition(
@@ -11,15 +11,11 @@ data class Competition(
     val code: String = "",
     val currentSeason: CurrentSeason = CurrentSeason(),
     val emblem: String = "",
-    val name: String = ""
+    val name: String = "",
 ) : Parcelable
 
 @Parcelize
-data class Area(
-    val id: Int = UUID.randomUUID().hashCode(),
-    val flag: String = "",
-    val name: String = ""
-) : Parcelable
+data class Area(val id: Int = UUID.randomUUID().hashCode(), val flag: String = "", val name: String = "") : Parcelable
 
 @Parcelize
 data class CurrentSeason(
@@ -27,5 +23,5 @@ data class CurrentSeason(
     val currentMatchDay: Int = -1,
     val startDateEndDate: String = "", // example - 2022/2023
     val endDate: String = "",
-    val startDate: String = ""
+    val startDate: String = "",
 ) : Parcelable

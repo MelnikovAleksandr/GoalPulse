@@ -33,12 +33,11 @@ enum class Stage(@StringRes val stringResId: Int) {
     CHAMPIONSHIP(R.string.stage_championship),
     RELEGATION(R.string.stage_relegation),
     RELEGATION_ROUND(R.string.stage_relegation_round),
-    NON(R.string.non);
+    NON(R.string.non),
+    ;
 
     companion object {
-        fun safeValueOf(value: String): Stage {
-            return runCatching { valueOf(value) }.getOrDefault(NON)
-        }
+        fun safeValueOf(value: String): Stage = runCatching { valueOf(value) }.getOrDefault(NON)
     }
 }
 
@@ -52,12 +51,11 @@ enum class MatchStatus(@StringRes val stringResId: Int) {
     POSTPONED(R.string.match_status_postponed),
     SUSPENDED(R.string.match_status_suspended),
     CANCELLED(R.string.match_status_cancelled),
-    NON(R.string.non);
+    NON(R.string.non),
+    ;
 
     companion object {
-        fun safeValueOf(value: String): MatchStatus {
-            return runCatching { valueOf(value) }.getOrDefault(NON)
-        }
+        fun safeValueOf(value: String): MatchStatus = runCatching { valueOf(value) }.getOrDefault(NON)
     }
 }
 
@@ -77,12 +75,11 @@ enum class PlayerPosition(@StringRes val stringResId: Int, val value: String) {
     RIGHT_WINGER(R.string.position_right_winger, "Right Winger"),
     OFFENCE(R.string.position_offence, "Offence"),
     CENTRE_FORWARD(R.string.position_centre_forward, "Centre-Forward"),
-    NON(R.string.non, "Non");
+    NON(R.string.non, "Non"),
+    ;
 
     companion object {
-        fun fromValue(value: String?): PlayerPosition {
-            return entries.find { it.value == value } ?: NON
-        }
+        fun fromValue(value: String?): PlayerPosition = entries.find { it.value == value } ?: NON
     }
 }
 
@@ -91,12 +88,11 @@ enum class TournamentType(@StringRes val stringResId: Int) {
     LEAGUE_CUP(R.string.tournament_type_league_cup),
     CUP(R.string.tournament_type_cup),
     PLAYOFFS(R.string.tournament_type_playoffs),
-    NON(R.string.non);
+    NON(R.string.non),
+    ;
 
     companion object {
-        fun safeValueOf(value: String): TournamentType {
-            return runCatching { valueOf(value) }.getOrDefault(NON)
-        }
+        fun safeValueOf(value: String): TournamentType = runCatching { valueOf(value) }.getOrDefault(NON)
     }
 }
 
@@ -113,7 +109,8 @@ enum class Group(@StringRes val stringResId: Int) {
     GROUP_J(R.string.group_j),
     GROUP_K(R.string.group_k),
     GROUP_L(R.string.group_l),
-    NON(R.string.header_team);
+    NON(R.string.header_team),
+    ;
 
     companion object {
         fun safeValueOf(value: String): Group {
@@ -131,11 +128,10 @@ enum class Winner(@StringRes val stringResId: Int) {
     HOME_TEAM(R.string.winner_home_team),
     AWAY_TEAM(R.string.winner_away_team),
     DRAW(R.string.winner_draw),
-    NON(R.string.non);
+    NON(R.string.non),
+    ;
 
     companion object {
-        fun safeValueOf(value: String): Winner {
-            return runCatching { valueOf(value) }.getOrDefault(NON)
-        }
+        fun safeValueOf(value: String): Winner = runCatching { valueOf(value) }.getOrDefault(NON)
     }
 }

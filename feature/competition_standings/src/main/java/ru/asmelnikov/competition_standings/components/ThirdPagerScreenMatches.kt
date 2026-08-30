@@ -60,7 +60,7 @@ fun ThirdPagerScreenMatches(
     calendarBusyMatchIds: Set<Int> = emptySet(),
     onCalendarClick: (Match) -> Unit = {},
     onOuterPagerScrollBlocked: (Boolean) -> Unit = {},
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -73,24 +73,24 @@ fun ThirdPagerScreenMatches(
             buildList {
                 if (matchesCompleted.isNotEmpty()) add(TabsMatches.Completed)
                 if (matchesAhead.isNotEmpty()) add(TabsMatches.Ahead)
-            }
+            },
         )
     }
 
     val pagerState = rememberPagerState(
-        initialPage = 0
+        initialPage = 0,
     ) {
         tabListState.count()
     }
 
     AnimatedContent(
         targetState = matchesCompleted.isEmpty() && matchesAhead.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyState ->
         if (emptyState && !isLoadingMatches) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -100,7 +100,7 @@ fun ThirdPagerScreenMatches(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -125,7 +125,7 @@ fun ThirdPagerScreenMatches(
                                                 onOuterPagerScrollBlocked(false)
                                             }
                                         },
-                                    contentAlignment = Alignment.Center
+                                    contentAlignment = Alignment.Center,
                                 ) {
                                     LiquidBottomTabs(
                                         pagerState = pagerState,
@@ -135,7 +135,7 @@ fun ThirdPagerScreenMatches(
                                         tabsCount = tabTitles.size,
                                         modifier = Modifier
                                             .fillMaxWidth(0.7f)
-                                            .padding(top = topInset, bottom = dimens.small3)
+                                            .padding(top = topInset, bottom = dimens.small3),
                                     ) {
                                         tabTitles.forEachIndexed { index, title ->
                                             LiquidBottomTab({
@@ -146,7 +146,7 @@ fun ThirdPagerScreenMatches(
                                                 Text(
                                                     text = title,
                                                     color = MaterialTheme.colorScheme.onBackground,
-                                                    style = MaterialTheme.typography.labelSmall
+                                                    style = MaterialTheme.typography.labelSmall,
                                                 )
                                             }
                                         }
@@ -154,7 +154,7 @@ fun ThirdPagerScreenMatches(
                                 }
                             }
                         }
-                    }
+                    },
                 ) { innerPaddingValues ->
                     val innerTopInset = innerPaddingValues.calculateTopPadding()
                     val topInsetResult =
@@ -165,7 +165,7 @@ fun ThirdPagerScreenMatches(
                             .fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 1,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.Top,
                     ) { page ->
                         when (tabListState[page]) {
                             TabsMatches.Completed -> {
@@ -176,7 +176,7 @@ fun ThirdPagerScreenMatches(
                                     expandedItemId = expandedItemId,
                                     onMatchItemClick = onMatchItemClick,
                                     head2head = head2head,
-                                    isHead2headLoading = isHead2headLoading
+                                    isHead2headLoading = isHead2headLoading,
                                 )
                             }
 
@@ -191,7 +191,7 @@ fun ThirdPagerScreenMatches(
                                     isHead2headLoading = isHead2headLoading,
                                     calendarMatchIds = calendarMatchIds,
                                     calendarBusyMatchIds = calendarBusyMatchIds,
-                                    onCalendarClick = onCalendarClick
+                                    onCalendarClick = onCalendarClick,
                                 )
                             }
                         }
@@ -215,7 +215,7 @@ private fun MatchesPreview1() {
             expandedItemId = -1,
             onMatchItemClick = {},
             isHead2headLoading = false,
-            onReloadClick = {}
+            onReloadClick = {},
         )
     }
 }
@@ -233,7 +233,7 @@ private fun MatchesPreview2() {
             expandedItemId = -1,
             onMatchItemClick = {},
             isHead2headLoading = false,
-            onReloadClick = {}
+            onReloadClick = {},
         )
     }
 }
@@ -251,7 +251,7 @@ private fun MatchesPreview3() {
             expandedItemId = -1,
             onMatchItemClick = {},
             isHead2headLoading = false,
-            onReloadClick = {}
+            onReloadClick = {},
         )
     }
 }
@@ -269,7 +269,7 @@ private fun MatchesPreview4() {
             expandedItemId = -1,
             onMatchItemClick = {},
             isHead2headLoading = false,
-            onReloadClick = {}
+            onReloadClick = {},
         )
     }
 }

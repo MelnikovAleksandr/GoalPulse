@@ -26,8 +26,8 @@ class App : Application() {
                     competitionStandingsModule,
                     teamInfoModule,
                     personModule,
-                    utilsModule
-                )
+                    utilsModule,
+                ),
             )
         }
     }

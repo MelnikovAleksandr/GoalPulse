@@ -21,7 +21,7 @@ data class Dimens(
     val mainGifHeight: Dp = 280.dp,
     val searchBarIconSize: Dp = 20.dp,
     val pullRefreshIndicatorStrokeWidth: Dp = 2.5.dp,
-    val liquidCardCornerRadius: Dp = 20.dp
+    val liquidCardCornerRadius: Dp = 20.dp,
 )
 
 val CompactSmallDimens = Dimens(
@@ -38,7 +38,7 @@ val CompactSmallDimens = Dimens(
     large = 80.dp,
     searchBarIconSize = 20.dp,
     pullRefreshIndicatorStrokeWidth = 2.5.dp,
-    liquidCardCornerRadius = 20.dp
+    liquidCardCornerRadius = 20.dp,
 )
 
 val CompactMediumDimens = Dimens(
@@ -55,7 +55,7 @@ val CompactMediumDimens = Dimens(
     large = 80.dp,
     searchBarIconSize = 20.dp,
     pullRefreshIndicatorStrokeWidth = 2.5.dp,
-    liquidCardCornerRadius = 20.dp
+    liquidCardCornerRadius = 20.dp,
 )
 
 val CompactDimens = Dimens(
@@ -72,7 +72,7 @@ val CompactDimens = Dimens(
     large = 80.dp,
     searchBarIconSize = 20.dp,
     pullRefreshIndicatorStrokeWidth = 2.5.dp,
-    liquidCardCornerRadius = 20.dp
+    liquidCardCornerRadius = 20.dp,
 )
 
 val MediumDimens = Dimens(
@@ -93,7 +93,7 @@ val MediumDimens = Dimens(
     mainGifHeight = 320.dp,
     searchBarIconSize = 24.dp,
     pullRefreshIndicatorStrokeWidth = 2.5.dp,
-    liquidCardCornerRadius = 24.dp
+    liquidCardCornerRadius = 24.dp,
 )
 
 val ExpandedDimens = Dimens(
@@ -114,5 +114,5 @@ val ExpandedDimens = Dimens(
     mainGifHeight = 400.dp,
     searchBarIconSize = 24.dp,
     pullRefreshIndicatorStrokeWidth = 3.dp,
-    liquidCardCornerRadius = 24.dp
+    liquidCardCornerRadius = 24.dp,
 )

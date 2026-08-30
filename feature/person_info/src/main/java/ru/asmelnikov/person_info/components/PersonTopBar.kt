@@ -16,7 +16,7 @@ fun PersonTopBar(
     backdrop: Backdrop,
     name: String,
     teamUrl: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     val blurRadiusPx = with(LocalDensity.current) { dimens.medium2.toPx() }
     val tint = MaterialTheme.colorScheme.background
@@ -28,14 +28,14 @@ fun PersonTopBar(
                     backdrop = backdrop,
                     blurRadiusPx = blurRadiusPx,
                     tint = tint,
-                    tintIntensity = 0.9f
-                )
+                    tintIntensity = 0.9f,
+                ),
         )
         PersonHeader(
             backdrop = backdrop,
             name = name,
             teamUrl = teamUrl,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
         )
     }
 }

@@ -9,5 +9,4 @@ val utilsModule = module {
     single<StringResourceProvider> { StringResourceProvider.StringResourceProviderImpl(context = get()) }
 
     single<ColorGenerator> { ColorGenerator.ColorGeneratorImpl(context = get()) }
-
 }

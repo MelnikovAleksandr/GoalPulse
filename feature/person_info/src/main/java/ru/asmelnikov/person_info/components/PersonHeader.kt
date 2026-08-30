@@ -41,24 +41,23 @@ fun PersonHeader(
     backdrop: Backdrop,
     name: String,
     teamUrl: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
-
     Row(
         modifier = modifier
             .statusBarsPadding()
             .fillMaxWidth()
             .padding(
                 horizontal = dimens.medium1,
-                vertical = dimens.small3
+                vertical = dimens.small3,
             ),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         LiquidButtonBox(
             modifier = Modifier
                 .size(dimens.medium5),
             onClick = onBackClick,
-            backdrop = backdrop
+            backdrop = backdrop,
         ) {
             Icon(
                 modifier = Modifier
@@ -66,7 +65,7 @@ fun PersonHeader(
                     .fillMaxSize(0.8f),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(R.string.back),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
         Spacer(modifier = Modifier.width(dimens.small2))
@@ -75,7 +74,7 @@ fun PersonHeader(
                 .height(dimens.medium4)
                 .weight(1f),
             onClick = {},
-            backdrop = backdrop
+            backdrop = backdrop,
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = dimens.extraSmall2).basicMarquee(Int.MAX_VALUE),
@@ -83,7 +82,7 @@ fun PersonHeader(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                maxLines = 1
+                maxLines = 1,
             )
         }
         Spacer(modifier = Modifier.width(dimens.small2))
@@ -91,12 +90,12 @@ fun PersonHeader(
             modifier = Modifier
                 .size(dimens.medium5),
             onClick = {},
-            backdrop = backdrop
+            backdrop = backdrop,
         ) {
             SubComposeAsyncImageCommon(
                 modifier = Modifier.fillMaxSize(0.7f),
                 imageUri = teamUrl,
-                shape = RoundedCornerShape(0.dp)
+                shape = RoundedCornerShape(0.dp),
             )
         }
     }
@@ -110,13 +109,13 @@ private fun PersonHeaderPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             PersonHeader(
                 backdrop = rememberLayerBackdrop { },
                 name = "Some name Some name Some name Some name",
                 teamUrl = "",
-                onBackClick = {}
+                onBackClick = {},
             )
         }
     }

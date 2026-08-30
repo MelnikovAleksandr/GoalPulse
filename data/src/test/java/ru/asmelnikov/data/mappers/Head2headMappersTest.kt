@@ -27,8 +27,8 @@ class Head2headMappersTest {
                 match(homeId = 61, awayId = 57, homeGoals = 2, awayGoals = 0, status = "FINISHED"),
                 match(homeId = 57, awayId = 61, homeGoals = 3, awayGoals = 0, status = "TIMED"),
                 match(homeId = 57, awayId = 61, homeGoals = null, awayGoals = null, status = "FINISHED"),
-                match(homeId = 57, awayId = 64, homeGoals = 4, awayGoals = 0, status = "FINISHED")
-            )
+                match(homeId = 57, awayId = 64, homeGoals = 4, awayGoals = 0, status = "FINISHED"),
+            ),
         )
 
         assertEquals(
@@ -39,9 +39,9 @@ class Head2headMappersTest {
                 drawsPercentage = 33f,
                 awayWinsPercentage = 33f,
                 numberOfMatches = 3,
-                totalGoals = 7
+                totalGoals = 7,
             ),
-            dto.toHead2head(id = 1).aggregates
+            dto.toHead2head(id = 1).aggregates,
         )
     }
 
@@ -55,8 +55,8 @@ class Head2headMappersTest {
             matches = listOf(
                 match(homeId = 81, awayId = 86, homeGoals = 2, awayGoals = 0, status = "FINISHED"),
                 match(homeId = 81, awayId = 86, homeGoals = 1, awayGoals = 0, status = "FINISHED"),
-                match(homeId = 81, awayId = 86, homeGoals = 1, awayGoals = 1, status = "FINISHED")
-            )
+                match(homeId = 81, awayId = 86, homeGoals = 1, awayGoals = 1, status = "FINISHED"),
+            ),
         )
 
         assertEquals(
@@ -67,9 +67,9 @@ class Head2headMappersTest {
                 drawsPercentage = 33f,
                 awayWinsPercentage = 0f,
                 numberOfMatches = 3,
-                totalGoals = 5
+                totalGoals = 5,
             ),
-            dto.toHead2head(id = 2).aggregates
+            dto.toHead2head(id = 2).aggregates,
         )
     }
 
@@ -80,11 +80,11 @@ class Head2headMappersTest {
                 homeTeam = TeamH2HDTO(id = null, name = "Arsenal", wins = 5, draws = 1, losses = 0),
                 awayTeam = TeamH2HDTO(id = 61, name = "Chelsea", wins = 0, draws = 1, losses = 5),
                 numberOfMatches = 6,
-                totalGoals = 10
+                totalGoals = 10,
             ),
             matches = listOf(
-                match(homeId = 57, awayId = 61, homeGoals = 2, awayGoals = 1, status = "FINISHED")
-            )
+                match(homeId = 57, awayId = 61, homeGoals = 2, awayGoals = 1, status = "FINISHED"),
+            ),
         )
 
         assertEquals(
@@ -95,9 +95,9 @@ class Head2headMappersTest {
                 drawsPercentage = 0f,
                 awayWinsPercentage = 0f,
                 numberOfMatches = 0,
-                totalGoals = 0
+                totalGoals = 0,
             ),
-            dto.toHead2head(id = 3).aggregates
+            dto.toHead2head(id = 3).aggregates,
         )
     }
 
@@ -108,66 +108,60 @@ class Head2headMappersTest {
         homeName: String,
         awayId: Int,
         awayName: String,
-        matches: List<MatchDTO>
-    ): Head2headDTO {
-        return Head2headDTO(
-            aggregates = AggregatesDTO(
-                homeTeam = TeamH2HDTO(id = homeId, name = homeName, wins = 99, draws = 99, losses = 99),
-                awayTeam = TeamH2HDTO(id = awayId, name = awayName, wins = 99, draws = 99, losses = 99),
-                numberOfMatches = 99,
-                totalGoals = 99
-            ),
-            matches = matches
-        )
-    }
+        matches: List<MatchDTO>,
+    ): Head2headDTO = Head2headDTO(
+        aggregates = AggregatesDTO(
+            homeTeam = TeamH2HDTO(id = homeId, name = homeName, wins = 99, draws = 99, losses = 99),
+            awayTeam = TeamH2HDTO(id = awayId, name = awayName, wins = 99, draws = 99, losses = 99),
+            numberOfMatches = 99,
+            totalGoals = 99,
+        ),
+        matches = matches,
+    )
 
     private fun match(
         homeId: Int,
         awayId: Int,
         homeGoals: Int?,
         awayGoals: Int?,
-        status: String
-    ): MatchDTO {
-        return MatchDTO(
-            id = homeId + awayId,
-            area = null,
-            awayTeam = team(id = awayId),
-            competition = null,
-            group = null,
-            homeTeam = team(id = homeId),
-            lastUpdated = null,
-            matchDay = null,
-            referees = null,
-            score = ScoreDTO(
-                duration = null,
-                winner = null,
-                fullTime = TimeDTO(home = homeGoals, away = awayGoals),
-                halfTime = null
-            ),
-            season = null,
-            stage = null,
-            status = status,
-            utcDate = null
-        )
-    }
+        status: String,
+    ): MatchDTO = MatchDTO(
+        id = homeId + awayId,
+        area = null,
+        awayTeam = team(id = awayId),
+        competition = null,
+        group = null,
+        homeTeam = team(id = homeId),
+        lastUpdated = null,
+        matchDay = null,
+        referees = null,
+        score = ScoreDTO(
+            duration = null,
+            winner = null,
+            fullTime = TimeDTO(home = homeGoals, away = awayGoals),
+            halfTime = null,
+        ),
+        season = null,
+        stage = null,
+        status = status,
+        utcDate = null,
+    )
 
-    private fun team(id: Int): TeamInfoDTO {
-        return TeamInfoDTO(
-            id = id,
-            address = null,
-            area = null,
-            clubColors = null,
-            coach = null,
-            crest = null,
-            founded = null,
-            name = null,
-            shortName = null,
-            squad = null,
-            tla = null,
-            venue = null,
-            website = null
-        )
-    }
+    private fun team(id: Int): TeamInfoDTO = TeamInfoDTO(
+        id = id,
+        address = null,
+        area = null,
+        clubColors = null,
+        coach = null,
+        crest = null,
+        founded = null,
+        name = null,
+        shortName = null,
+        squad = null,
+        tla = null,
+        venue = null,
+        website = null,
+    )
 
     // endregion
 }

@@ -4,10 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Head2head(
-    val id: Int = -1,
-    val aggregates: Aggregates = Aggregates()
-) : Parcelable
+data class Head2head(val id: Int = -1, val aggregates: Aggregates = Aggregates()) : Parcelable
 
 @Parcelize
 data class Aggregates(
@@ -17,7 +14,7 @@ data class Aggregates(
     val awayWinsPercentage: Float = -1f,
     val drawsPercentage: Float = -1f,
     val numberOfMatches: Int = -1,
-    val totalGoals: Int = -1
+    val totalGoals: Int = -1,
 ) : Parcelable
 
 @Parcelize
@@ -26,5 +23,5 @@ data class TeamH2H(
     val id: Int = -1,
     val losses: Int = -1,
     val name: String = "",
-    val wins: Int = -1
+    val wins: Int = -1,
 ) : Parcelable

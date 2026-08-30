@@ -12,7 +12,7 @@ val personModule = module {
             savedStateHandle = savedStateHandle,
             repository = get(),
             stringResourceProvider = get(),
-            personId = personId
+            personId = personId,
         )
     }
 }

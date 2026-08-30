@@ -23,7 +23,7 @@ import ru.asmelnikov.utils.ui.theme.dimens
 fun EmptyContent(
     modifier: Modifier = Modifier,
     withScroll: Boolean = true,
-    onReloadClick: () -> Unit
+    onReloadClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -33,20 +33,20 @@ fun EmptyContent(
                     Modifier.verticalScroll(rememberScrollState())
                 } else {
                     Modifier
-                }
+                },
             ),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(dimens.large))
         Image(
             modifier = Modifier.size(dimens.emptyContentImageSize),
             painter = painterResource(id = R.drawable.page_is_empty),
-            contentDescription = null
+            contentDescription = null,
         )
         TextButton(onClick = onReloadClick) {
             Text(
                 text = stringResource(R.string.reload),
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineLarge,
             )
         }
     }

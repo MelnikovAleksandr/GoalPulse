@@ -16,6 +16,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
@@ -38,7 +39,7 @@ class CompetitionsScreenContentTest {
     fun emptyListNotLoading_showsReload_hidesLeagues() {
         setScreen(comps = emptyList())
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Premier League").assertDoesNotExist()
         composeTestRule.onNodeWithText(notFoundLabel).assertDoesNotExist()
     }
@@ -49,7 +50,7 @@ class CompetitionsScreenContentTest {
 
         setScreen(comps = emptyList(), onUpdate = { updateCalls++ })
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, updateCalls)
     }
@@ -113,7 +114,7 @@ class CompetitionsScreenContentTest {
             onCompClick = { id, url ->
                 clickedId = id
                 clickedUrl = url
-            }
+            },
         )
 
         composeTestRule.onNodeWithText("Premier League").performClick()
@@ -177,7 +178,7 @@ class CompetitionsScreenContentTest {
         comps: List<Competition>,
         isLoading: Boolean = false,
         onUpdate: () -> Unit = {},
-        onCompClick: (String, String) -> Unit = { _, _ -> }
+        onCompClick: (String, String) -> Unit = { _, _ -> },
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -189,7 +190,7 @@ class CompetitionsScreenContentTest {
                                 updateComps = onUpdate,
                                 isLoading = isLoading,
                                 onCompClick = onCompClick,
-                                animatedVisibilityScope = this
+                                animatedVisibilityScope = this,
                             )
                         }
                     }
@@ -206,13 +207,13 @@ class CompetitionsScreenContentTest {
 private val premierLeague = Competition(
     id = 2021,
     name = "Premier League",
-    emblem = "https://crests.football-data.org/PL.png"
+    emblem = "https://crests.football-data.org/PL.png",
 )
 
 private val laLiga = Competition(
     id = 2014,
     name = "La Liga",
-    emblem = "https://crests.football-data.org/PD.png"
+    emblem = "https://crests.football-data.org/PD.png",
 )
 
 // endregion

@@ -34,7 +34,7 @@ fun SecondPagerScreenScorers(
     isLoadingScorers: Boolean,
     onReloadClick: () -> Unit,
     onPersonClick: (Int) -> Unit,
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -45,12 +45,12 @@ fun SecondPagerScreenScorers(
 
     AnimatedContent(
         targetState = scorers.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyState ->
         if (emptyState && !isLoadingScorers) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -60,7 +60,7 @@ fun SecondPagerScreenScorers(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -68,7 +68,7 @@ fun SecondPagerScreenScorers(
                         .fillMaxSize()
                         .background(backgroundColor),
                     state = listState,
-                    contentPadding = PaddingValues(top = topInset)
+                    contentPadding = PaddingValues(top = topInset),
                 ) {
                     stickyHeaderContentPaddingAware(
                         listState = listState,
@@ -77,7 +77,7 @@ fun SecondPagerScreenScorers(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(backgroundColor)
+                                .background(backgroundColor),
                         ) {
                             HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                             ScorerItemEmpty()
@@ -87,12 +87,13 @@ fun SecondPagerScreenScorers(
 
                     itemsIndexed(
                         items = scorers,
-                        key = { _, scorer -> scorer.player.id }) { index, scorer ->
+                        key = { _, scorer -> scorer.player.id },
+                    ) { index, scorer ->
                         ScorerItem(
                             modifier = Modifier.animateItem(),
                             scorer = scorer,
                             index = index + 1,
-                            onPersonClick = onPersonClick
+                            onPersonClick = onPersonClick,
                         )
                         HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                     }
@@ -112,7 +113,7 @@ private fun ScorersPreview1() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
@@ -120,7 +121,7 @@ private fun ScorersPreview1() {
                 isPullToRefreshEnabled = true,
                 topInset = Dp.Hairline,
                 onReloadClick = {},
-                onPersonClick = {}
+                onPersonClick = {},
             )
         }
     }
@@ -133,7 +134,7 @@ private fun ScorersPreview2() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SecondPagerScreenScorers(
                 scorers = emptyList(),
@@ -141,7 +142,7 @@ private fun ScorersPreview2() {
                 isPullToRefreshEnabled = true,
                 topInset = Dp.Hairline,
                 onReloadClick = {},
-                onPersonClick = {}
+                onPersonClick = {},
             )
         }
     }
@@ -154,7 +155,7 @@ private fun ScorersPreview3() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             SecondPagerScreenScorers(
                 scorers = getMockScorers(),
@@ -162,7 +163,7 @@ private fun ScorersPreview3() {
                 isPullToRefreshEnabled = true,
                 topInset = Dp.Hairline,
                 onReloadClick = {},
-                onPersonClick = {}
+                onPersonClick = {},
             )
         }
     }

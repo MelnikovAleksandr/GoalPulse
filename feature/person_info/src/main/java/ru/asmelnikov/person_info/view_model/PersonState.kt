@@ -8,11 +8,8 @@ import ru.asmelnikov.domain.models.Person
 
 @Immutable
 @Parcelize
-data class PersonState(
-    val isLoading: Boolean = false,
-    val person: Person = Person(),
-    val personId: String = ""
-) : Parcelable
+data class PersonState(val isLoading: Boolean = false, val person: Person = Person(), val personId: String = "") :
+    Parcelable
 
 sealed class PersonSideEffects {
     data class Snackbar(val text: String, val duration: SnackbarDuration = SnackbarDuration.Short) :

@@ -26,7 +26,7 @@ data class TeamInfoState(
     val news: News = News(),
     val calendarMatchIds: Set<Int> = emptySet(),
     val calendarBusyMatchIds: Set<Int> = emptySet(),
-    val pendingCalendarMatch: Match? = null
+    val pendingCalendarMatch: Match? = null,
 ) : Parcelable
 
 sealed class TeamInfoSideEffects {
@@ -35,8 +35,7 @@ sealed class TeamInfoSideEffects {
 
     data object BackClick : TeamInfoSideEffects()
 
-    data class OnPersonInfoNavigate(val personId: String) :
-        TeamInfoSideEffects()
+    data class OnPersonInfoNavigate(val personId: String) : TeamInfoSideEffects()
 
     data object RequestCalendarPermission : TeamInfoSideEffects()
 

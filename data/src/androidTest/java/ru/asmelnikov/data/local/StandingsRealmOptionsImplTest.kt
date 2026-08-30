@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.realmListOf
+import java.util.UUID
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,7 +30,6 @@ import ru.asmelnikov.data.local.models.StandingEntity
 import ru.asmelnikov.data.local.models.TableEntity
 import ru.asmelnikov.data.local.models.TeamEmbeddedEntity
 import ru.asmelnikov.data.local.models.TimeEntity
-import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class StandingsRealmOptionsImplTest {
@@ -55,8 +55,8 @@ class StandingsRealmOptionsImplTest {
                 TimeEntity::class,
                 AreaEntity::class,
                 CurrentSeasonEntity::class,
-                TeamEmbeddedEntity::class
-            )
+                TeamEmbeddedEntity::class,
+            ),
         )
             .inMemory()
             .name("standings-test-${UUID.randomUUID()}")
@@ -83,16 +83,16 @@ class StandingsRealmOptionsImplTest {
                 areaName = "England",
                 table = listOf(
                     tableRow(1, 57, "Arsenal", 90),
-                    tableRow(2, 61, "Chelsea", 80)
-                )
-            )
+                    tableRow(2, 61, "Chelsea", 80),
+                ),
+            ),
         )
 
         val updated = StandingsSnapshot(
             id = "2021",
             competitionName = "English Premier League",
             areaName = "England",
-            table = listOf(tableRow(1, 65, "Manchester City", 88))
+            table = listOf(tableRow(1, 65, "Manchester City", 88)),
         )
         realmOptions.upsertStandingsFromRemoteToLocal(updated.toEntity())
 
@@ -106,15 +106,15 @@ class StandingsRealmOptionsImplTest {
                 id = "2014",
                 competitionName = "La Liga",
                 areaName = "Spain",
-                table = listOf(tableRow(1, 81, "Barcelona", 85))
-            )
+                table = listOf(tableRow(1, 81, "Barcelona", 85)),
+            ),
         )
 
         val cleared = StandingsSnapshot(
             id = "2014",
             competitionName = "La Liga",
             areaName = "Spain",
-            table = emptyList()
+            table = emptyList(),
         )
         realmOptions.upsertStandingsFromRemoteToLocal(cleared.toEntity())
 
@@ -127,13 +127,13 @@ class StandingsRealmOptionsImplTest {
             id = "2021",
             competitionName = "Premier League",
             areaName = "England",
-            table = listOf(tableRow(1, 57, "Arsenal", 90))
+            table = listOf(tableRow(1, 57, "Arsenal", 90)),
         )
         val laLiga = StandingsSnapshot(
             id = "2014",
             competitionName = "La Liga",
             areaName = "Spain",
-            table = listOf(tableRow(1, 81, "Barcelona", 85))
+            table = listOf(tableRow(1, 81, "Barcelona", 85)),
         )
 
         realmOptions.upsertStandingsFromRemoteToLocal(premier.toEntity())
@@ -157,7 +157,7 @@ class StandingsRealmOptionsImplTest {
             id = "2021",
             competitionName = "Premier League",
             areaName = "England",
-            table = listOf(tableRow(1, 57, "Arsenal", 90))
+            table = listOf(tableRow(1, 57, "Arsenal", 90)),
         )
         realmOptions.upsertStandingsFromRemoteToLocal(first.toEntity())
         assertEquals(first, emissions.receive())
@@ -166,7 +166,7 @@ class StandingsRealmOptionsImplTest {
             id = "2021",
             competitionName = "Premier League",
             areaName = "England",
-            table = listOf(tableRow(1, 65, "Manchester City", 88))
+            table = listOf(tableRow(1, 65, "Manchester City", 88)),
         )
         realmOptions.upsertStandingsFromRemoteToLocal(second.toEntity())
         assertEquals(second, emissions.receive())
@@ -185,14 +185,14 @@ class StandingsRealmOptionsImplTest {
                 id = "2021",
                 scorers = listOf(
                     scorerRow(1, "Haaland", 30, 5),
-                    scorerRow(2, "Salah", 25, 10)
-                )
-            ).toEntity()
+                    scorerRow(2, "Salah", 25, 10),
+                ),
+            ).toEntity(),
         )
 
         val updated = ScorersSnapshot(
             id = "2021",
-            scorers = listOf(scorerRow(3, "Palmer", 22, 12))
+            scorers = listOf(scorerRow(3, "Palmer", 22, 12)),
         )
         realmOptions.upsertScorersFromRemoteToLocal(updated.toEntity())
 
@@ -204,8 +204,8 @@ class StandingsRealmOptionsImplTest {
         realmOptions.upsertScorersFromRemoteToLocal(
             ScorersSnapshot(
                 id = "2021",
-                scorers = listOf(scorerRow(1, "Haaland", 30, 5))
-            ).toEntity()
+                scorers = listOf(scorerRow(1, "Haaland", 30, 5)),
+            ).toEntity(),
         )
 
         val cleared = ScorersSnapshot(id = "2021", scorers = emptyList())
@@ -218,11 +218,11 @@ class StandingsRealmOptionsImplTest {
     fun scorersQueryByIdDoesNotLeakOtherCompetitions() = runBlocking {
         val premier = ScorersSnapshot(
             id = "2021",
-            scorers = listOf(scorerRow(1, "Haaland", 30, 5))
+            scorers = listOf(scorerRow(1, "Haaland", 30, 5)),
         )
         val laLiga = ScorersSnapshot(
             id = "2014",
-            scorers = listOf(scorerRow(10, "Lewandowski", 28, 4))
+            scorers = listOf(scorerRow(10, "Lewandowski", 28, 4)),
         )
 
         realmOptions.upsertScorersFromRemoteToLocal(premier.toEntity())
@@ -244,14 +244,14 @@ class StandingsRealmOptionsImplTest {
 
         val first = ScorersSnapshot(
             id = "2021",
-            scorers = listOf(scorerRow(1, "Haaland", 30, 5))
+            scorers = listOf(scorerRow(1, "Haaland", 30, 5)),
         )
         realmOptions.upsertScorersFromRemoteToLocal(first.toEntity())
         assertEquals(first, emissions.receive())
 
         val second = ScorersSnapshot(
             id = "2021",
-            scorers = listOf(scorerRow(2, "Salah", 25, 10))
+            scorers = listOf(scorerRow(2, "Salah", 25, 10)),
         )
         realmOptions.upsertScorersFromRemoteToLocal(second.toEntity())
         assertEquals(second, emissions.receive())
@@ -271,15 +271,15 @@ class StandingsRealmOptionsImplTest {
                 seasonType = "LEAGUE",
                 matches = listOf(
                     matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1),
-                    matchRow(101, "Liverpool", "City", "TIMED", -1, -1)
-                )
-            ).toEntity()
+                    matchRow(101, "Liverpool", "City", "TIMED", -1, -1),
+                ),
+            ).toEntity(),
         )
 
         val updated = MatchesSnapshot(
             id = "2021",
             seasonType = "CUP",
-            matches = listOf(matchRow(200, "Arsenal", "City", "FINISHED", 3, 0))
+            matches = listOf(matchRow(200, "Arsenal", "City", "FINISHED", 3, 0)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(updated.toEntity())
 
@@ -292,8 +292,8 @@ class StandingsRealmOptionsImplTest {
             MatchesSnapshot(
                 id = "2021",
                 seasonType = "LEAGUE",
-                matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1))
-            ).toEntity()
+                matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1)),
+            ).toEntity(),
         )
 
         val cleared = MatchesSnapshot(id = "2021", seasonType = "LEAGUE", matches = emptyList())
@@ -307,12 +307,12 @@ class StandingsRealmOptionsImplTest {
         val premier = MatchesSnapshot(
             id = "2021",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1))
+            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1)),
         )
         val laLiga = MatchesSnapshot(
             id = "2014",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(300, "Barcelona", "Madrid", "FINISHED", 1, 1))
+            matches = listOf(matchRow(300, "Barcelona", "Madrid", "FINISHED", 1, 1)),
         )
 
         realmOptions.upsertMatchesFromRemoteToLocal(premier.toEntity())
@@ -335,7 +335,7 @@ class StandingsRealmOptionsImplTest {
         val first = MatchesSnapshot(
             id = "2021",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1))
+            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(first.toEntity())
         assertEquals(first, emissions.receive())
@@ -343,7 +343,7 @@ class StandingsRealmOptionsImplTest {
         val second = MatchesSnapshot(
             id = "2021",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(101, "Liverpool", "City", "FINISHED", 0, 0))
+            matches = listOf(matchRow(101, "Liverpool", "City", "FINISHED", 0, 0)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(second.toEntity())
         assertEquals(second, emissions.receive())
@@ -372,28 +372,26 @@ class StandingsRealmOptionsImplTest {
         id: String,
         competitionName: String,
         areaName: String,
-        table: List<TableRowSnapshot>
-    ): CompetitionStandingsEntity {
-        return StandingsSnapshot(
-            id = id,
-            competitionName = competitionName,
-            areaName = areaName,
-            table = table
-        ).toEntity()
-    }
+        table: List<TableRowSnapshot>,
+    ): CompetitionStandingsEntity = StandingsSnapshot(
+        id = id,
+        competitionName = competitionName,
+        areaName = areaName,
+        table = table,
+    ).toEntity()
 
     private fun tableRow(
         position: Int,
         teamId: Int,
         teamName: String,
-        points: Int
+        points: Int,
     ) = TableRowSnapshot(position, teamId, teamName, points)
 
     private fun scorerRow(
         playerId: Int,
         playerName: String,
         goals: Int,
-        assists: Int
+        assists: Int,
     ) = ScorerRowSnapshot(playerId, playerName, goals, assists)
 
     private fun matchRow(
@@ -402,7 +400,7 @@ class StandingsRealmOptionsImplTest {
         awayTeam: String,
         status: String,
         homeGoals: Int,
-        awayGoals: Int
+        awayGoals: Int,
     ) = MatchRowSnapshot(matchId, homeTeam, awayTeam, status, homeGoals, awayGoals)
 
     // endregion
@@ -451,10 +449,10 @@ class StandingsRealmOptionsImplTest {
                                         team.name = row.teamName
                                     }
                                 }
-                            }
+                            },
                         )
                     }
-                }
+                },
             )
         }
         return entity
@@ -468,7 +466,7 @@ class StandingsRealmOptionsImplTest {
                     position = it.position,
                     teamId = it.team?.id ?: 0,
                     teamName = it.team?.name.orEmpty(),
-                    points = it.points
+                    points = it.points,
                 )
             }
             .orEmpty()
@@ -477,7 +475,7 @@ class StandingsRealmOptionsImplTest {
             id = id,
             competitionName = competition?.name,
             areaName = area?.name,
-            table = tableRows
+            table = tableRows,
         )
     }
 
@@ -499,25 +497,23 @@ class StandingsRealmOptionsImplTest {
                             player.name = row.playerName
                         }
                     }
-                }
+                },
             )
         }
         return entity
     }
 
-    private fun CompetitionScorersEntity.toSnapshot(): ScorersSnapshot {
-        return ScorersSnapshot(
-            id = id,
-            scorers = scorers.orEmpty().map {
-                ScorerRowSnapshot(
-                    playerId = it.player?.id ?: it.id,
-                    playerName = it.player?.name.orEmpty(),
-                    goals = it.goals,
-                    assists = it.assists
-                )
-            }
-        )
-    }
+    private fun CompetitionScorersEntity.toSnapshot(): ScorersSnapshot = ScorersSnapshot(
+        id = id,
+        scorers = scorers.orEmpty().map {
+            ScorerRowSnapshot(
+                playerId = it.player?.id ?: it.id,
+                playerName = it.player?.name.orEmpty(),
+                goals = it.goals,
+                assists = it.assists,
+            )
+        },
+    )
 
     private fun MatchesSnapshot.toEntity(): MatchesEntity {
         val snapshotId = id
@@ -543,28 +539,26 @@ class StandingsRealmOptionsImplTest {
                             }
                         }
                     }
-                }
+                },
             )
         }
         return entity
     }
 
-    private fun MatchesEntity.toSnapshot(): MatchesSnapshot {
-        return MatchesSnapshot(
-            id = id,
-            seasonType = seasonType,
-            matches = matches.orEmpty().map {
-                MatchRowSnapshot(
-                    matchId = it.id,
-                    homeTeam = it.homeTeam?.name.orEmpty(),
-                    awayTeam = it.awayTeam?.name.orEmpty(),
-                    status = it.status,
-                    homeGoals = it.score?.fullTime?.home ?: -1,
-                    awayGoals = it.score?.fullTime?.away ?: -1
-                )
-            }
-        )
-    }
+    private fun MatchesEntity.toSnapshot(): MatchesSnapshot = MatchesSnapshot(
+        id = id,
+        seasonType = seasonType,
+        matches = matches.orEmpty().map {
+            MatchRowSnapshot(
+                matchId = it.id,
+                homeTeam = it.homeTeam?.name.orEmpty(),
+                awayTeam = it.awayTeam?.name.orEmpty(),
+                status = it.status,
+                homeGoals = it.score?.fullTime?.home ?: -1,
+                awayGoals = it.score?.fullTime?.away ?: -1,
+            )
+        },
+    )
 
     // endregion
 
@@ -574,33 +568,16 @@ class StandingsRealmOptionsImplTest {
         val id: String,
         val competitionName: String?,
         val areaName: String?,
-        val table: List<TableRowSnapshot>
+        val table: List<TableRowSnapshot>,
     )
 
-    private data class TableRowSnapshot(
-        val position: Int,
-        val teamId: Int,
-        val teamName: String,
-        val points: Int
-    )
+    private data class TableRowSnapshot(val position: Int, val teamId: Int, val teamName: String, val points: Int)
 
-    private data class ScorersSnapshot(
-        val id: String,
-        val scorers: List<ScorerRowSnapshot>
-    )
+    private data class ScorersSnapshot(val id: String, val scorers: List<ScorerRowSnapshot>)
 
-    private data class ScorerRowSnapshot(
-        val playerId: Int,
-        val playerName: String,
-        val goals: Int,
-        val assists: Int
-    )
+    private data class ScorerRowSnapshot(val playerId: Int, val playerName: String, val goals: Int, val assists: Int)
 
-    private data class MatchesSnapshot(
-        val id: String,
-        val seasonType: String,
-        val matches: List<MatchRowSnapshot>
-    )
+    private data class MatchesSnapshot(val id: String, val seasonType: String, val matches: List<MatchRowSnapshot>)
 
     private data class MatchRowSnapshot(
         val matchId: Int,
@@ -608,7 +585,7 @@ class StandingsRealmOptionsImplTest {
         val awayTeam: String,
         val status: String,
         val homeGoals: Int,
-        val awayGoals: Int
+        val awayGoals: Int,
     )
 
     // endregion

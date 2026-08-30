@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.net.ConnectException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -30,7 +31,6 @@ import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
 
 class CompetitionStandingsRepositoryImplTest {
 
@@ -45,7 +45,7 @@ class CompetitionStandingsRepositoryImplTest {
         repository = CompetitionStandingsRepositoryImpl(
             footballApi = api,
             realmOptions = realmOptions,
-            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl()
+            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl(),
         )
     }
 
@@ -58,8 +58,8 @@ class CompetitionStandingsRepositoryImplTest {
                 area = null,
                 competition = competitionDto(id = 2021, name = "Premier League"),
                 season = null,
-                standings = emptyList()
-            )
+                standings = emptyList(),
+            ),
         )
 
         val result = repository.getCompetitionStandingsFromRemoteToLocalById("2021")
@@ -120,8 +120,8 @@ class CompetitionStandingsRepositoryImplTest {
             CompetitionScorersModelDTO(
                 competition = competitionDto(id = 2014, name = "La Liga"),
                 season = null,
-                scorers = emptyList()
-            )
+                scorers = emptyList(),
+            ),
         )
 
         val result = repository.getCompetitionTopScorersBySeason("2014")
@@ -137,8 +137,8 @@ class CompetitionStandingsRepositoryImplTest {
         api.matchesResponse = Response.success(
             MatchesDTO(
                 competition = competitionDto(id = 2002, name = "Bundesliga"),
-                matches = emptyList()
-            )
+                matches = emptyList(),
+            ),
         )
 
         val result = repository.getAllMatchesFromRemoteToLocal("2002")
@@ -157,10 +157,10 @@ class CompetitionStandingsRepositoryImplTest {
                     homeTeam = TeamH2HDTO(id = 57, name = "Arsenal", wins = 0, draws = 0, losses = 0),
                     awayTeam = TeamH2HDTO(id = 61, name = "Chelsea", wins = 0, draws = 0, losses = 0),
                     numberOfMatches = 0,
-                    totalGoals = 0
+                    totalGoals = 0,
                 ),
-                matches = emptyList()
-            )
+                matches = emptyList(),
+            ),
         )
 
         val result = repository.getHead2headById(445)
@@ -187,17 +187,15 @@ class CompetitionStandingsRepositoryImplTest {
 
     // region Factories
 
-    private fun competitionDto(id: Int, name: String): CompetitionDTO {
-        return CompetitionDTO(
-            id = id,
-            area = null,
-            code = null,
-            currentSeason = null,
-            emblem = null,
-            name = name,
-            type = null
-        )
-    }
+    private fun competitionDto(id: Int, name: String): CompetitionDTO = CompetitionDTO(
+        id = id,
+        area = null,
+        code = null,
+        currentSeason = null,
+        emblem = null,
+        name = name,
+        type = null,
+    )
 
     // endregion
 
@@ -224,7 +222,7 @@ class CompetitionStandingsRepositoryImplTest {
         }
 
         override suspend fun getCompetitionStandingById(
-            competitionId: String
+            competitionId: String,
         ): Response<CompetitionStandingsModelDTO> {
             exception?.let { throw it }
             requestedStandingsId = competitionId
@@ -233,7 +231,7 @@ class CompetitionStandingsRepositoryImplTest {
 
         override suspend fun getCompetitionTopScorers(
             competitionId: String,
-            limit: Int
+            limit: Int,
         ): Response<CompetitionScorersModelDTO> {
             exception?.let { throw it }
             requestedScorersId = competitionId

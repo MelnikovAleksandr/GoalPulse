@@ -1,18 +1,15 @@
 package ru.asmelnikov.data.mappers
 
 import ru.asmelnikov.data.models.Head2headDTO
-import ru.asmelnikov.data.models.MatchDTO
 import ru.asmelnikov.data.models.TeamH2HDTO
 import ru.asmelnikov.domain.models.Aggregates
 import ru.asmelnikov.domain.models.Head2head
 import ru.asmelnikov.domain.models.TeamH2H
 
-fun Head2headDTO.toHead2head(id: Int): Head2head {
-    return Head2head(
-        id = id,
-        aggregates = calculateAggregatesFromMatches()
-    )
-}
+fun Head2headDTO.toHead2head(id: Int): Head2head = Head2head(
+    id = id,
+    aggregates = calculateAggregatesFromMatches(),
+)
 
 private fun Head2headDTO.calculateAggregatesFromMatches(): Aggregates {
     val homeTeamDto = aggregates?.homeTeam
@@ -70,22 +67,22 @@ private fun Head2headDTO.calculateAggregatesFromMatches(): Aggregates {
             name = homeTeamDto.name.orEmpty(),
             wins = homeWins,
             draws = homeDraws,
-            losses = homeLosses
+            losses = homeLosses,
         ),
         awayTeam = TeamH2H(
             id = awayTeamId,
             name = awayTeamDto.name.orEmpty(),
             wins = homeLosses,
             draws = homeDraws,
-            losses = homeWins
-        )
+            losses = homeWins,
+        ),
     )
 }
 
 private fun calculatePercentages(
     homeWins: Int,
     homeDraws: Int,
-    homeLosses: Int
+    homeLosses: Int,
 ): Triple<Float, Float, Float> {
     val total = homeWins + homeDraws + homeLosses
     if (total == 0) return Triple(0f, 0f, 0f)
@@ -105,33 +102,31 @@ private fun calculatePercentages(
     return Triple(
         rounded[0].toFloat(),
         rounded[1].toFloat(),
-        rounded[2].toFloat()
+        rounded[2].toFloat(),
     )
 }
 
 private fun emptyAggregates(
     homeTeamDto: TeamH2HDTO?,
-    awayTeamDto: TeamH2HDTO?
-): Aggregates {
-    return Aggregates(
-        numberOfMatches = 0,
-        totalGoals = 0,
-        homeWinsPercentage = 0f,
-        awayWinsPercentage = 0f,
-        drawsPercentage = 0f,
-        homeTeam = TeamH2H(
-            id = homeTeamDto?.id ?: 0,
-            name = homeTeamDto?.name.orEmpty(),
-            wins = 0,
-            draws = 0,
-            losses = 0
-        ),
-        awayTeam = TeamH2H(
-            id = awayTeamDto?.id ?: 0,
-            name = awayTeamDto?.name.orEmpty(),
-            wins = 0,
-            draws = 0,
-            losses = 0
-        )
-    )
-}
+    awayTeamDto: TeamH2HDTO?,
+): Aggregates = Aggregates(
+    numberOfMatches = 0,
+    totalGoals = 0,
+    homeWinsPercentage = 0f,
+    awayWinsPercentage = 0f,
+    drawsPercentage = 0f,
+    homeTeam = TeamH2H(
+        id = homeTeamDto?.id ?: 0,
+        name = homeTeamDto?.name.orEmpty(),
+        wins = 0,
+        draws = 0,
+        losses = 0,
+    ),
+    awayTeam = TeamH2H(
+        id = awayTeamDto?.id ?: 0,
+        name = awayTeamDto?.name.orEmpty(),
+        wins = 0,
+        draws = 0,
+        losses = 0,
+    ),
+)

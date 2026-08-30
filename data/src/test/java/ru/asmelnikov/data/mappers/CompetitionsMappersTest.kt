@@ -10,7 +10,7 @@ class CompetitionsMappersTest {
     fun toCurrentSeason_buildsYearRangeFromStartAndEndDates() {
         val season = seasonEntity(
             startDate = "2025-08-15",
-            endDate = "2026-05-24"
+            endDate = "2026-05-24",
         )
 
         assertEquals("2025/2026", season.toCurrentSeason().startDateEndDate)
@@ -20,7 +20,7 @@ class CompetitionsMappersTest {
     fun toCurrentSeason_keepsSameYearWhenSeasonDoesNotCrossNewYear() {
         val season = seasonEntity(
             startDate = "2024-02-01",
-            endDate = "2024-11-30"
+            endDate = "2024-11-30",
         )
 
         assertEquals("2024/2024", season.toCurrentSeason().startDateEndDate)

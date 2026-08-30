@@ -55,9 +55,8 @@ fun CollapsingToolbarScope.Toolbar(
     secondColor: Color,
     teamName: String,
     teamCrest: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
-
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
         drawRect(backgroundColor)
@@ -68,7 +67,6 @@ fun CollapsingToolbarScope.Toolbar(
     val blurRadiusPx = with(density) { dimens.medium2.toPx() }
 
     val topInset = with(density) { WindowInsets.systemBars.getTop(this).toDp() }
-
 
     val progress = collapsingState.toolbarState.progress
 
@@ -95,9 +93,9 @@ fun CollapsingToolbarScope.Toolbar(
                 lerp(
                     start = secondColor,
                     stop = mainColor,
-                    fraction = collapsingState.toolbarState.progress
-                )
-            )
+                    fraction = collapsingState.toolbarState.progress,
+                ),
+            ),
     )
     Box(
         modifier = Modifier
@@ -105,9 +103,9 @@ fun CollapsingToolbarScope.Toolbar(
             .heightIn(min = minBarHeight)
             .road(
                 whenCollapsed = Alignment.BottomCenter,
-                whenExpanded = Alignment.BottomCenter
+                whenExpanded = Alignment.BottomCenter,
             ),
-        contentAlignment = Alignment.BottomCenter
+        contentAlignment = Alignment.BottomCenter,
     ) {
         Box(
             modifier = Modifier
@@ -116,8 +114,8 @@ fun CollapsingToolbarScope.Toolbar(
                 .drawProgressivePlainBackdropReverse(
                     backdrop = backdrop,
                     blurRadiusPx = blurRadiusPx,
-                    tint = secondColor
-                )
+                    tint = secondColor,
+                ),
         )
     }
 
@@ -128,13 +126,13 @@ fun CollapsingToolbarScope.Toolbar(
             .padding(horizontal = dimens.small1)
             .road(
                 whenCollapsed = Alignment.TopEnd,
-                whenExpanded = Alignment.Center
+                whenExpanded = Alignment.Center,
             ),
-        contentAlignment = Alignment.TopEnd
+        contentAlignment = Alignment.TopEnd,
     ) {
         Box(
             modifier = Modifier.size(imgSize),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             LiquidBox(
                 modifier = Modifier
@@ -142,12 +140,12 @@ fun CollapsingToolbarScope.Toolbar(
                     .graphicsLayer {
                         alpha = ((1f - progress) * 3f).coerceIn(0f, 1f)
                     },
-                backdrop = backdrop
+                backdrop = backdrop,
             ) {}
             SubComposeAsyncImageCommon(
                 modifier = Modifier.fillMaxSize(0.7f),
                 imageUri = teamCrest,
-                shape = RoundedCornerShape(0.dp)
+                shape = RoundedCornerShape(0.dp),
             )
         }
     }
@@ -161,8 +159,8 @@ fun CollapsingToolbarScope.Toolbar(
             shadow = Shadow(
                 color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                 offset = Offset(0f, 1f),
-                blurRadius = 4f
-            )
+                blurRadius = 4f,
+            ),
         ),
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = Modifier
@@ -171,12 +169,12 @@ fun CollapsingToolbarScope.Toolbar(
             .padding(horizontal = dimens.medium1)
             .padding(
                 bottom = dimens.medium1,
-                top = dimens.extraSmall2
+                top = dimens.extraSmall2,
             )
             .road(
                 whenCollapsed = Alignment.TopCenter,
-                whenExpanded = Alignment.BottomCenter
-            )
+                whenExpanded = Alignment.BottomCenter,
+            ),
     )
 
     Box(
@@ -184,9 +182,9 @@ fun CollapsingToolbarScope.Toolbar(
             .heightIn(min = minBarHeight)
             .road(
                 whenCollapsed = Alignment.TopStart,
-                whenExpanded = Alignment.TopStart
+                whenExpanded = Alignment.TopStart,
             ),
-        contentAlignment = Alignment.TopStart
+        contentAlignment = Alignment.TopStart,
     ) {
         LiquidButtonBox(
             modifier = Modifier
@@ -194,7 +192,7 @@ fun CollapsingToolbarScope.Toolbar(
                 .padding(horizontal = dimens.small1)
                 .size(startSize.dp),
             onClick = onBackClick,
-            backdrop = backdrop
+            backdrop = backdrop,
         ) {
             Icon(
                 modifier = Modifier
@@ -202,7 +200,7 @@ fun CollapsingToolbarScope.Toolbar(
                     .fillMaxSize(0.8f),
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(R.string.back),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     }

@@ -22,7 +22,7 @@ class MatchCalendarRepositoryImplTest {
         repository = MatchCalendarRepositoryImpl(
             appPackageName = APP_PACKAGE,
             store = store,
-            ioDispatcher = Dispatchers.Unconfined
+            ioDispatcher = Dispatchers.Unconfined,
         )
     }
 

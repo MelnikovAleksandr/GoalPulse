@@ -11,7 +11,7 @@ import coil.request.SuccessResult
 interface ColorGenerator {
 
     suspend fun convertImageUrlToBitmap(
-        imageUrl: String
+        imageUrl: String,
     ): Bitmap?
 
     fun extractColorsFromBitmap(bitmap: Bitmap): Map<String, String>
@@ -31,52 +31,45 @@ interface ColorGenerator {
             }
         }
 
-        override fun extractColorsFromBitmap(bitmap: Bitmap): Map<String, String> {
-            return mapOf(
-                "vibrant" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().vibrantSwatch
-                ),
-                "darkVibrant" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().darkVibrantSwatch
-                ),
-                "onDarkVibrant" to parseBodyColor(
-                    color = Palette.from(bitmap).generate().darkVibrantSwatch?.bodyTextColor
-                ),
-                "lightVibrant" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().lightVibrantSwatch
-                ),
-                "domainSwatch" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().dominantSwatch
-                ),
-                "mutedSwatch" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().mutedSwatch
-                ),
-                "lightMuted" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().lightMutedSwatch
-                ),
-                "darkMuted" to parseColorSwatch(
-                    color = Palette.from(bitmap).generate().darkMutedSwatch
-                )
-            )
+        override fun extractColorsFromBitmap(bitmap: Bitmap): Map<String, String> = mapOf(
+            "vibrant" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().vibrantSwatch,
+            ),
+            "darkVibrant" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().darkVibrantSwatch,
+            ),
+            "onDarkVibrant" to parseBodyColor(
+                color = Palette.from(bitmap).generate().darkVibrantSwatch?.bodyTextColor,
+            ),
+            "lightVibrant" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().lightVibrantSwatch,
+            ),
+            "domainSwatch" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().dominantSwatch,
+            ),
+            "mutedSwatch" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().mutedSwatch,
+            ),
+            "lightMuted" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().lightMutedSwatch,
+            ),
+            "darkMuted" to parseColorSwatch(
+                color = Palette.from(bitmap).generate().darkMutedSwatch,
+            ),
+        )
+
+        private fun parseColorSwatch(color: Palette.Swatch?): String = if (color != null) {
+            val parsedColor = Integer.toHexString(color.rgb)
+            "#$parsedColor"
+        } else {
+            "#000000"
         }
 
-        private fun parseColorSwatch(color: Palette.Swatch?): String {
-            return if (color != null) {
-                val parsedColor = Integer.toHexString(color.rgb)
-                "#$parsedColor"
-            } else {
-                "#000000"
-            }
+        private fun parseBodyColor(color: Int?): String = if (color != null) {
+            val parsedColor = Integer.toHexString(color)
+            "#$parsedColor"
+        } else {
+            "#FFFFFF"
         }
-
-        private fun parseBodyColor(color: Int?): String {
-            return if (color != null) {
-                val parsedColor = Integer.toHexString(color)
-                "#$parsedColor"
-            } else {
-                "#FFFFFF"
-            }
-        }
-
     }
 }

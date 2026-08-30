@@ -36,7 +36,7 @@ fun FirstPagerScreenStandings(
     isLoading: Boolean,
     onTeamClick: (Int) -> Unit,
     onReloadClick: () -> Unit,
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -46,12 +46,12 @@ fun FirstPagerScreenStandings(
     }
     AnimatedContent(
         targetState = competitionStandings.standings.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyState ->
         if (emptyState && !isLoading) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -61,7 +61,7 @@ fun FirstPagerScreenStandings(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -69,40 +69,40 @@ fun FirstPagerScreenStandings(
                         .background(backgroundColor)
                         .fillMaxSize(),
                     state = listState,
-                    contentPadding = PaddingValues(top = topInset)
+                    contentPadding = PaddingValues(top = topInset),
                 ) {
                     competitionStandings.standings.forEachIndexed { standingIndex, standing ->
                         val stickyKey = "standing_sticky_$standingIndex"
                         stickyHeaderContentPaddingAware(
                             listState = listState,
                             key = stickyKey,
-                            contentType = stickyKey
+                            contentType = stickyKey,
                         ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(backgroundColor)
+                                    .background(backgroundColor),
                             ) {
                                 HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                                 StandingTopItem(
-                                    tableName = stringResource(standing.group.stringResId)
+                                    tableName = stringResource(standing.group.stringResId),
                                 )
                                 HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                             }
                         }
                         itemsIndexed(
                             items = standing.table,
-                            key = { _, table -> table.team.id }
+                            key = { _, table -> table.team.id },
                         ) { tableIndex, table ->
                             val color = competitionStandings.competition.code.getCompColor(
                                 tableIndex,
-                                standing.table.size
+                                standing.table.size,
                             )
                             StandingItem(
                                 modifier = Modifier,
                                 table = table,
                                 firstBoxColor = color,
-                                onTeamClick = onTeamClick
+                                onTeamClick = onTeamClick,
                             )
                             HorizontalDivider(color = MaterialTheme.colorScheme.primary)
                         }
@@ -123,7 +123,7 @@ private fun TablePreview1() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             FirstPagerScreenStandings(
                 competitionStandings = getMockStandings(),
@@ -131,7 +131,7 @@ private fun TablePreview1() {
                 isPullToRefreshEnabled = true,
                 topInset = Dp.Hairline,
                 onTeamClick = {},
-                onReloadClick = {}
+                onReloadClick = {},
             )
         }
     }
@@ -144,7 +144,7 @@ private fun TablePreview2() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             FirstPagerScreenStandings(
                 competitionStandings = getMockStandings().copy(standings = emptyList()),
@@ -152,7 +152,7 @@ private fun TablePreview2() {
                 isPullToRefreshEnabled = true,
                 topInset = Dp.Hairline,
                 onTeamClick = {},
-                onReloadClick = {}
+                onReloadClick = {},
             )
         }
     }
@@ -165,7 +165,7 @@ private fun TablePreview3() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             FirstPagerScreenStandings(
                 competitionStandings = getMockStandings(),
@@ -173,7 +173,7 @@ private fun TablePreview3() {
                 isPullToRefreshEnabled = false,
                 topInset = Dp.Hairline,
                 onTeamClick = {},
-                onReloadClick = {}
+                onReloadClick = {},
             )
         }
     }

@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class MatchesDTO(
     @Json(name = "competition") val competition: CompetitionDTO?,
-    @Json(name = "matches") val matches: List<MatchDTO>?
+    @Json(name = "matches") val matches: List<MatchDTO>?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -24,7 +24,7 @@ data class MatchDTO(
     @Json(name = "season") val season: CurrentSeasonDTO?,
     @Json(name = "stage") val stage: String?,
     @Json(name = "status") val status: String?,
-    @Json(name = "utcDate") val utcDate: String?
+    @Json(name = "utcDate") val utcDate: String?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -32,7 +32,7 @@ data class RefereeDTO(
     @Json(name = "id") val id: Int?,
     @Json(name = "name") val name: String?,
     @Json(name = "nationality") val nationality: String?,
-    @Json(name = "type") val type: String?
+    @Json(name = "type") val type: String?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -40,12 +40,8 @@ data class ScoreDTO(
     @Json(name = "duration") val duration: String?,
     @Json(name = "fullTime") val fullTime: TimeDTO?,
     @Json(name = "halfTime") val halfTime: TimeDTO?,
-    @Json(name = "winner") val winner: String?
+    @Json(name = "winner") val winner: String?,
 )
 
 @JsonClass(generateAdapter = true)
-data class TimeDTO(
-    @Json(name = "away") val away: Int?,
-    @Json(name = "home") val home: Int?
-)
-
+data class TimeDTO(@Json(name = "away") val away: Int?, @Json(name = "home") val home: Int?)

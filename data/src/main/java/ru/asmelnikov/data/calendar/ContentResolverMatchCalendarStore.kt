@@ -5,16 +5,12 @@ import android.content.pm.PackageManager
 import android.provider.CalendarContract
 import ru.asmelnikov.utils.calendar.CalendarPermissions
 
-internal class ContentResolverMatchCalendarStore(
-    private val context: Context
-) : MatchCalendarStore {
+internal class ContentResolverMatchCalendarStore(private val context: Context) : MatchCalendarStore {
 
     private val contentResolver get() = context.contentResolver
 
-    override fun hasPermission(): Boolean {
-        return CalendarPermissions.REQUIRED.all { permission ->
-            context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
-        }
+    override fun hasPermission(): Boolean = CalendarPermissions.REQUIRED.all { permission ->
+        context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun eventId(packageName: String, matchId: Int): Long? {
@@ -24,14 +20,14 @@ internal class ContentResolverMatchCalendarStore(
             arrayOf(
                 CalendarContract.Events._ID,
                 CalendarContract.Events.CUSTOM_APP_URI,
-                CalendarContract.Events.DESCRIPTION
+                CalendarContract.Events.DESCRIPTION,
             ),
             "${CalendarContract.Events.DELETED} = 0 AND (" +
                 "(${CalendarContract.Events.CUSTOM_APP_PACKAGE} = ? AND " +
                 "${CalendarContract.Events.CUSTOM_APP_URI} = ?) OR " +
                 "${CalendarContract.Events.DESCRIPTION} LIKE ?)",
             arrayOf(packageName, customAppUri, "%$customAppUri%"),
-            null
+            null,
         ) ?: return null
         return cursor.use {
             val idIndex = it.getColumnIndex(CalendarContract.Events._ID)
@@ -79,7 +75,7 @@ internal class ContentResolverMatchCalendarStore(
             arrayOf(CalendarContract.Events.CUSTOM_APP_URI),
             selection,
             selectionArgs,
-            null
+            null,
         ) ?: return emptySet()
         return cursor.use {
             val uriIndex = it.getColumnIndex(CalendarContract.Events.CUSTOM_APP_URI)
@@ -104,7 +100,7 @@ internal class ContentResolverMatchCalendarStore(
             "${CalendarContract.Events.DELETED} = 0 AND " +
                 "${CalendarContract.Events.DESCRIPTION} LIKE ?",
             arrayOf("%$URI_PREFIX%"),
-            null
+            null,
         ) ?: return emptySet()
         return cursor.use {
             val descriptionIndex = it.getColumnIndex(CalendarContract.Events.DESCRIPTION)

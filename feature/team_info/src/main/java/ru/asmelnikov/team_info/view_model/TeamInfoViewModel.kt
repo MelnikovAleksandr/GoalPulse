@@ -23,12 +23,12 @@ class TeamInfoViewModel(
     private val standingsRepository: CompetitionStandingsRepository,
     private val newsRepository: NewsRepository,
     private val matchCalendarRepository: MatchCalendarRepository,
-    private val teamId: String
+    private val teamId: String,
 ) : ViewModel(),
     ContainerHost<TeamInfoState, TeamInfoSideEffects> {
 
     override val container = container<TeamInfoState, TeamInfoSideEffects>(
-        initialState = TeamInfoState()
+        initialState = TeamInfoState(),
     ) {
         reduce { state.copy(teamId = teamId) }
         collectTeamInfoFlowFromLocal()
@@ -47,15 +47,17 @@ class TeamInfoViewModel(
             return@intent
         }
         reduce { state.copy(expandedItem = itemId, isHead2headLoading = true) }
-        when (val head2head =
-            standingsRepository.getHead2headById(
-                itemId
-            )) {
+        when (
+            val head2head =
+                standingsRepository.getHead2headById(
+                    itemId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
                         head2head = head2head.data ?: Head2head(),
-                        isHead2headLoading = false
+                        isHead2headLoading = false,
                     )
                 }
             }
@@ -63,7 +65,7 @@ class TeamInfoViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isHead2headLoading = false
+                        isHead2headLoading = false,
                     )
                 }
                 handleError(head2head.httpErrors)
@@ -87,8 +89,8 @@ class TeamInfoViewModel(
             if (intent == null) {
                 postSideEffect(
                     TeamInfoSideEffects.Snackbar(
-                        stringResourceProvider.getString(R.string.calendar_event_failed)
-                    )
+                        stringResourceProvider.getString(R.string.calendar_event_failed),
+                    ),
                 )
                 return@intent
             }
@@ -100,8 +102,8 @@ class TeamInfoViewModel(
             reduce { state.copy(calendarMatchIds = scheduledIds) }
             postSideEffect(
                 TeamInfoSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -109,8 +111,8 @@ class TeamInfoViewModel(
         if (intent == null) {
             postSideEffect(
                 TeamInfoSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -127,7 +129,7 @@ class TeamInfoViewModel(
         reduce {
             state.copy(
                 pendingCalendarMatch = null,
-                calendarMatchIds = scheduledIds
+                calendarMatchIds = scheduledIds,
             )
         }
         if (match == null) return@intent
@@ -136,8 +138,8 @@ class TeamInfoViewModel(
             if (intent == null) {
                 postSideEffect(
                     TeamInfoSideEffects.Snackbar(
-                        stringResourceProvider.getString(R.string.calendar_event_failed)
-                    )
+                        stringResourceProvider.getString(R.string.calendar_event_failed),
+                    ),
                 )
                 return@intent
             }
@@ -147,8 +149,8 @@ class TeamInfoViewModel(
         if (matchCalendarRepository.findEventId(match.id) == null) {
             postSideEffect(
                 TeamInfoSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -156,8 +158,8 @@ class TeamInfoViewModel(
         if (intent == null) {
             postSideEffect(
                 TeamInfoSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -167,21 +169,23 @@ class TeamInfoViewModel(
     fun onCalendarInsertFailed() = intent {
         postSideEffect(
             TeamInfoSideEffects.Snackbar(
-                stringResourceProvider.getString(R.string.calendar_event_failed)
-            )
+                stringResourceProvider.getString(R.string.calendar_event_failed),
+            ),
         )
     }
 
     fun getTeamInfoFromRemoteToLocal() = intent {
         reduce { state.copy(isInfoLoading = true) }
-        when (val team =
-            teamRepository.getTeamInfoById(
-                state.teamId
-            )) {
+        when (
+            val team =
+                teamRepository.getTeamInfoById(
+                    state.teamId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        isInfoLoading = false
+                        isInfoLoading = false,
                     )
                 }
             }
@@ -189,7 +193,7 @@ class TeamInfoViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isInfoLoading = false
+                        isInfoLoading = false,
                     )
                 }
                 handleError(team.httpErrors)
@@ -199,14 +203,16 @@ class TeamInfoViewModel(
 
     fun getTeamMatchesFromRemoteToLocal() = intent {
         reduce { state.copy(isMatchesLoading = true) }
-        when (val matches =
-            teamRepository.getTeamMatchesFromRemoteToLocal(
-                teamId = state.teamId
-            )) {
+        when (
+            val matches =
+                teamRepository.getTeamMatchesFromRemoteToLocal(
+                    teamId = state.teamId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        isMatchesLoading = false
+                        isMatchesLoading = false,
                     )
                 }
             }
@@ -214,7 +220,7 @@ class TeamInfoViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isMatchesLoading = false
+                        isMatchesLoading = false,
                     )
                 }
                 handleError(matches.httpErrors)
@@ -230,7 +236,7 @@ class TeamInfoViewModel(
         teamRepository.getTeamInfoByIdFlowFromLocal(state.teamId).collect { teamInfo ->
             reduce {
                 state.copy(
-                    teamInfo = teamInfo ?: TeamInfo()
+                    teamInfo = teamInfo ?: TeamInfo(),
                 )
             }
             if (!teamInfo?.name.isNullOrEmpty()) getNews()
@@ -246,7 +252,7 @@ class TeamInfoViewModel(
                     state.copy(
                         matchesComplete = matches?.matchesCompleted ?: emptyList(),
                         matchesAhead = ahead,
-                        calendarMatchIds = scheduledIds
+                        calendarMatchIds = scheduledIds,
                     )
                 }
             }
@@ -260,15 +266,17 @@ class TeamInfoViewModel(
 
     private fun getNews() = intent {
         reduce { state.copy(isNewsLoading = true) }
-        when (val news =
-            newsRepository.getNews(
-                state.teamInfo.name
-            )) {
+        when (
+            val news =
+                newsRepository.getNews(
+                    state.teamInfo.name,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
                         isNewsLoading = false,
-                        news = news.data ?: News()
+                        news = news.data ?: News(),
                     )
                 }
             }
@@ -276,7 +284,7 @@ class TeamInfoViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isNewsLoading = false
+                        isNewsLoading = false,
                     )
                 }
                 handleError(news.httpErrors)
@@ -288,10 +296,9 @@ class TeamInfoViewModel(
         postSideEffect(
             TeamInfoSideEffects.Snackbar(
                 error.getErrorMessage(
-                    stringResourceProvider
-                )
-            )
+                    stringResourceProvider,
+                ),
+            ),
         )
     }
-
 }

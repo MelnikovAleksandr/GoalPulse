@@ -15,17 +15,17 @@ class CompetitionStandingsMappersTest {
             listOf(
                 tableRow(position = 3, teamName = "Chelsea"),
                 tableRow(position = 1, teamName = "Arsenal"),
-                tableRow(position = 2, teamName = "City")
-            )
+                tableRow(position = 2, teamName = "City"),
+            ),
         )
 
         assertEquals(
             listOf(
                 1 to "Arsenal",
                 2 to "City",
-                3 to "Chelsea"
+                3 to "Chelsea",
             ),
-            standing.toStanding().table.map { it.position to it.team.name }
+            standing.toStanding().table.map { it.position to it.team.name },
         )
     }
 

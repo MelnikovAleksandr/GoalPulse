@@ -46,13 +46,13 @@ fun LiquidButtonRow(
     isInteractive: Boolean = true,
     tint: Color = Color.Unspecified,
     surfaceColor: Color = Color.Unspecified,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     val animationScope = rememberCoroutineScope()
 
     val interactiveHighlight = remember(animationScope) {
         InteractiveHighlight(
-            animationScope = animationScope
+            animationScope = animationScope,
         )
     }
 
@@ -86,12 +86,12 @@ fun LiquidButtonRow(
                         val offsetAngle = atan2(offset.y, offset.x)
                         scaleX =
                             scale +
-                                    maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
-                                    (width / height).fastCoerceAtMost(1f)
+                            maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
+                            (width / height).fastCoerceAtMost(1f)
                         scaleY =
                             scale +
-                                    maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
-                                    (height / width).fastCoerceAtMost(1f)
+                            maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
+                            (height / width).fastCoerceAtMost(1f)
                     }
                 } else {
                     null
@@ -107,13 +107,13 @@ fun LiquidButtonRow(
                         drawRect(surfaceColor)
                     }
                 },
-                exportedBackdrop = exportedBackdrop
+                exportedBackdrop = exportedBackdrop,
             )
             .clickable(
                 interactionSource = null,
                 indication = if (isInteractive) null else LocalIndication.current,
                 role = Role.Button,
-                onClick = onClick
+                onClick = onClick,
             )
             .then(
                 if (isInteractive) {
@@ -122,11 +122,11 @@ fun LiquidButtonRow(
                         .then(interactiveHighlight.gestureModifier)
                 } else {
                     Modifier
-                }
+                },
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        content = content
+        content = content,
     )
 }
 
@@ -139,13 +139,13 @@ fun LiquidButtonColumn(
     isInteractive: Boolean = true,
     tint: Color = Color.Unspecified,
     surfaceColor: Color = Color.Unspecified,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val animationScope = rememberCoroutineScope()
 
     val interactiveHighlight = remember(animationScope) {
         InteractiveHighlight(
-            animationScope = animationScope
+            animationScope = animationScope,
         )
     }
 
@@ -179,12 +179,12 @@ fun LiquidButtonColumn(
                         val offsetAngle = atan2(offset.y, offset.x)
                         scaleX =
                             scale +
-                                    maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
-                                    (width / height).fastCoerceAtMost(1f)
+                            maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
+                            (width / height).fastCoerceAtMost(1f)
                         scaleY =
                             scale +
-                                    maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
-                                    (height / width).fastCoerceAtMost(1f)
+                            maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
+                            (height / width).fastCoerceAtMost(1f)
                     }
                 } else {
                     null
@@ -200,13 +200,13 @@ fun LiquidButtonColumn(
                         drawRect(surfaceColor)
                     }
                 },
-                exportedBackdrop = exportedBackdrop
+                exportedBackdrop = exportedBackdrop,
             )
             .clickable(
                 interactionSource = null,
                 indication = if (isInteractive) null else LocalIndication.current,
                 role = Role.Button,
-                onClick = onClick
+                onClick = onClick,
             )
             .then(
                 if (isInteractive) {
@@ -215,11 +215,11 @@ fun LiquidButtonColumn(
                         .then(interactiveHighlight.gestureModifier)
                 } else {
                     Modifier
-                }
+                },
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        content = content
+        content = content,
     )
 }
 
@@ -234,13 +234,13 @@ fun LiquidButtonBox(
     isInteractive: Boolean = true,
     tint: Color = Color.Unspecified,
     surfaceColor: Color = Color.Unspecified,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val animationScope = rememberCoroutineScope()
 
     val interactiveHighlight = remember(animationScope) {
         InteractiveHighlight(
-            animationScope = animationScope
+            animationScope = animationScope,
         )
     }
 
@@ -285,12 +285,12 @@ fun LiquidButtonBox(
                         val offsetAngle = atan2(offset.y, offset.x)
                         scaleX =
                             scale +
-                                    maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
-                                    (width / height).fastCoerceAtMost(1f)
+                            maxDragScale * abs(cos(offsetAngle) * offset.x / size.maxDimension) *
+                            (width / height).fastCoerceAtMost(1f)
                         scaleY =
                             scale +
-                                    maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
-                                    (height / width).fastCoerceAtMost(1f)
+                            maxDragScale * abs(sin(offsetAngle) * offset.y / size.maxDimension) *
+                            (height / width).fastCoerceAtMost(1f)
                     }
                 } else {
                     null
@@ -306,13 +306,13 @@ fun LiquidButtonBox(
                         drawRect(surfaceColor)
                     }
                 },
-                exportedBackdrop = exportedBackdrop
+                exportedBackdrop = exportedBackdrop,
             )
             .clickable(
                 interactionSource = pressInteractionSource,
                 indication = if (isInteractive) null else LocalIndication.current,
                 role = Role.Button,
-                onClick = onClick
+                onClick = onClick,
             )
             .then(
                 if (isInteractive) {
@@ -321,10 +321,10 @@ fun LiquidButtonBox(
                         .then(interactiveHighlight.gestureModifier)
                 } else {
                     Modifier
-                }
+                },
             ),
         contentAlignment = Alignment.Center,
-        content = content
+        content = content,
     )
 }
 
@@ -332,7 +332,7 @@ fun LiquidButtonBox(
 fun LiquidBox(
     backdrop: Backdrop,
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val glassSpec = rememberLiquidGlassCompactSpec()
 
@@ -351,9 +351,9 @@ fun LiquidBox(
                         surfaceAlpha = 0.24f,
                         overlayAlpha = 0.12f,
                     )
-                }
+                },
             ),
         contentAlignment = Alignment.Center,
-        content = content
+        content = content,
     )
 }

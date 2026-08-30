@@ -1,9 +1,9 @@
 package ru.asmelnikov.data.mappers
 
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import ru.asmelnikov.data.models.PersonDTO
-import java.time.LocalDate
 
 class TeamInfoMappersTest {
 
@@ -13,18 +13,18 @@ class TeamInfoMappersTest {
             person(id = 1, name = "Saliba", position = "Defence"),
             person(id = 2, name = "Raya", position = "Goalkeeper"),
             person(id = 3, name = "Gabriel", position = "Defence"),
-            person(id = 4, name = "Unknown", position = null)
+            person(id = 4, name = "Unknown", position = null),
         )
 
         assertEquals(
             listOf(
                 "Defence" to listOf("Saliba", "Gabriel"),
                 "Goalkeeper" to listOf("Raya"),
-                "" to listOf("Unknown")
+                "" to listOf("Unknown"),
             ),
             convertToRealmList(squad).map { group ->
                 group.position to group.squad.orEmpty().map { it.name }
-            }
+            },
         )
     }
 
@@ -43,19 +43,17 @@ class TeamInfoMappersTest {
 
     // region Factories
 
-    private fun person(id: Int, name: String, position: String?): PersonDTO {
-        return PersonDTO(
-            id = id,
-            contract = null,
-            dateOfBirth = null,
-            firstName = null,
-            lastName = null,
-            name = name,
-            nationality = null,
-            position = position,
-            shirtNumber = null
-        )
-    }
+    private fun person(id: Int, name: String, position: String?): PersonDTO = PersonDTO(
+        id = id,
+        contract = null,
+        dateOfBirth = null,
+        firstName = null,
+        lastName = null,
+        name = name,
+        nationality = null,
+        position = position,
+        shirtNumber = null,
+    )
 
     // endregion
 }

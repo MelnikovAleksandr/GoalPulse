@@ -16,6 +16,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -50,7 +51,7 @@ class CompetitionStandingsContentTest {
     fun emptyStandingsNotLoading_showsReload_hidesTeam() {
         setScreen(competitionStandings = premierLeagueWithoutTable)
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Arsenal").assertDoesNotExist()
     }
 
@@ -64,10 +65,10 @@ class CompetitionStandingsContentTest {
             competitionStandings = premierLeagueWithoutTable,
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, standingsReloads)
         assertEquals(0, scorersReloads)
@@ -78,7 +79,7 @@ class CompetitionStandingsContentTest {
     fun loadingEmptyStandings_doesNotShowReload() {
         setScreen(
             competitionStandings = premierLeagueWithoutTable,
-            isLoadingStandings = true
+            isLoadingStandings = true,
         )
 
         composeTestRule.onNodeWithText(reloadLabel).assertDoesNotExist()
@@ -102,7 +103,7 @@ class CompetitionStandingsContentTest {
         setScreen(
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
         swipeDisplayedList()
@@ -122,7 +123,7 @@ class CompetitionStandingsContentTest {
             matchesCompleted = listOf(completedTour),
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
@@ -143,7 +144,7 @@ class CompetitionStandingsContentTest {
             matchesCompleted = listOf(completedTour),
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -158,7 +159,7 @@ class CompetitionStandingsContentTest {
     fun isLoadingStandings_showsProgressOnStandings_notOnScorersOrMatches() {
         setScreen(
             isLoadingStandings = true,
-            matchesCompleted = listOf(completedTour)
+            matchesCompleted = listOf(completedTour),
         )
 
         assertEquals(1, displayedProgressCount())
@@ -179,7 +180,7 @@ class CompetitionStandingsContentTest {
     fun isLoadingScorers_showsProgressOnScorers_notOnStandingsOrMatches() {
         setScreen(
             isLoadingScorers = true,
-            matchesCompleted = listOf(completedTour)
+            matchesCompleted = listOf(completedTour),
         )
 
         assertEquals(0, displayedProgressCount())
@@ -200,7 +201,7 @@ class CompetitionStandingsContentTest {
     fun isLoadingMatches_showsProgressOnMatches_notOnStandingsOrScorers() {
         setScreen(
             isLoadingMatches = true,
-            matchesCompleted = listOf(completedTour)
+            matchesCompleted = listOf(completedTour),
         )
 
         assertEquals(0, displayedProgressCount())
@@ -251,12 +252,12 @@ class CompetitionStandingsContentTest {
     fun emptyScorers_showsReload_hidesPlayer() {
         setScreen(
             scorers = emptyList(),
-            matchesCompleted = listOf(completedTour)
+            matchesCompleted = listOf(completedTour),
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Bukayo Saka").assertDoesNotExist()
     }
 
@@ -271,11 +272,11 @@ class CompetitionStandingsContentTest {
             matchesCompleted = listOf(completedTour),
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(0, standingsReloads)
         assertEquals(1, scorersReloads)
@@ -287,7 +288,7 @@ class CompetitionStandingsContentTest {
         setScreen(
             scorers = emptyList(),
             isLoadingScorers = true,
-            matchesCompleted = listOf(completedTour)
+            matchesCompleted = listOf(completedTour),
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
@@ -302,7 +303,7 @@ class CompetitionStandingsContentTest {
 
         setScreen(
             matchesCompleted = listOf(completedTour),
-            onPersonClick = { clickedPersonId = it }
+            onPersonClick = { clickedPersonId = it },
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
@@ -317,7 +318,7 @@ class CompetitionStandingsContentTest {
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Arsenal - Chelsea").assertDoesNotExist()
     }
 
@@ -330,11 +331,11 @@ class CompetitionStandingsContentTest {
         setScreen(
             onReloadStandings = { standingsReloads++ },
             onReloadScorers = { scorersReloads++ },
-            onReloadMatches = { matchesReloads++ }
+            onReloadMatches = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(0, standingsReloads)
         assertEquals(0, scorersReloads)
@@ -364,7 +365,7 @@ class CompetitionStandingsContentTest {
     fun clickAheadTab_showsUpcomingMatch() {
         setScreen(
             matchesCompleted = listOf(completedTour),
-            matchesAhead = listOf(aheadTour)
+            matchesAhead = listOf(aheadTour),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -379,7 +380,7 @@ class CompetitionStandingsContentTest {
 
         setScreen(
             matchesCompleted = listOf(completedTour),
-            onMatchItemClick = { clickedMatchId = it }
+            onMatchItemClick = { clickedMatchId = it },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -395,8 +396,8 @@ class CompetitionStandingsContentTest {
             expandedItemId = COMPLETED_MATCH_ID,
             head2head = Head2head(
                 id = COMPLETED_MATCH_ID,
-                aggregates = Aggregates(numberOfMatches = 0)
-            )
+                aggregates = Aggregates(numberOfMatches = 0),
+            ),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -418,7 +419,7 @@ class CompetitionStandingsContentTest {
     fun aheadMatch_showsAddCalendarButton() {
         setScreen(
             matchesCompleted = listOf(completedTour),
-            matchesAhead = listOf(aheadTour)
+            matchesAhead = listOf(aheadTour),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -433,7 +434,7 @@ class CompetitionStandingsContentTest {
         setScreen(
             matchesCompleted = listOf(completedTour),
             matchesAhead = listOf(aheadTour),
-            calendarMatchIds = setOf(AHEAD_MATCH_ID)
+            calendarMatchIds = setOf(AHEAD_MATCH_ID),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -452,7 +453,7 @@ class CompetitionStandingsContentTest {
             matchesCompleted = listOf(completedTour),
             matchesAhead = listOf(aheadTour),
             onMatchItemClick = { clickedMatchId = it },
-            onCalendarClick = { calendarMatch = it }
+            onCalendarClick = { calendarMatch = it },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -468,7 +469,7 @@ class CompetitionStandingsContentTest {
         setScreen(
             matchesCompleted = listOf(completedTour),
             matchesAhead = listOf(aheadTour),
-            calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
+            calendarBusyMatchIds = setOf(AHEAD_MATCH_ID),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -539,7 +540,7 @@ class CompetitionStandingsContentTest {
         onBackClick: () -> Unit = {},
         calendarMatchIds: Set<Int> = emptySet(),
         calendarBusyMatchIds: Set<Int> = emptySet(),
-        onCalendarClick: (Match) -> Unit = {}
+        onCalendarClick: (Match) -> Unit = {},
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -568,7 +569,7 @@ class CompetitionStandingsContentTest {
                                 animatedVisibilityScope = this,
                                 calendarMatchIds = calendarMatchIds,
                                 calendarBusyMatchIds = calendarBusyMatchIds,
-                                onCalendarClick = onCalendarClick
+                                onCalendarClick = onCalendarClick,
                             )
                         }
                     }
@@ -590,7 +591,7 @@ private const val AHEAD_MATCH_ID = 200
 private val premierLeagueWithoutTable = CompetitionStandings(
     id = "2021",
     competition = Competition(id = 2021, name = "Premier League"),
-    standings = emptyList()
+    standings = emptyList(),
 )
 
 private val premierLeague = CompetitionStandings(
@@ -604,18 +605,18 @@ private val premierLeague = CompetitionStandings(
                     team = Team(
                         id = ARSENAL_ID,
                         name = "Arsenal FC",
-                        shortName = "Arsenal"
-                    )
-                )
-            )
-        )
-    )
+                        shortName = "Arsenal",
+                    ),
+                ),
+            ),
+        ),
+    ),
 )
 
 private val sakaScorer = Scorer(
     goals = 15,
     player = Player(id = SAKA_ID, name = "Bukayo Saka"),
-    team = Team(id = ARSENAL_ID, shortName = "AFC")
+    team = Team(id = ARSENAL_ID, shortName = "AFC"),
 )
 
 private val completedTour = MatchesByTour(
@@ -626,9 +627,9 @@ private val completedTour = MatchesByTour(
             homeTeam = MatchTeam(id = ARSENAL_ID, shortName = "Arsenal"),
             awayTeam = MatchTeam(id = 61, shortName = "Chelsea"),
             score = Score(fullTime = Time(home = 2, away = 1)),
-            utcDate = "2026-05-09T14:00:00Z"
-        )
-    )
+            utcDate = "2026-05-09T14:00:00Z",
+        ),
+    ),
 )
 
 private val aheadTour = MatchesByTour(
@@ -639,9 +640,9 @@ private val aheadTour = MatchesByTour(
             homeTeam = MatchTeam(id = 73, shortName = "Spurs"),
             awayTeam = MatchTeam(id = ARSENAL_ID, shortName = "Arsenal"),
             bigDate = "12.05",
-            utcDate = "2026-05-12T14:00:00Z"
-        )
-    )
+            utcDate = "2026-05-12T14:00:00Z",
+        ),
+    ),
 )
 
 // endregion

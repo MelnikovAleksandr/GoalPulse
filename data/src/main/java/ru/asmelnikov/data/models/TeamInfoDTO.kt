@@ -17,7 +17,7 @@ data class TeamInfoDTO(
     @Json(name = "squad") val squad: List<PersonDTO>?,
     @Json(name = "tla") val tla: String?,
     @Json(name = "venue") val venue: String?,
-    @Json(name = "website") val website: String?
+    @Json(name = "website") val website: String?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -30,12 +30,8 @@ data class PersonDTO(
     @Json(name = "name") val name: String?,
     @Json(name = "nationality") val nationality: String?,
     @Json(name = "position") val position: String?,
-    @Json(name = "shirtNumber") val shirtNumber: Int?
+    @Json(name = "shirtNumber") val shirtNumber: Int?,
 )
 
 @JsonClass(generateAdapter = true)
-data class ContractDTO(
-    @Json(name = "start") val start: String?,
-    @Json(name = "until") val until: String?
-)
-
+data class ContractDTO(@Json(name = "start") val start: String?, @Json(name = "until") val until: String?)

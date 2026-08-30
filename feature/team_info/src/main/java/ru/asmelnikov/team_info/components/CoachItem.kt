@@ -12,16 +12,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.Coach
-import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.R
+import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun CoachItem(
-    coach: Coach
+    coach: Coach,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Text(
             modifier = Modifier.padding(dimens.small3),
@@ -29,7 +29,7 @@ fun CoachItem(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.primary)
         Text(
@@ -38,7 +38,7 @@ fun CoachItem(
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleSmall.copy(),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

@@ -31,9 +31,12 @@ interface TeamInfoRealmOptions {
             }
         }
 
-        override fun getTeamInfoFlowById(teamId: String): Flow<TeamInfoEntity?> {
-            return realm.query<TeamInfoEntity>("id == $0", teamId).asFlow().map { it.list.firstOrNull() }.flowOn(Dispatchers.IO)
-        }
+        override fun getTeamInfoFlowById(teamId: String): Flow<TeamInfoEntity?> = realm.query<TeamInfoEntity>(
+            "id == $0",
+            teamId,
+        ).asFlow().map {
+            it.list.firstOrNull()
+        }.flowOn(Dispatchers.IO)
 
         override suspend fun upsertMatchesFromRemoteToLocal(matches: MatchesEntity) {
             withContext(Dispatchers.IO) {
@@ -43,8 +46,11 @@ interface TeamInfoRealmOptions {
             }
         }
 
-        override fun getMatchesFlowById(teamId: String): Flow<MatchesEntity?> {
-            return realm.query<MatchesEntity>("id == $0", teamId).asFlow().map { it.list.firstOrNull() }.flowOn(Dispatchers.IO)
-        }
+        override fun getMatchesFlowById(teamId: String): Flow<MatchesEntity?> = realm.query<MatchesEntity>(
+            "id == $0",
+            teamId,
+        ).asFlow().map {
+            it.list.firstOrNull()
+        }.flowOn(Dispatchers.IO)
     }
 }

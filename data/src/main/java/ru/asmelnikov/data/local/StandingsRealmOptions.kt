@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import ru.asmelnikov.data.local.models.MatchesEntity
 import ru.asmelnikov.data.local.models.CompetitionScorersEntity
 import ru.asmelnikov.data.local.models.CompetitionStandingsEntity
+import ru.asmelnikov.data.local.models.MatchesEntity
 
 interface StandingsRealmOptions {
 
@@ -35,11 +35,13 @@ interface StandingsRealmOptions {
             }
         }
 
-        override fun getStandingsFlowById(compId: String): Flow<CompetitionStandingsEntity?> {
-            return realm.query<CompetitionStandingsEntity>("id == $0", compId).asFlow()
+        override fun getStandingsFlowById(compId: String): Flow<CompetitionStandingsEntity?> =
+            realm.query<CompetitionStandingsEntity>(
+                "id == $0",
+                compId,
+            ).asFlow()
                 .map { it.list.firstOrNull() }
                 .flowOn(Dispatchers.IO)
-        }
 
         override suspend fun upsertScorersFromRemoteToLocal(comp: CompetitionScorersEntity) {
             withContext(Dispatchers.IO) {
@@ -49,12 +51,13 @@ interface StandingsRealmOptions {
             }
         }
 
-        override fun getScorersFlowById(compId: String): Flow<CompetitionScorersEntity?> {
-            return realm.query<CompetitionScorersEntity>("id == $0", compId).asFlow()
+        override fun getScorersFlowById(compId: String): Flow<CompetitionScorersEntity?> =
+            realm.query<CompetitionScorersEntity>(
+                "id == $0",
+                compId,
+            ).asFlow()
                 .map { it.list.firstOrNull() }
                 .flowOn(Dispatchers.IO)
-        }
-
 
         override suspend fun upsertMatchesFromRemoteToLocal(matches: MatchesEntity) {
             withContext(Dispatchers.IO) {
@@ -64,10 +67,11 @@ interface StandingsRealmOptions {
             }
         }
 
-        override fun getMatchesFlowById(compId: String): Flow<MatchesEntity?> {
-            return realm.query<MatchesEntity>("id == $0", compId).asFlow()
-                .map { it.list.firstOrNull() }
-                .flowOn(Dispatchers.IO)
-        }
+        override fun getMatchesFlowById(compId: String): Flow<MatchesEntity?> = realm.query<MatchesEntity>(
+            "id == $0",
+            compId,
+        ).asFlow()
+            .map { it.list.firstOrNull() }
+            .flowOn(Dispatchers.IO)
     }
 }

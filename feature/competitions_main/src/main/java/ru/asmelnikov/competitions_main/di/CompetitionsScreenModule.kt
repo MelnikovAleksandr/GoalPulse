@@ -11,7 +11,7 @@ val competitionsScreenModule = module {
         CompetitionsScreenViewModel(
             footballRepository = get(),
             stringResourceProvider = get(),
-            savedStateHandle = savedStateHandle
+            savedStateHandle = savedStateHandle,
         )
     }
 }

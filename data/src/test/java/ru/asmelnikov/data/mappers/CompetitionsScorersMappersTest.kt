@@ -16,8 +16,8 @@ class CompetitionsScorersMappersTest {
                 scorer(name = "Salah", goals = 25, assists = 10),
                 scorer(name = "Haaland", goals = 30, assists = 5),
                 scorer(name = "Palmer", goals = 25, assists = 12),
-                scorer(name = "Kane", goals = 30, assists = 8)
-            )
+                scorer(name = "Kane", goals = 30, assists = 8),
+            ),
         )
 
         val scorers = entity.toCompetitionScorers().scorers
@@ -27,9 +27,9 @@ class CompetitionsScorersMappersTest {
                 Triple("Kane", 30, 8),
                 Triple("Haaland", 30, 5),
                 Triple("Palmer", 25, 12),
-                Triple("Salah", 25, 10)
+                Triple("Salah", 25, 10),
             ),
-            scorers.map { Triple(it.player.name, it.goals, it.assists) }
+            scorers.map { Triple(it.player.name, it.goals, it.assists) },
         )
     }
 

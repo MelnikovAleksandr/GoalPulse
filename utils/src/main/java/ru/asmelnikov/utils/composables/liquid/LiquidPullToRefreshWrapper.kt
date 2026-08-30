@@ -22,7 +22,7 @@ fun LiquidPullToRefreshWrapper(
     contentAlignment: Alignment = Alignment.TopStart,
     enabled: Boolean = true,
     onPullActiveChange: (Boolean) -> Unit = {},
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val refreshState = rememberPullToRefreshState()
     val isPullActive = refreshState.distanceFraction > 0f || isRefreshing
@@ -36,9 +36,9 @@ fun LiquidPullToRefreshWrapper(
             state = refreshState,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
-            enabled = enabled
+            enabled = enabled,
         ),
-        contentAlignment = contentAlignment
+        contentAlignment = contentAlignment,
     ) {
         content()
         LiquidRefreshIndicator(
@@ -46,7 +46,7 @@ fun LiquidPullToRefreshWrapper(
             state = refreshState,
             isRefreshing = isRefreshing,
             backdrop = backdrop,
-            topOffset = topOffset
+            topOffset = topOffset,
         )
     }
 }

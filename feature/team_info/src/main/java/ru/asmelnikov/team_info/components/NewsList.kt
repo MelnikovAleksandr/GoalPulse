@@ -41,7 +41,7 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun NewsList(
     news: News,
-    isLoading: Boolean
+    isLoading: Boolean,
 ) {
     val context = LocalContext.current
     AnimatedContent(targetState = isLoading) { isLoadingState ->
@@ -51,7 +51,7 @@ fun NewsList(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(dimens.small1),
-                    contentPadding = PaddingValues(all = dimens.small1)
+                    contentPadding = PaddingValues(all = dimens.small1),
                 ) {
                     item {
                         Text(
@@ -60,18 +60,18 @@ fun NewsList(
                             style = MaterialTheme.typography.titleLarge,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                     items(
-                        items = news.articles
+                        items = news.articles,
                     ) { article ->
                         ArticleItem(
                             modifier = Modifier.animateItem(),
                             article = article,
                             onArticleClick = { url ->
                                 getWebIntent(url, context)
-                            }
+                            },
                         )
                     }
                 }
@@ -84,49 +84,50 @@ fun NewsList(
 fun ArticleItem(
     modifier: Modifier = Modifier,
     article: Article,
-    onArticleClick: (String) -> Unit
+    onArticleClick: (String) -> Unit,
 ) {
     Row(
         modifier = modifier
             .background(Color.Transparent)
-            .clickable { onArticleClick.invoke(article.url) }) {
+            .clickable { onArticleClick.invoke(article.url) },
+    ) {
         SubComposeAsyncImageCommon(
             modifier = Modifier,
             imageUri = article.urlToImage,
             shape = MaterialTheme.shapes.medium,
-            size = dimens.champLogoDefaultSize
+            size = dimens.champLogoDefaultSize,
         )
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .padding(horizontal = dimens.small1)
                 .height(dimens.champLogoDefaultSize)
-                .background(Color.Transparent)
+                .background(Color.Transparent),
         ) {
             Text(
                 text = article.title,
                 style = MaterialTheme.typography.bodyMedium.copy(),
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = article.source.name,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
                 )
                 Spacer(modifier = Modifier.width(dimens.extraSmall1))
                 Icon(
                     painter = painterResource(id = R.drawable.ic_time),
                     contentDescription = null,
                     modifier = Modifier.size(dimens.small3),
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.secondary,
                 )
                 Spacer(modifier = Modifier.width(dimens.extraSmall1))
                 Text(
                     text = article.publishedAt,
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
                 )
             }
         }
@@ -136,36 +137,36 @@ fun ArticleItem(
 @Composable
 fun ArticleCardShimmerEffect(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(
             modifier = Modifier
                 .size(dimens.champLogoDefaultSize)
                 .clip(MaterialTheme.shapes.medium)
-                .shimmerEffect()
+                .shimmerEffect(),
         )
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .padding(horizontal = dimens.extraSmall1)
-                .height(dimens.champLogoDefaultSize)
+                .height(dimens.champLogoDefaultSize),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(30.dp)
                     .padding(horizontal = dimens.small3)
-                    .shimmerEffect()
+                    .shimmerEffect(),
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .padding(horizontal = dimens.small3)
                         .height(15.dp)
-                        .shimmerEffect()
+                        .shimmerEffect(),
                 )
             }
         }
@@ -177,7 +178,7 @@ private fun ShimmerEffect() {
     Column(verticalArrangement = Arrangement.spacedBy(dimens.small1)) {
         repeat(10) {
             ArticleCardShimmerEffect(
-                modifier = Modifier.padding(horizontal = dimens.small1)
+                modifier = Modifier.padding(horizontal = dimens.small1),
             )
         }
     }

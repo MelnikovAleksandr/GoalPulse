@@ -30,7 +30,7 @@ fun MainBackVideo(
     modifier: Modifier = Modifier,
     @RawRes videoResId: Int,
     @RawRes reverseVideoResId: Int,
-    pingPong: Boolean = true
+    pingPong: Boolean = true,
 ) {
     if (isInPreview()) {
         Image(
@@ -39,7 +39,7 @@ fun MainBackVideo(
             contentScale = ContentScale.Crop,
             modifier = modifier
                 .clipToBounds()
-                .fillMaxSize()
+                .fillMaxSize(),
         )
         return
     }
@@ -55,8 +55,8 @@ fun MainBackVideo(
                     setMediaItems(
                         listOf(
                             MediaItem.fromUri(resourceUri(packageName, videoResId)),
-                            MediaItem.fromUri(resourceUri(packageName, reverseVideoResId))
-                        )
+                            MediaItem.fromUri(resourceUri(packageName, reverseVideoResId)),
+                        ),
                     )
                 } else {
                     setMediaItem(MediaItem.fromUri(resourceUri(packageName, videoResId)))
@@ -77,7 +77,7 @@ fun MainBackVideo(
             player = exoPlayer,
             modifier = Modifier.fillMaxSize(),
             surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
     }
 }

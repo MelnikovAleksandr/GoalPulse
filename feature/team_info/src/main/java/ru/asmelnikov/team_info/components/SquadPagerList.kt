@@ -38,9 +38,8 @@ fun SquadPagerList(
     isPullToRefreshEnabled: Boolean,
     onReloadClick: () -> Unit,
     onPersonClick: (Int) -> Unit,
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
-
     val listState = rememberLazyListState()
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -50,12 +49,12 @@ fun SquadPagerList(
 
     AnimatedContent(
         targetState = teamInfo.squadByPosition.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyData ->
         if (emptyData && !isLoading) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -65,14 +64,14 @@ fun SquadPagerList(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 LazyColumn(
                     modifier = Modifier
                         .layerBackdrop(backdrop)
                         .fillMaxSize(),
                     state = listState,
-                    contentPadding = PaddingValues(top = topInset)
+                    contentPadding = PaddingValues(top = topInset),
                 ) {
                     item {
                         CoachItem(coach = teamInfo.coach)
@@ -82,29 +81,30 @@ fun SquadPagerList(
                         stickyHeaderContentPaddingAware(
                             listState = listState,
                             key = stickyKey,
-                            contentType = stickyKey
+                            contentType = stickyKey,
                         ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(backgroundColor)
+                                    .background(backgroundColor),
                             ) {
                                 SquadHeaderItem(
                                     squadByPosition = squadByPosition,
-                                    itemColor = itemColor
+                                    itemColor = itemColor,
                                 )
                             }
                         }
                         itemsIndexed(
                             items = squadByPosition.squad,
-                            key = { _, squadItem -> squadItem.id }) { index, squadItem ->
+                            key = { _, squadItem -> squadItem.id },
+                        ) { index, squadItem ->
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
-                                        Color.Transparent
+                                        Color.Transparent,
                                     ),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 SquadItem(squad = squadItem, onPersonClick = onPersonClick)
                                 if (index < squadByPosition.squad.size - 1) {
@@ -122,7 +122,6 @@ fun SquadPagerList(
     }
 }
 
-
 @Preview(showBackground = true, locale = "ru")
 @Composable
 private fun SquadPagerListPreview() {
@@ -134,7 +133,7 @@ private fun SquadPagerListPreview() {
             itemColor = MaterialTheme.colorScheme.primaryContainer,
             isPullToRefreshEnabled = true,
             onReloadClick = {},
-            onPersonClick = {}
+            onPersonClick = {},
         )
     }
 }

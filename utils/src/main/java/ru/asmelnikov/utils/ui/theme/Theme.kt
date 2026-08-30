@@ -1,9 +1,12 @@
 package ru.asmelnikov.utils.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -40,9 +43,8 @@ private val LightColors = lightColorScheme(
     inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
     outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim
+    scrim = md_theme_light_scrim,
 )
-
 
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
@@ -73,13 +75,13 @@ private val DarkColors = darkColorScheme(
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
     outlineVariant = md_theme_dark_outlineVariant,
-    scrim = md_theme_dark_scrim
+    scrim = md_theme_dark_scrim,
 )
 
 @Composable
 fun GoalPulseTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colorScheme = when {
         darkTheme -> DarkColors
@@ -96,7 +98,7 @@ fun GoalPulseTheme(
             colorScheme = colorScheme,
             shapes = screenConfig.shapes,
             typography = screenConfig.typography,
-            content = content
+            content = content,
         )
     }
 }
@@ -104,35 +106,29 @@ fun GoalPulseTheme(
 @Composable
 private fun rememberScreenConfig(
     windowSizeClass: WindowSizeClass,
-    containerSize: DpSize
-): ScreenConfig {
-    return remember(windowSizeClass, containerSize) {
-        val screenWidth = containerSize.width
-        when {
-            screenWidth >= 840.dp ->
-                ScreenConfig(ExpandedDimens, ExpandedTypography, ExpandedShapes)
+    containerSize: DpSize,
+): ScreenConfig = remember(windowSizeClass, containerSize) {
+    val screenWidth = containerSize.width
+    when {
+        screenWidth >= 840.dp ->
+            ScreenConfig(ExpandedDimens, ExpandedTypography, ExpandedShapes)
 
-            screenWidth in 600.dp..839.dp ->
-                ScreenConfig(MediumDimens, MediumTypography, MediumShapes)
+        screenWidth in 600.dp..839.dp ->
+            ScreenConfig(MediumDimens, MediumTypography, MediumShapes)
 
-            else -> {
-                when {
-                    screenWidth <= 360.dp ->
-                        ScreenConfig(CompactSmallDimens, CompactSmallTypography, CompactShapes)
+        else -> {
+            when {
+                screenWidth <= 360.dp ->
+                    ScreenConfig(CompactSmallDimens, CompactSmallTypography, CompactShapes)
 
-                    screenWidth < 600.dp ->
-                        ScreenConfig(CompactMediumDimens, CompactMediumTypography, CompactShapes)
+                screenWidth < 600.dp ->
+                    ScreenConfig(CompactMediumDimens, CompactMediumTypography, CompactShapes)
 
-                    else ->
-                        ScreenConfig(CompactDimens, CompactTypography, CompactShapes)
-                }
+                else ->
+                    ScreenConfig(CompactDimens, CompactTypography, CompactShapes)
             }
         }
     }
 }
 
-private data class ScreenConfig(
-    val dimens: Dimens,
-    val typography: Typography,
-    val shapes: Shapes
-)
+private data class ScreenConfig(val dimens: Dimens, val typography: Typography, val shapes: Shapes)

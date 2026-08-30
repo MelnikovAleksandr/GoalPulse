@@ -16,22 +16,21 @@ import ru.asmelnikov.utils.navigation.Routes
 class MainAppState(
     val snackbarState: SnackbarHostState,
     val snackbarScope: CoroutineScope,
-    val backStack: NavBackStack<NavKey>
+    val backStack: NavBackStack<NavKey>,
 ) {
 
     fun showSnackbar(
         message: String,
         duration: SnackbarDuration = SnackbarDuration.Short,
         actionLabel: String? = null,
-        actionPerformed: () -> Unit
+        actionPerformed: () -> Unit,
     ) {
-
         snackbarScope.launch {
             snackbarState.currentSnackbarData?.dismiss()
             val snackResult = snackbarState.showSnackbar(
                 message = message,
                 duration = duration,
-                actionLabel = actionLabel
+                actionLabel = actionLabel,
             )
             when (snackResult) {
                 SnackbarResult.ActionPerformed -> actionPerformed()
@@ -47,11 +46,11 @@ fun rememberAppState(
         SnackbarHostState()
     },
     backStack: NavBackStack<NavKey> = rememberNavBackStack(Routes.Competitions),
-    snackbarScope: CoroutineScope = rememberCoroutineScope()
+    snackbarScope: CoroutineScope = rememberCoroutineScope(),
 ) = remember(snackbarState, backStack, snackbarScope) {
     MainAppState(
         snackbarState = snackbarState,
         snackbarScope = snackbarScope,
-        backStack = backStack
+        backStack = backStack,
     )
 }

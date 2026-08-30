@@ -4,7 +4,6 @@ import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
-import ru.asmelnikov.data.models.TeamInfoDTO
 import java.util.UUID
 
 class CompetitionScorersEntity : RealmObject {

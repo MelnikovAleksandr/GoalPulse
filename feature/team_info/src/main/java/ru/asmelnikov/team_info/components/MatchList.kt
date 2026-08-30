@@ -38,16 +38,16 @@ fun MatchList(
     teamId: String,
     calendarMatchIds: Set<Int> = emptySet(),
     calendarBusyMatchIds: Set<Int> = emptySet(),
-    onCalendarClick: (Match) -> Unit = {}
+    onCalendarClick: (Match) -> Unit = {},
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-        contentPadding = PaddingValues(top = topInset)
+        contentPadding = PaddingValues(top = topInset),
     ) {
         itemsIndexed(
             items = matches,
-            key = { _, match -> match.id }
+            key = { _, match -> match.id },
         ) { index, match ->
             MatchItem(
                 modifier = Modifier.animateItem(),
@@ -76,7 +76,7 @@ fun MatchList(
                 color = getResultColor(match, teamId),
                 isInCalendar = calendarMatchIds.contains(match.id),
                 isCalendarLoading = calendarBusyMatchIds.contains(match.id),
-                onCalendarClick = { onCalendarClick(match) }
+                onCalendarClick = { onCalendarClick(match) },
             )
 
             if (index < matches.size - 1) {
@@ -95,13 +95,21 @@ private fun getResultColor(match: Match, teamId: String): Color {
     val isAwayTeam = teamId == match.awayTeam.id.toString()
 
     return when (match.score.winner) {
-        Winner.HOME_TEAM -> if (isHomeTeam) MaterialTheme.colorScheme.primary else lastRed.copy(
-            alpha = 0.5f
-        )
+        Winner.HOME_TEAM -> if (isHomeTeam) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            lastRed.copy(
+                alpha = 0.5f,
+            )
+        }
 
-        Winner.AWAY_TEAM -> if (isAwayTeam) MaterialTheme.colorScheme.primary else lastRed.copy(
-            alpha = 0.5f
-        )
+        Winner.AWAY_TEAM -> if (isAwayTeam) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            lastRed.copy(
+                alpha = 0.5f,
+            )
+        }
 
         else -> MaterialTheme.colorScheme.secondary
     }
@@ -114,7 +122,7 @@ private fun MatchListPreview1() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             MatchList(
                 matches = getMockMatchesComplete(),
@@ -123,7 +131,7 @@ private fun MatchListPreview1() {
                 onMatchItemClick = {},
                 head2head = getMockHead2Head(),
                 isHead2headLoading = false,
-                teamId = "66"
+                teamId = "66",
             )
         }
     }
@@ -136,7 +144,7 @@ private fun MatchListPreview2() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             MatchList(
                 matches = getMockMatchesAhead(),
@@ -145,7 +153,7 @@ private fun MatchListPreview2() {
                 onMatchItemClick = {},
                 head2head = getMockHead2Head(),
                 isHead2headLoading = false,
-                teamId = "66"
+                teamId = "66",
             )
         }
     }

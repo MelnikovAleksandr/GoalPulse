@@ -15,7 +15,6 @@ interface NewsApi {
         @Query("q") query: String,
         @Query("language") language: String = "en",
         @Query("sortBy") sortBy: String = "relevancy",
-        @Query("pageSize") pageSize: Int = 10
+        @Query("pageSize") pageSize: Int = 10,
     ): Response<NewsDTO>
-
 }

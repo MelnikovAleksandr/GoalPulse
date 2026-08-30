@@ -33,7 +33,7 @@ class CompetitionStandingsViewModelTest {
         val repository = FakeStandingsRepository(
             standingsById = mapOf("2021" to premierLeagueStandings),
             scorersById = mapOf("2021" to premierLeagueScorers),
-            matchesById = mapOf("2021" to premierLeagueMatches)
+            matchesById = mapOf("2021" to premierLeagueMatches),
         )
 
         viewModel(repository).test(this) {
@@ -55,7 +55,7 @@ class CompetitionStandingsViewModelTest {
             assertEquals(listOf("Bukayo Saka"), screen.scorers.map { it.player.name })
             assertEquals(
                 listOf(COMPLETED_MATCH_ID),
-                screen.matchesCompleted.flatMap { tour -> tour.matches.map { it.id } }
+                screen.matchesCompleted.flatMap { tour -> tour.matches.map { it.id } },
             )
 
             cancelAndIgnoreRemainingItems()
@@ -65,7 +65,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun standingsLoadFails_hidesSpinner_showsError() = runTest {
         val repository = FakeStandingsRepository(
-            standingsError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            standingsError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(this, CompetitionStandingsState(compId = "2021")) {
@@ -79,7 +79,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun standingsReloadFails_keepsAlreadyLoadedTable_showsError() = runTest {
         val repository = FakeStandingsRepository(
-            standingsError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            standingsError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(
@@ -87,8 +87,8 @@ class CompetitionStandingsViewModelTest {
             CompetitionStandingsState(
                 compId = "2021",
                 competitionStandings = premierLeagueStandings,
-                isLoadingStandings = false
-            )
+                isLoadingStandings = false,
+            ),
         ) {
             containerHost.updateStandingsFromRemoteToLocal()
 
@@ -101,7 +101,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun scorersLoadFails_hidesSpinner_showsError() = runTest {
         val repository = FakeStandingsRepository(
-            scorersError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            scorersError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(this, CompetitionStandingsState(compId = "2021")) {
@@ -115,7 +115,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun matchesLoadFails_hidesSpinner_showsError() = runTest {
         val repository = FakeStandingsRepository(
-            matchesError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            matchesError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(this, CompetitionStandingsState(compId = "2021")) {
@@ -129,7 +129,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun clickMatch_loadsHead2headForThatMatch() = runTest {
         val repository = FakeStandingsRepository(
-            head2headById = mapOf(COMPLETED_MATCH_ID to match100Head2head)
+            head2headById = mapOf(COMPLETED_MATCH_ID to match100Head2head),
         )
 
         viewModel(repository).test(
@@ -138,8 +138,8 @@ class CompetitionStandingsViewModelTest {
                 compId = "2021",
                 isLoadingStandings = false,
                 isLoadingScorers = false,
-                isLoadingMatches = false
-            )
+                isLoadingMatches = false,
+            ),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -158,8 +158,8 @@ class CompetitionStandingsViewModelTest {
                 head2head = match100Head2head,
                 isLoadingStandings = false,
                 isLoadingScorers = false,
-                isLoadingMatches = false
-            )
+                isLoadingMatches = false,
+            ),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -172,8 +172,8 @@ class CompetitionStandingsViewModelTest {
         val repository = FakeStandingsRepository(
             head2headById = mapOf(
                 COMPLETED_MATCH_ID to match100Head2head,
-                OTHER_MATCH_ID to match200Head2head
-            )
+                OTHER_MATCH_ID to match200Head2head,
+            ),
         )
 
         viewModel(repository).test(
@@ -184,8 +184,8 @@ class CompetitionStandingsViewModelTest {
                 head2head = match100Head2head,
                 isLoadingStandings = false,
                 isLoadingScorers = false,
-                isLoadingMatches = false
-            )
+                isLoadingMatches = false,
+            ),
         ) {
             containerHost.matchItemClick(OTHER_MATCH_ID)
 
@@ -197,7 +197,7 @@ class CompetitionStandingsViewModelTest {
     @Test
     fun clickMatch_whenHead2headFails_hidesSpinner_showsError() = runTest {
         val repository = FakeStandingsRepository(
-            head2headError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            head2headError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(
@@ -206,8 +206,8 @@ class CompetitionStandingsViewModelTest {
                 compId = "2021",
                 isLoadingStandings = false,
                 isLoadingScorers = false,
-                isLoadingMatches = false
-            )
+                isLoadingMatches = false,
+            ),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -225,8 +225,8 @@ class CompetitionStandingsViewModelTest {
                 compId = "2021",
                 isLoadingStandings = false,
                 isLoadingScorers = false,
-                isLoadingMatches = false
-            )
+                isLoadingMatches = false,
+            ),
         ) {
             containerHost.onCalendarClick(aheadMatch)
 
@@ -244,8 +244,8 @@ class CompetitionStandingsViewModelTest {
                 isLoadingStandings = false,
                 isLoadingScorers = false,
                 isLoadingMatches = false,
-                pendingCalendarMatch = aheadMatch
-            )
+                pendingCalendarMatch = aheadMatch,
+            ),
         ) {
             containerHost.onCalendarPermissionResult(granted = false)
 
@@ -265,8 +265,8 @@ class CompetitionStandingsViewModelTest {
                 isLoadingScorers = false,
                 isLoadingMatches = false,
                 matchesAhead = listOf(aheadTour),
-                pendingCalendarMatch = aheadMatch
-            )
+                pendingCalendarMatch = aheadMatch,
+            ),
         ) {
             containerHost.onCalendarPermissionResult(granted = true)
 
@@ -280,7 +280,7 @@ class CompetitionStandingsViewModelTest {
         val calendarRepository = FakeMatchCalendarRepository(
             hasPermission = true,
             scheduledIds = setOf(AHEAD_MATCH_ID),
-            eventIds = mapOf(AHEAD_MATCH_ID to 7L)
+            eventIds = mapOf(AHEAD_MATCH_ID to 7L),
         )
 
         viewModel(matchCalendarRepository = calendarRepository).test(
@@ -291,8 +291,8 @@ class CompetitionStandingsViewModelTest {
                 isLoadingScorers = false,
                 isLoadingMatches = false,
                 matchesAhead = listOf(aheadTour),
-                calendarMatchIds = setOf(AHEAD_MATCH_ID)
-            )
+                calendarMatchIds = setOf(AHEAD_MATCH_ID),
+            ),
         ) {
             containerHost.onCalendarClick(aheadMatch)
 
@@ -304,13 +304,13 @@ class CompetitionStandingsViewModelTest {
 
     private fun viewModel(
         repository: FakeStandingsRepository = FakeStandingsRepository(),
-        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository()
+        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository(),
     ) = CompetitionStandingsViewModel(
         standingsRepository = repository,
         matchCalendarRepository = matchCalendarRepository,
         stringResourceProvider = FakeStringResourceProvider(),
         compId = "2021",
-        compUrl = PL_CREST
+        compUrl = PL_CREST,
     )
 
     // endregion
@@ -326,7 +326,7 @@ private class FakeStandingsRepository(
     private val standingsError: ErrorsTypesHttp? = null,
     private val scorersError: ErrorsTypesHttp? = null,
     private val matchesError: ErrorsTypesHttp? = null,
-    private val head2headError: ErrorsTypesHttp? = null
+    private val head2headError: ErrorsTypesHttp? = null,
 ) : CompetitionStandingsRepository {
 
     override suspend fun getCompetitionStandingsFromRemoteToLocalById(compId: String): Resource<Boolean> {
@@ -336,9 +336,9 @@ private class FakeStandingsRepository(
         return Resource.Success(true)
     }
 
-    override suspend fun getStandingsFlowFromLocalById(compId: String): Flow<CompetitionStandings?> {
-        return flowOf(standingsById[compId])
-    }
+    override suspend fun getStandingsFlowFromLocalById(compId: String): Flow<CompetitionStandings?> = flowOf(
+        standingsById[compId],
+    )
 
     override suspend fun getCompetitionTopScorersBySeason(compId: String): Resource<Boolean> {
         if (scorersError != null) {
@@ -347,9 +347,9 @@ private class FakeStandingsRepository(
         return Resource.Success(true)
     }
 
-    override suspend fun getScorersFlowFromLocal(compId: String): Flow<CompetitionScorers?> {
-        return flowOf(scorersById[compId])
-    }
+    override suspend fun getScorersFlowFromLocal(compId: String): Flow<CompetitionScorers?> = flowOf(
+        scorersById[compId],
+    )
 
     override suspend fun getAllMatchesFromRemoteToLocal(compId: String): Resource<Boolean> {
         if (matchesError != null) {
@@ -358,9 +358,7 @@ private class FakeStandingsRepository(
         return Resource.Success(true)
     }
 
-    override suspend fun getAllMatchesFlowFromLocal(compId: String): Flow<Matches?> {
-        return flowOf(matchesById[compId])
-    }
+    override suspend fun getAllMatchesFlowFromLocal(compId: String): Flow<Matches?> = flowOf(matchesById[compId])
 
     override suspend fun getHead2headById(matchId: Int): Resource<Head2head> {
         if (head2headError != null) {
@@ -378,14 +376,14 @@ private class FakeStandingsRepository(
 private class FakeMatchCalendarRepository(
     private var hasPermission: Boolean = false,
     private var scheduledIds: Set<Int> = emptySet(),
-    private val eventIds: Map<Int, Long> = emptyMap()
+    private val eventIds: Map<Int, Long> = emptyMap(),
 ) : MatchCalendarRepository {
 
     override fun hasCalendarPermission(): Boolean = hasPermission
 
-    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> {
-        return scheduledIds.intersect(matchIds.toSet())
-    }
+    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> = scheduledIds.intersect(
+        matchIds.toSet(),
+    )
 
     override suspend fun findEventId(matchId: Int): Long? = eventIds[matchId]
 
@@ -402,12 +400,10 @@ private class FakeMatchCalendarRepository(
 }
 
 private class FakeStringResourceProvider : StringResourceProvider {
-    override fun getString(resourceId: Int): String {
-        return when (resourceId) {
-            R.string.http_429_errors -> RATE_LIMIT_MESSAGE
-            R.string.calendar_event_failed -> "calendar failed"
-            else -> error("unexpected string resource $resourceId")
-        }
+    override fun getString(resourceId: Int): String = when (resourceId) {
+        R.string.http_429_errors -> RATE_LIMIT_MESSAGE
+        R.string.calendar_event_failed -> "calendar failed"
+        else -> error("unexpected string resource $resourceId")
     }
 
     override fun getString(resourceId: Int, vararg arguments: Any): String {
@@ -431,24 +427,24 @@ private val premierLeagueStandings = CompetitionStandings(
     standings = listOf(
         Standing(
             table = listOf(
-                Table(position = 1, team = Team(id = 57, name = "Arsenal"))
-            )
-        )
-    )
+                Table(position = 1, team = Team(id = 57, name = "Arsenal")),
+            ),
+        ),
+    ),
 )
 
 private val premierLeagueScorers = CompetitionScorers(
     id = "2021",
     scorers = listOf(
-        Scorer(goals = 15, player = Player(id = 44, name = "Bukayo Saka"))
-    )
+        Scorer(goals = 15, player = Player(id = 44, name = "Bukayo Saka")),
+    ),
 )
 
 private val premierLeagueMatches = Matches(
     id = "2021",
     matchesByTourCompleted = listOf(
-        MatchesByTour(matchDay = 1, matches = listOf(Match(id = COMPLETED_MATCH_ID)))
-    )
+        MatchesByTour(matchDay = 1, matches = listOf(Match(id = COMPLETED_MATCH_ID))),
+    ),
 )
 
 private val match100Head2head = Head2head(id = COMPLETED_MATCH_ID)

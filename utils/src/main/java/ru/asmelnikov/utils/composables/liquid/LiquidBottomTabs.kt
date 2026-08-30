@@ -48,10 +48,10 @@ import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.shadow.InnerShadow
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.shapes.Capsule
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sign
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.launch
 
 @Composable
 fun LiquidBottomTabs(
@@ -62,7 +62,7 @@ fun LiquidBottomTabs(
     heightMain: Dp = 64f.dp,
     heightInner: Dp = 56f.dp,
     background: Color? = null,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     val accentColor = MaterialTheme.colorScheme.primary
     val containerColor = MaterialTheme.colorScheme.background.copy(0.4f)
@@ -75,7 +75,7 @@ fun LiquidBottomTabs(
 
     BoxWithConstraints(
         modifier,
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         val density = LocalDensity.current
         val tabWidth = with(density) {
@@ -117,13 +117,13 @@ fun LiquidBottomTabs(
                         pagerState.layoutInfo.pageSize + pagerState.layoutInfo.pageSpacing
                     if (pageSize > 0) {
                         pagerState.dispatchRawDelta(
-                            dragAmount.x / tabWidth * pageSize * if (isLtr) 1f else -1f
+                            dragAmount.x / tabWidth * pageSize * if (isLtr) 1f else -1f,
                         )
                     }
                     scope.launch {
                         offsetAnimation.snapTo(offsetAnimation.value + dragAmount.x)
                     }
-                }
+                },
             )
         }
 
@@ -132,11 +132,14 @@ fun LiquidBottomTabs(
                 animationScope = scope,
                 position = { size, _ ->
                     Offset(
-                        if (isLtr) (tabProgress() + 0.5f) * tabWidth + panelOffset
-                        else size.width - (tabProgress() + 0.5f) * tabWidth + panelOffset,
-                        size.height / 2f
+                        if (isLtr) {
+                            (tabProgress() + 0.5f) * tabWidth + panelOffset
+                        } else {
+                            size.width - (tabProgress() + 0.5f) * tabWidth + panelOffset
+                        },
+                        size.height / 2f,
                     )
-                }
+                },
             )
         }
 
@@ -157,20 +160,20 @@ fun LiquidBottomTabs(
                         scaleX = scale
                         scaleY = scale
                     },
-                    onDrawSurface = { drawRect(containerColor) }
+                    onDrawSurface = { drawRect(containerColor) },
                 )
                 .then(interactiveHighlight.modifier)
                 .height(heightMain)
                 .fillMaxWidth()
                 .padding(4f.dp),
             verticalAlignment = Alignment.CenterVertically,
-            content = content
+            content = content,
         )
 
         CompositionLocalProvider(
             LocalLiquidBottomTabScale provides {
                 lerp(1f, 1.2f, dampedDragAnimation.pressProgress)
-            }
+            },
         ) {
             Row(
                 Modifier
@@ -190,7 +193,7 @@ fun LiquidBottomTabs(
                         highlight = {
                             Highlight.Default.copy(alpha = dampedDragAnimation.pressProgress)
                         },
-                        onDrawSurface = { drawRect(containerColor) }
+                        onDrawSurface = { drawRect(containerColor) },
                     )
                     .then(interactiveHighlight.modifier)
                     .height(heightInner)
@@ -198,7 +201,7 @@ fun LiquidBottomTabs(
                     .padding(horizontal = 4f.dp)
                     .graphicsLayer(colorFilter = ColorFilter.tint(accentColor)),
                 verticalAlignment = Alignment.CenterVertically,
-                content = content
+                content = content,
             )
         }
 
@@ -208,8 +211,11 @@ fun LiquidBottomTabs(
                 .graphicsLayer {
                     val progress = tabProgress()
                     translationX =
-                        if (isLtr) progress * tabWidth + panelOffset
-                        else size.width - (progress + 1f) * tabWidth + panelOffset
+                        if (isLtr) {
+                            progress * tabWidth + panelOffset
+                        } else {
+                            size.width - (progress + 1f) * tabWidth + panelOffset
+                        }
                 }
                 .then(interactiveHighlight.gestureModifier)
                 .then(dampedDragAnimation.modifier)
@@ -221,7 +227,7 @@ fun LiquidBottomTabs(
                         lens(
                             10f.dp.toPx() * progress,
                             14f.dp.toPx() * progress,
-                            chromaticAberration = true
+                            chromaticAberration = true,
                         )
                     },
                     highlight = {
@@ -243,10 +249,10 @@ fun LiquidBottomTabs(
                         val progress = dampedDragAnimation.pressProgress
                         drawRect(color = accentColor.copy(0.2f), alpha = 1f - progress)
                         drawRect(Color.Black.copy(alpha = 0.03f * progress))
-                    }
+                    },
                 )
                 .height(heightInner)
-                .fillMaxWidth(1f / tabsCount)
+                .fillMaxWidth(1f / tabsCount),
         )
     }
 }

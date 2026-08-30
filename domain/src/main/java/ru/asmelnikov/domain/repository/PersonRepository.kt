@@ -6,5 +6,4 @@ import ru.asmelnikov.utils.Resource
 interface PersonRepository {
 
     suspend fun getPersonInfo(personId: String): Resource<Person>
-
 }

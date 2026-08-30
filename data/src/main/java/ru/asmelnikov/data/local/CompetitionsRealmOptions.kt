@@ -19,7 +19,7 @@ interface CompetitionsRealmOptions {
     class RealmOptionsImpl(private val realm: Realm) : CompetitionsRealmOptions {
 
         override suspend fun upsertCompetitionsDataFromRemoteToLocal(
-            competitions: List<CompetitionEntity>
+            competitions: List<CompetitionEntity>,
         ) = withContext(Dispatchers.IO) {
             realm.write {
                 val ids = competitions.map { it.id }
@@ -32,8 +32,9 @@ interface CompetitionsRealmOptions {
             }
         }
 
-        override fun getCompetitionsFlowFromLocal(): Flow<List<CompetitionEntity>> {
-            return realm.query<CompetitionEntity>().asFlow().map { it.list }.flowOn(Dispatchers.IO)
-        }
+        override fun getCompetitionsFlowFromLocal(): Flow<List<CompetitionEntity>> =
+            realm.query<CompetitionEntity>().asFlow().map {
+                it.list
+            }.flowOn(Dispatchers.IO)
     }
 }

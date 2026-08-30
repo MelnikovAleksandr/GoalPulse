@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.net.ConnectException
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -18,7 +19,6 @@ import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
 
 class PersonRepositoryImplTest {
 
@@ -30,7 +30,7 @@ class PersonRepositoryImplTest {
         api = FakeFootballApi()
         repository = PersonRepositoryImpl(
             footballApi = api,
-            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl()
+            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl(),
         )
     }
 
@@ -49,8 +49,8 @@ class PersonRepositoryImplTest {
                 position = null,
                 section = null,
                 shirtNumber = null,
-                contract = null
-            )
+                contract = null,
+            ),
         )
 
         val result = repository.getPersonInfo("44")
@@ -104,14 +104,14 @@ class PersonRepositoryImplTest {
         }
 
         override suspend fun getCompetitionStandingById(
-            competitionId: String
+            competitionId: String,
         ): Response<CompetitionStandingsModelDTO> {
             error("not used")
         }
 
         override suspend fun getCompetitionTopScorers(
             competitionId: String,
-            limit: Int
+            limit: Int,
         ): Response<CompetitionScorersModelDTO> {
             error("not used")
         }

@@ -53,11 +53,10 @@ fun PersonInfoScreen(
         String,
         SnackbarDuration,
         String?,
-        actionPerformed: () -> Unit
+        actionPerformed: () -> Unit,
     ) -> Unit,
-    viewModel: PersonViewModel = koinViewModel(parameters = { parametersOf(personId) })
+    viewModel: PersonViewModel = koinViewModel(parameters = { parametersOf(personId) }),
 ) {
-
     val state by viewModel.container.stateFlow.collectAsState()
 
     viewModel.collectSideEffect {
@@ -65,20 +64,18 @@ fun PersonInfoScreen(
             is PersonSideEffects.Snackbar -> showSnackbar(
                 it.text,
                 it.duration,
-                null
+                null,
             ) {}
 
             is PersonSideEffects.BackClick -> appState.popUp()
-
         }
     }
     PersonInfoContent(
         isLoading = state.isLoading,
         person = state.person,
         onReload = viewModel::getPersonFromRemote,
-        onBackClick = viewModel::onBackClick
+        onBackClick = viewModel::onBackClick,
     )
-
 }
 
 @Composable
@@ -86,26 +83,24 @@ fun PersonInfoContent(
     isLoading: Boolean,
     person: Person,
     onReload: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
-
     val videoBackdrop = rememberLayerBackdrop()
     val listBackdrop = rememberLayerBackdrop()
     val topBarBackdrop = rememberLayerBackdrop()
     val contentBackdrop = rememberCombinedBackdrop(videoBackdrop, listBackdrop)
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         MainBackVideo(
             modifier = Modifier
                 .fillMaxSize()
                 .layerBackdrop(videoBackdrop),
             videoResId = R.raw.player_video,
-            reverseVideoResId = R.raw.player_video_reverse
+            reverseVideoResId = R.raw.player_video_reverse,
         )
 
         Scaffold(
@@ -119,9 +114,9 @@ fun PersonInfoContent(
                     backdrop = contentBackdrop,
                     name = person.name,
                     teamUrl = person.currentTeam.crest,
-                    onBackClick = onBackClick
+                    onBackClick = onBackClick,
                 )
-            }
+            },
         ) { paddingValues ->
             val topInsets = paddingValues.calculateTopPadding()
 
@@ -132,17 +127,17 @@ fun PersonInfoContent(
                     !isLoading && person.name.isEmpty() -> Empty
                     else -> List
                 },
-                label = "competitions_content"
+                label = "competitions_content",
             ) { state ->
                 when (state) {
                     Loading -> {
                         LoadingBall(
-                            modifier = Modifier.padding(top = topInsets)
+                            modifier = Modifier.padding(top = topInsets),
                         )
                     }
                     Empty -> EmptyContent(
                         modifier = Modifier.padding(top = topInsets),
-                        onReloadClick = onReload
+                        onReloadClick = onReload,
                     )
 
                     List -> {
@@ -156,13 +151,13 @@ fun PersonInfoContent(
                                 end = dimens.medium1,
                                 bottom = dimens.medium1,
                                 top = topInsets + dimens.medium1,
-                            )
+                            ),
                         ) {
                             item {
                                 TextItem(
                                     backdrop = videoBackdrop,
                                     title = stringResource(R.string.player_name),
-                                    text = person.name
+                                    text = person.name,
                                 )
                             }
 
@@ -170,7 +165,7 @@ fun PersonInfoContent(
                                 TextItem(
                                     backdrop = videoBackdrop,
                                     title = stringResource(R.string.player_age),
-                                    text = person.age
+                                    text = person.age,
                                 )
                             }
 
@@ -178,7 +173,7 @@ fun PersonInfoContent(
                                 TextItem(
                                     backdrop = videoBackdrop,
                                     title = stringResource(R.string.player_nationality),
-                                    text = person.nationality
+                                    text = person.nationality,
                                 )
                             }
 
@@ -186,7 +181,7 @@ fun PersonInfoContent(
                                 TextItem(
                                     backdrop = videoBackdrop,
                                     title = stringResource(R.string.player_position),
-                                    text = stringResource(person.position.stringResId)
+                                    text = stringResource(person.position.stringResId),
                                 )
                             }
 
@@ -195,7 +190,7 @@ fun PersonInfoContent(
                                     TextItem(
                                         backdrop = videoBackdrop,
                                         title = stringResource(R.string.player_number),
-                                        text = person.shirtNumber.toString()
+                                        text = person.shirtNumber.toString(),
                                     )
                                 }
                             }
@@ -214,7 +209,7 @@ fun PersonInfoContent(
 private enum class ContentState {
     Loading,
     Empty,
-    List
+    List,
 }
 
 @Preview(showSystemUi = false, showBackground = false, locale = "ru")
@@ -225,7 +220,7 @@ private fun PersonInfoContentPreview1() {
             isLoading = false,
             person = getMockPlayer(),
             onReload = {},
-            onBackClick = {}
+            onBackClick = {},
         )
     }
 }
@@ -238,7 +233,7 @@ private fun PersonInfoContentPreview2() {
             isLoading = false,
             person = getMockPlayer(),
             onReload = {},
-            onBackClick = {}
+            onBackClick = {},
         )
     }
 }
@@ -251,7 +246,7 @@ private fun PersonInfoContentPreview3() {
             isLoading = true,
             person = getMockPlayer().copy(name = ""),
             onReload = {},
-            onBackClick = {}
+            onBackClick = {},
         )
     }
 }
@@ -264,7 +259,7 @@ private fun PersonInfoContentPreview4() {
             isLoading = false,
             person = getMockPlayer().copy(name = ""),
             onReload = {},
-            onBackClick = {}
+            onBackClick = {},
         )
     }
 }

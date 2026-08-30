@@ -1,5 +1,10 @@
 package ru.asmelnikov.data.retrofit_errors_handler
 
+import java.net.ConnectException
+import java.net.HttpRetryException
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -9,11 +14,6 @@ import org.junit.Test
 import retrofit2.Response
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
-import java.net.HttpRetryException
-import java.net.SocketException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 class RetrofitErrorsHandlerImplTest {
 
@@ -64,7 +64,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.NetworkError(message = "Unable to resolve host"),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -76,7 +76,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.NetworkError(message = "cannot retry"),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -86,7 +86,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.UnknownError(message = "boom"),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -100,7 +100,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.Https400Errors(errorCode = 404),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -110,7 +110,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.Https400Errors(errorCode = 418),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -120,7 +120,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.Https500Errors(errorCode = 500),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -130,7 +130,7 @@ class RetrofitErrorsHandlerImplTest {
 
         assertEquals(
             ErrorsTypesHttp.Https500Errors(errorCode = 503),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -145,14 +145,14 @@ class RetrofitErrorsHandlerImplTest {
                 .code(302)
                 .message("Found")
                 .body(body)
-                .build()
+                .build(),
         )
 
         val result = handler.responseFailureHandler<Any, Any>(response)
 
         assertEquals(
             ErrorsTypesHttp.UnknownError(message = response.message()),
-            result.requireHttpError()
+            result.requireHttpError(),
         )
     }
 
@@ -160,9 +160,7 @@ class RetrofitErrorsHandlerImplTest {
 
     // region Helpers
 
-    private fun errorResponse(code: Int): Response<Any> {
-        return Response.error(code, ByteArray(0).toResponseBody(null))
-    }
+    private fun errorResponse(code: Int): Response<Any> = Response.error(code, ByteArray(0).toResponseBody(null))
 
     private fun <T> Resource<T>.requireHttpError(): ErrorsTypesHttp {
         assertTrue("Expected Resource.Error, was $this", this is Resource.Error)

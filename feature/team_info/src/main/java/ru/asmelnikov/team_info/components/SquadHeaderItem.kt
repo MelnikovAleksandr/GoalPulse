@@ -24,19 +24,18 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun SquadHeaderItem(
     squadByPosition: SquadByPosition,
-    itemColor: Color
+    itemColor: Color,
 ) {
-
     Column(
         modifier = Modifier
             .background(itemColor)
             .fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(
             modifier = Modifier.padding(
                 horizontal = dimens.small1,
-                vertical = dimens.extraSmall1
+                vertical = dimens.extraSmall1,
             ),
             text = stringResource(squadByPosition.position.stringResId),
             textAlign = TextAlign.Start,
@@ -44,25 +43,25 @@ fun SquadHeaderItem(
                 shadow = Shadow(
                     color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                     offset = Offset(0f, 1f),
-                    blurRadius = 4f
-                )
+                    blurRadius = 4f,
+                ),
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         HorizontalDivider(
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
         )
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Text(
                 modifier = Modifier
                     .padding(
                         horizontal = dimens.small1,
-                        vertical = dimens.extraSmall1
+                        vertical = dimens.extraSmall1,
                     )
                     .weight(1f),
                 text = stringResource(R.string.player_name),
@@ -71,18 +70,18 @@ fun SquadHeaderItem(
                     shadow = Shadow(
                         color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                         offset = Offset(0f, 1f),
-                        blurRadius = 4f
-                    )
+                        blurRadius = 4f,
+                    ),
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             Text(
                 modifier = Modifier
                     .padding(
                         horizontal = dimens.small1,
-                        vertical = dimens.extraSmall1
+                        vertical = dimens.extraSmall1,
                     )
                     .weight(1f),
                 text = stringResource(R.string.player_nationality),
@@ -91,18 +90,18 @@ fun SquadHeaderItem(
                     shadow = Shadow(
                         color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                         offset = Offset(0f, 1f),
-                        blurRadius = 4f
-                    )
+                        blurRadius = 4f,
+                    ),
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             Text(
                 modifier = Modifier
                     .padding(
                         horizontal = dimens.small1,
-                        vertical = dimens.extraSmall1
+                        vertical = dimens.extraSmall1,
                     )
                     .weight(0.5f),
                 text = stringResource(R.string.player_age),
@@ -111,12 +110,12 @@ fun SquadHeaderItem(
                     shadow = Shadow(
                         color = MaterialTheme.colorScheme.background.copy(alpha = 0.6f),
                         offset = Offset(0f, 1f),
-                        blurRadius = 4f
-                    )
+                        blurRadius = 4f,
+                    ),
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }
     }

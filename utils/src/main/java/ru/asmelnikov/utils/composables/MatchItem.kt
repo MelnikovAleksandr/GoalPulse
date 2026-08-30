@@ -23,10 +23,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.util.UUID
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
-import java.util.UUID
 
 @Composable
 fun MatchItem(
@@ -56,11 +56,10 @@ fun MatchItem(
     color: Color = MaterialTheme.colorScheme.primary,
     isInCalendar: Boolean = false,
     isCalendarLoading: Boolean = false,
-    onCalendarClick: () -> Unit = {}
+    onCalendarClick: () -> Unit = {},
 ) {
-
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier
@@ -68,20 +67,20 @@ fun MatchItem(
                 .clickable(enabled = !isHead2headLoading) {
                     onMatchItemClick(matchId)
                 },
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimens.medium1),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
             ) {
                 SubComposeAsyncImageCommon(
                     modifier = Modifier.padding(horizontal = dimens.small1),
                     imageUri = homeTeamCrest,
                     shape = RoundedCornerShape(0.dp),
-                    size = dimens.medium4
+                    size = dimens.medium4,
                 )
                 if (isAhead) {
                     Text(
@@ -91,20 +90,20 @@ fun MatchItem(
                         style = MaterialTheme.typography.titleLarge,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 } else {
                     ScoreItem(
                         scoreHome = homeScore,
                         scoreAway = awayScore,
-                        color = color
+                        color = color,
                     )
                 }
                 SubComposeAsyncImageCommon(
                     modifier = Modifier.padding(horizontal = dimens.small1),
                     imageUri = awayTeamCrest,
                     shape = RoundedCornerShape(0.dp),
-                    size = dimens.medium4
+                    size = dimens.medium4,
                 )
             }
             Text(
@@ -114,7 +113,7 @@ fun MatchItem(
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
             Text(
                 modifier = Modifier.padding(bottom = dimens.medium1),
@@ -123,21 +122,21 @@ fun MatchItem(
                 style = MaterialTheme.typography.titleSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.secondary,
             )
             AnimatedVisibility(visible = expandedItemId == matchId) {
                 AnimatedVisibility(
-                    visible = isHead2headLoading
+                    visible = isHead2headLoading,
                 ) {
                     LinearProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(dimens.extraSmall1),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
                 AnimatedVisibility(
-                    visible = matchId == head2headId
+                    visible = matchId == head2headId,
                 ) {
                     if (numberOfMatches < 1) {
                         Text(
@@ -146,7 +145,7 @@ fun MatchItem(
                             style = MaterialTheme.typography.titleSmall,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = MaterialTheme.colorScheme.secondary,
                         )
                     } else {
                         Head2headView(
@@ -155,7 +154,7 @@ fun MatchItem(
                             awayWinsPercentage = awayWinsPercentage,
                             homeWins = homeWins,
                             homeDraws = homeDraws,
-                            homeLosses = homeLosses
+                            homeLosses = homeLosses,
                         )
                     }
                 }
@@ -166,7 +165,7 @@ fun MatchItem(
                 modifier = Modifier.align(Alignment.TopEnd),
                 isInCalendar = isInCalendar,
                 isLoading = isCalendarLoading,
-                onClick = onCalendarClick
+                onClick = onCalendarClick,
             )
         }
     }
@@ -198,7 +197,7 @@ private fun MatchItemPreview1() {
             homeWins = 5,
             homeDraws = 3,
             homeLosses = 1,
-            head2headId = 538046
+            head2headId = 538046,
         )
     }
 }
@@ -229,7 +228,7 @@ private fun MatchItemPreview2() {
             homeWins = 5,
             homeDraws = 3,
             homeLosses = 1,
-            head2headId = 538046
+            head2headId = 538046,
         )
     }
 }
@@ -261,7 +260,7 @@ private fun MatchItemPreview3() {
             homeDraws = 3,
             homeLosses = 1,
             head2headId = 538046,
-            isInCalendar = true
+            isInCalendar = true,
         )
     }
 }
@@ -293,7 +292,7 @@ private fun MatchItemPreview4() {
             homeDraws = 3,
             homeLosses = 1,
             head2headId = 538046,
-            isCalendarLoading = false
+            isCalendarLoading = false,
         )
     }
 }
@@ -324,7 +323,7 @@ private fun MatchItemPreview5() {
             homeWins = 5,
             homeDraws = 3,
             homeLosses = 1,
-            head2headId = 538046
+            head2headId = 538046,
         )
     }
 }
@@ -355,7 +354,7 @@ private fun MatchItemPreview6() {
             homeWins = 5,
             homeDraws = 3,
             homeLosses = 1,
-            head2headId = 538046
+            head2headId = 538046,
         )
     }
 }
@@ -386,7 +385,7 @@ private fun MatchItemPreview7() {
             homeWins = 5,
             homeDraws = 3,
             homeLosses = 1,
-            head2headId = 538046
+            head2headId = 538046,
         )
     }
 }

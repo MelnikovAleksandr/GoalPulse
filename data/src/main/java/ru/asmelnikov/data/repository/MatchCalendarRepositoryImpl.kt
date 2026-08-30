@@ -3,18 +3,18 @@ package ru.asmelnikov.data.repository
 import android.content.ContentUris
 import android.content.Intent
 import android.provider.CalendarContract
+import java.time.Instant
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.asmelnikov.data.calendar.MatchCalendarStore
 import ru.asmelnikov.domain.models.Match
 import ru.asmelnikov.domain.repository.MatchCalendarRepository
-import java.time.Instant
 
 class MatchCalendarRepositoryImpl internal constructor(
     private val appPackageName: String,
     private val store: MatchCalendarStore,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : MatchCalendarRepository {
 
     override fun hasCalendarPermission(): Boolean = store.hasPermission()

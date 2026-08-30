@@ -28,10 +28,10 @@ class TeamInfoViewModelTest {
     fun onOpen_showsTeamMatchesAndNewsForOpenedId() = runTest {
         val teamRepository = FakeTeamInfoRepository(
             teamById = mapOf("57" to arsenal),
-            matchesById = mapOf("57" to arsenalMatches)
+            matchesById = mapOf("57" to arsenalMatches),
         )
         val newsRepository = FakeNewsRepository(
-            newsByQuery = mapOf("Arsenal FC" to arsenalNews)
+            newsByQuery = mapOf("Arsenal FC" to arsenalNews),
         )
 
         viewModel(teamRepository, newsRepository).test(this) {
@@ -59,7 +59,7 @@ class TeamInfoViewModelTest {
     @Test
     fun loadFails_hidesSpinner_showsError() = runTest {
         val repository = FakeTeamInfoRepository(
-            error = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            error = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(this, TeamInfoState(teamId = "57")) {
@@ -73,12 +73,12 @@ class TeamInfoViewModelTest {
     @Test
     fun reloadFails_keepsAlreadyLoadedTeam_showsError() = runTest {
         val repository = FakeTeamInfoRepository(
-            error = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            error = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(
             this,
-            TeamInfoState(teamId = "57", teamInfo = arsenal, isInfoLoading = false)
+            TeamInfoState(teamId = "57", teamInfo = arsenal, isInfoLoading = false),
         ) {
             containerHost.getTeamInfoFromRemoteToLocal()
 
@@ -91,7 +91,7 @@ class TeamInfoViewModelTest {
     @Test
     fun matchesLoadFails_hidesSpinner_showsError() = runTest {
         val repository = FakeTeamInfoRepository(
-            matchesError = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            matchesError = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(repository).test(this, TeamInfoState(teamId = "57")) {
@@ -105,12 +105,12 @@ class TeamInfoViewModelTest {
     @Test
     fun clickMatch_loadsHead2headForThatMatch() = runTest {
         val standingsRepository = FakeStandingsRepository(
-            head2headById = mapOf(COMPLETED_MATCH_ID to match100Head2head)
+            head2headById = mapOf(COMPLETED_MATCH_ID to match100Head2head),
         )
 
         viewModel(standingsRepository = standingsRepository).test(
             this,
-            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false)
+            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -128,8 +128,8 @@ class TeamInfoViewModelTest {
                 expandedItem = COMPLETED_MATCH_ID,
                 head2head = match100Head2head,
                 isInfoLoading = false,
-                isMatchesLoading = false
-            )
+                isMatchesLoading = false,
+            ),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -142,8 +142,8 @@ class TeamInfoViewModelTest {
         val standingsRepository = FakeStandingsRepository(
             head2headById = mapOf(
                 COMPLETED_MATCH_ID to match100Head2head,
-                OTHER_MATCH_ID to match200Head2head
-            )
+                OTHER_MATCH_ID to match200Head2head,
+            ),
         )
 
         viewModel(standingsRepository = standingsRepository).test(
@@ -153,8 +153,8 @@ class TeamInfoViewModelTest {
                 expandedItem = COMPLETED_MATCH_ID,
                 head2head = match100Head2head,
                 isInfoLoading = false,
-                isMatchesLoading = false
-            )
+                isMatchesLoading = false,
+            ),
         ) {
             containerHost.matchItemClick(OTHER_MATCH_ID)
 
@@ -166,12 +166,12 @@ class TeamInfoViewModelTest {
     @Test
     fun clickMatch_whenHead2headFails_hidesSpinner_showsError() = runTest {
         val standingsRepository = FakeStandingsRepository(
-            error = ErrorsTypesHttp.Https400Errors(errorCode = 429)
+            error = ErrorsTypesHttp.Https400Errors(errorCode = 429),
         )
 
         viewModel(standingsRepository = standingsRepository).test(
             this,
-            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false)
+            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false),
         ) {
             containerHost.matchItemClick(COMPLETED_MATCH_ID)
 
@@ -185,7 +185,7 @@ class TeamInfoViewModelTest {
     fun calendarClick_withoutPermission_requestsSystemPermission() = runTest {
         viewModel().test(
             this,
-            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false)
+            TeamInfoState(teamId = "57", isInfoLoading = false, isMatchesLoading = false),
         ) {
             containerHost.onCalendarClick(aheadMatch)
 
@@ -202,8 +202,8 @@ class TeamInfoViewModelTest {
                 teamId = "57",
                 isInfoLoading = false,
                 isMatchesLoading = false,
-                pendingCalendarMatch = aheadMatch
-            )
+                pendingCalendarMatch = aheadMatch,
+            ),
         ) {
             containerHost.onCalendarPermissionResult(granted = false)
 
@@ -224,8 +224,8 @@ class TeamInfoViewModelTest {
                 isInfoLoading = false,
                 isMatchesLoading = false,
                 matchesAhead = listOf(aheadMatch),
-                pendingCalendarMatch = aheadMatch
-            )
+                pendingCalendarMatch = aheadMatch,
+            ),
         ) {
             containerHost.onCalendarPermissionResult(granted = true)
 
@@ -239,7 +239,7 @@ class TeamInfoViewModelTest {
         val calendarRepository = FakeMatchCalendarRepository(
             hasPermission = true,
             scheduledIds = setOf(AHEAD_MATCH_ID),
-            eventIds = mapOf(AHEAD_MATCH_ID to 7L)
+            eventIds = mapOf(AHEAD_MATCH_ID to 7L),
         )
 
         viewModel(matchCalendarRepository = calendarRepository).test(
@@ -249,8 +249,8 @@ class TeamInfoViewModelTest {
                 isInfoLoading = false,
                 isMatchesLoading = false,
                 matchesAhead = listOf(aheadMatch),
-                calendarMatchIds = setOf(AHEAD_MATCH_ID)
-            )
+                calendarMatchIds = setOf(AHEAD_MATCH_ID),
+            ),
         ) {
             containerHost.onCalendarClick(aheadMatch)
 
@@ -264,14 +264,14 @@ class TeamInfoViewModelTest {
         teamRepository: FakeTeamInfoRepository = FakeTeamInfoRepository(),
         newsRepository: FakeNewsRepository = FakeNewsRepository(),
         standingsRepository: FakeStandingsRepository = FakeStandingsRepository(),
-        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository()
+        matchCalendarRepository: FakeMatchCalendarRepository = FakeMatchCalendarRepository(),
     ) = TeamInfoViewModel(
         teamRepository = teamRepository,
         stringResourceProvider = FakeStringResourceProvider(),
         standingsRepository = standingsRepository,
         newsRepository = newsRepository,
         matchCalendarRepository = matchCalendarRepository,
-        teamId = "57"
+        teamId = "57",
     )
 
     // endregion
@@ -283,7 +283,7 @@ private class FakeTeamInfoRepository(
     private val teamById: Map<String, TeamInfo> = emptyMap(),
     private val matchesById: Map<String, TeamMatches> = emptyMap(),
     private val error: ErrorsTypesHttp? = null,
-    private val matchesError: ErrorsTypesHttp? = null
+    private val matchesError: ErrorsTypesHttp? = null,
 ) : TeamInfoRepository {
 
     override suspend fun getTeamInfoById(teamId: String): Resource<Boolean> {
@@ -293,9 +293,7 @@ private class FakeTeamInfoRepository(
         return Resource.Success(true)
     }
 
-    override suspend fun getTeamInfoByIdFlowFromLocal(teamId: String): Flow<TeamInfo?> {
-        return flowOf(teamById[teamId])
-    }
+    override suspend fun getTeamInfoByIdFlowFromLocal(teamId: String): Flow<TeamInfo?> = flowOf(teamById[teamId])
 
     override suspend fun getTeamMatchesFromRemoteToLocal(teamId: String): Resource<Boolean> {
         if (matchesError != null) {
@@ -304,14 +302,10 @@ private class FakeTeamInfoRepository(
         return Resource.Success(true)
     }
 
-    override suspend fun getTeamMatchesFlowFromLocal(teamId: String): Flow<TeamMatches?> {
-        return flowOf(matchesById[teamId])
-    }
+    override suspend fun getTeamMatchesFlowFromLocal(teamId: String): Flow<TeamMatches?> = flowOf(matchesById[teamId])
 }
 
-private class FakeNewsRepository(
-    private val newsByQuery: Map<String, News> = emptyMap()
-) : NewsRepository {
+private class FakeNewsRepository(private val newsByQuery: Map<String, News> = emptyMap()) : NewsRepository {
 
     override suspend fun getNews(q: String): Resource<News> {
         val news = newsByQuery[q]
@@ -325,7 +319,7 @@ private class FakeNewsRepository(
 
 private class FakeStandingsRepository(
     private val head2headById: Map<Int, Head2head> = emptyMap(),
-    private val error: ErrorsTypesHttp? = null
+    private val error: ErrorsTypesHttp? = null,
 ) : CompetitionStandingsRepository {
 
     override suspend fun getHead2headById(matchId: Int): Resource<Head2head> {
@@ -357,14 +351,14 @@ private class FakeStandingsRepository(
 private class FakeMatchCalendarRepository(
     private var hasPermission: Boolean = false,
     private var scheduledIds: Set<Int> = emptySet(),
-    private val eventIds: Map<Int, Long> = emptyMap()
+    private val eventIds: Map<Int, Long> = emptyMap(),
 ) : MatchCalendarRepository {
 
     override fun hasCalendarPermission(): Boolean = hasPermission
 
-    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> {
-        return scheduledIds.intersect(matchIds.toSet())
-    }
+    override suspend fun findScheduledMatchIds(matchIds: Collection<Int>): Set<Int> = scheduledIds.intersect(
+        matchIds.toSet(),
+    )
 
     override suspend fun findEventId(matchId: Int): Long? = eventIds[matchId]
 
@@ -381,12 +375,10 @@ private class FakeMatchCalendarRepository(
 }
 
 private class FakeStringResourceProvider : StringResourceProvider {
-    override fun getString(resourceId: Int): String {
-        return when (resourceId) {
-            R.string.http_429_errors -> RATE_LIMIT_MESSAGE
-            R.string.calendar_event_failed -> CALENDAR_FAILED_MESSAGE
-            else -> error("unexpected string resource $resourceId")
-        }
+    override fun getString(resourceId: Int): String = when (resourceId) {
+        R.string.http_429_errors -> RATE_LIMIT_MESSAGE
+        R.string.calendar_event_failed -> CALENDAR_FAILED_MESSAGE
+        else -> error("unexpected string resource $resourceId")
     }
 
     override fun getString(resourceId: Int, vararg arguments: Any): String {
@@ -407,16 +399,16 @@ private const val ARSENAL_NEWS_TITLE = "Arteta praises Saka"
 
 private val arsenal = TeamInfo(
     id = "57",
-    name = "Arsenal FC"
+    name = "Arsenal FC",
 )
 
 private val arsenalMatches = TeamMatches(
     id = "57",
-    matchesCompleted = listOf(Match(id = COMPLETED_MATCH_ID))
+    matchesCompleted = listOf(Match(id = COMPLETED_MATCH_ID)),
 )
 
 private val arsenalNews = News(
-    articles = listOf(Article(title = ARSENAL_NEWS_TITLE))
+    articles = listOf(Article(title = ARSENAL_NEWS_TITLE)),
 )
 
 private val match100Head2head = Head2head(id = COMPLETED_MATCH_ID)

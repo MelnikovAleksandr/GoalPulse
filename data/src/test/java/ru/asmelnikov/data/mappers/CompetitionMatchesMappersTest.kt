@@ -21,40 +21,40 @@ class CompetitionMatchesMappersTest {
             status = "FINISHED",
             utcDate = "2025-05-10T17:00:00Z",
             homeName = "Arsenal",
-            awayName = "Chelsea"
+            awayName = "Chelsea",
         )
         val finishedOld = matchEntity(
             id = 1,
             status = "FINISHED",
             utcDate = "2025-05-03T15:00:00Z",
             homeName = "Liverpool",
-            awayName = "City"
+            awayName = "City",
         )
         val timed = matchEntity(
             id = 3,
             status = "TIMED",
             utcDate = "2025-05-17T15:00:00Z",
             homeName = "Arsenal",
-            awayName = "City"
+            awayName = "City",
         )
         val finishedWithoutAway = matchEntity(
             id = 4,
             status = "FINISHED",
             utcDate = "2025-05-11T15:00:00Z",
             homeName = "Arsenal",
-            awayName = "Chelsea"
+            awayName = "Chelsea",
         ).also { it.awayTeam = null }
 
         val result = groupMatchesByDateCompleted(
-            listOf(finishedOld, timed, finishedNew, finishedWithoutAway)
+            listOf(finishedOld, timed, finishedNew, finishedWithoutAway),
         )
 
         assertEquals(
             listOf(
                 MatchKey(id = 2, home = "Arsenal", away = "Chelsea"),
-                MatchKey(id = 1, home = "Liverpool", away = "City")
+                MatchKey(id = 1, home = "Liverpool", away = "City"),
             ),
-            result.toMatchKeys()
+            result.toMatchKeys(),
         )
     }
 
@@ -65,40 +65,40 @@ class CompetitionMatchesMappersTest {
             status = "TIMED",
             utcDate = "2025-08-16T15:00:00Z",
             homeName = "Arsenal",
-            awayName = "Wolves"
+            awayName = "Wolves",
         )
         val liveLater = matchEntity(
             id = 11,
             status = "LIVE",
             utcDate = "2025-08-17T16:30:00Z",
             homeName = "Chelsea",
-            awayName = "Liverpool"
+            awayName = "Liverpool",
         )
         val finished = matchEntity(
             id = 12,
             status = "FINISHED",
             utcDate = "2025-08-10T15:00:00Z",
             homeName = "City",
-            awayName = "Arsenal"
+            awayName = "Arsenal",
         )
         val timedWithoutHome = matchEntity(
             id = 13,
             status = "TIMED",
             utcDate = "2025-08-15T15:00:00Z",
             homeName = "Arsenal",
-            awayName = "Everton"
+            awayName = "Everton",
         ).also { it.homeTeam = null }
 
         val result = groupMatchesByDateAhead(
-            listOf(liveLater, finished, timedSoon, timedWithoutHome)
+            listOf(liveLater, finished, timedSoon, timedWithoutHome),
         )
 
         assertEquals(
             listOf(
                 MatchKey(id = 10, home = "Arsenal", away = "Wolves"),
-                MatchKey(id = 11, home = "Chelsea", away = "Liverpool")
+                MatchKey(id = 11, home = "Chelsea", away = "Liverpool"),
             ),
-            result.toMatchKeys()
+            result.toMatchKeys(),
         )
     }
 
@@ -115,7 +115,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 38,
             stage = "REGULAR_SEASON",
             homeName = "Arsenal",
-            awayName = "City"
+            awayName = "City",
         )
         val md38early = matchEntity(
             id = 37,
@@ -124,7 +124,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 38,
             stage = "REGULAR_SEASON",
             homeName = "Chelsea",
-            awayName = "Liverpool"
+            awayName = "Liverpool",
         )
         val md37 = matchEntity(
             id = 36,
@@ -133,7 +133,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 37,
             stage = "REGULAR_SEASON",
             homeName = "Tottenham",
-            awayName = "United"
+            awayName = "United",
         )
         val timed = matchEntity(
             id = 39,
@@ -142,19 +142,19 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "REGULAR_SEASON",
             homeName = "Arsenal",
-            awayName = "Wolves"
+            awayName = "Wolves",
         )
 
         val result = filterCompletedMatches(
-            matchesEntity(seasonType = "LEAGUE", matches = listOf(md37, timed, md38early, md38late))
+            matchesEntity(seasonType = "LEAGUE", matches = listOf(md37, timed, md38early, md38late)),
         )
 
         assertEquals(
             listOf(
                 TourKey(matchDay = 38, stage = Stage.REGULAR_SEASON, matchIds = listOf(38, 37)),
-                TourKey(matchDay = 37, stage = Stage.REGULAR_SEASON, matchIds = listOf(36))
+                TourKey(matchDay = 37, stage = Stage.REGULAR_SEASON, matchIds = listOf(36)),
             ),
-            result.toTourKeys()
+            result.toTourKeys(),
         )
     }
 
@@ -167,7 +167,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "REGULAR_SEASON",
             homeName = "Arsenal",
-            awayName = "Wolves"
+            awayName = "Wolves",
         )
         val md2early = matchEntity(
             id = 2,
@@ -176,7 +176,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 2,
             stage = "REGULAR_SEASON",
             homeName = "Chelsea",
-            awayName = "West Ham"
+            awayName = "West Ham",
         )
         val md2late = matchEntity(
             id = 3,
@@ -185,7 +185,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 2,
             stage = "REGULAR_SEASON",
             homeName = "Liverpool",
-            awayName = "City"
+            awayName = "City",
         )
         val finished = matchEntity(
             id = 4,
@@ -194,19 +194,19 @@ class CompetitionMatchesMappersTest {
             matchDay = 38,
             stage = "REGULAR_SEASON",
             homeName = "Arsenal",
-            awayName = "City"
+            awayName = "City",
         )
 
         val result = filterAheadMatches(
-            matchesEntity(seasonType = "LEAGUE", matches = listOf(md2late, finished, md1, md2early))
+            matchesEntity(seasonType = "LEAGUE", matches = listOf(md2late, finished, md1, md2early)),
         )
 
         assertEquals(
             listOf(
                 TourKey(matchDay = 1, stage = Stage.REGULAR_SEASON, matchIds = listOf(1)),
-                TourKey(matchDay = 2, stage = Stage.REGULAR_SEASON, matchIds = listOf(2, 3))
+                TourKey(matchDay = 2, stage = Stage.REGULAR_SEASON, matchIds = listOf(2, 3)),
             ),
-            result.toTourKeys()
+            result.toTourKeys(),
         )
     }
 
@@ -219,7 +219,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "QUARTER_FINALS",
             homeName = "Arsenal",
-            awayName = "Real Madrid"
+            awayName = "Real Madrid",
         )
         val semiFinal = matchEntity(
             id = 21,
@@ -228,19 +228,19 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "SEMI_FINALS",
             homeName = "Arsenal",
-            awayName = "PSG"
+            awayName = "PSG",
         )
 
         val result = filterCompletedMatches(
-            matchesEntity(seasonType = "CUP", matches = listOf(quarterFinal, semiFinal))
+            matchesEntity(seasonType = "CUP", matches = listOf(quarterFinal, semiFinal)),
         )
 
         assertEquals(
             listOf(
                 TourKey(matchDay = 1, stage = Stage.SEMI_FINALS, matchIds = listOf(21)),
-                TourKey(matchDay = 1, stage = Stage.QUARTER_FINALS, matchIds = listOf(20))
+                TourKey(matchDay = 1, stage = Stage.QUARTER_FINALS, matchIds = listOf(20)),
             ),
-            result.toTourKeys()
+            result.toTourKeys(),
         )
     }
 
@@ -253,7 +253,7 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "LAST_16",
             homeName = "Barcelona",
-            awayName = "Benfica"
+            awayName = "Benfica",
         )
         val quarterFinal = matchEntity(
             id = 31,
@@ -262,19 +262,19 @@ class CompetitionMatchesMappersTest {
             matchDay = 1,
             stage = "QUARTER_FINALS",
             homeName = "Barcelona",
-            awayName = "Bayern"
+            awayName = "Bayern",
         )
 
         val result = filterAheadMatches(
-            matchesEntity(seasonType = "CUP", matches = listOf(quarterFinal, last16))
+            matchesEntity(seasonType = "CUP", matches = listOf(quarterFinal, last16)),
         )
 
         assertEquals(
             listOf(
                 TourKey(matchDay = 1, stage = Stage.LAST_16, matchIds = listOf(30)),
-                TourKey(matchDay = 1, stage = Stage.QUARTER_FINALS, matchIds = listOf(31))
+                TourKey(matchDay = 1, stage = Stage.QUARTER_FINALS, matchIds = listOf(31)),
             ),
-            result.toTourKeys()
+            result.toTourKeys(),
         )
     }
 
@@ -284,7 +284,7 @@ class CompetitionMatchesMappersTest {
 
     private fun matchesEntity(
         seasonType: String,
-        matches: List<MatchEntity>
+        matches: List<MatchEntity>,
     ): MatchesEntity {
         val entity = MatchesEntity()
         entity.id = seasonType
@@ -300,7 +300,7 @@ class CompetitionMatchesMappersTest {
         homeName: String,
         awayName: String,
         matchDay: Int = -1,
-        stage: String = ""
+        stage: String = "",
     ): MatchEntity {
         val entity = MatchEntity()
         entity.id = id
@@ -324,31 +324,21 @@ class CompetitionMatchesMappersTest {
 
     // region Keys
 
-    private fun List<Match>.toMatchKeys(): List<MatchKey> {
-        return map { MatchKey(id = it.id, home = it.homeTeam.name, away = it.awayTeam.name) }
+    private fun List<Match>.toMatchKeys(): List<MatchKey> = map {
+        MatchKey(id = it.id, home = it.homeTeam.name, away = it.awayTeam.name)
     }
 
-    private fun List<MatchesByTour>.toTourKeys(): List<TourKey> {
-        return map { tour ->
-            TourKey(
-                matchDay = tour.matchDay,
-                stage = tour.stage,
-                matchIds = tour.matches.map { it.id }
-            )
-        }
+    private fun List<MatchesByTour>.toTourKeys(): List<TourKey> = map { tour ->
+        TourKey(
+            matchDay = tour.matchDay,
+            stage = tour.stage,
+            matchIds = tour.matches.map { it.id },
+        )
     }
 
-    private data class MatchKey(
-        val id: Int,
-        val home: String,
-        val away: String
-    )
+    private data class MatchKey(val id: Int, val home: String, val away: String)
 
-    private data class TourKey(
-        val matchDay: Int,
-        val stage: Stage,
-        val matchIds: List<Int>
-    )
+    private data class TourKey(val matchDay: Int, val stage: Stage, val matchIds: List<Int>)
 
     // endregion
 }

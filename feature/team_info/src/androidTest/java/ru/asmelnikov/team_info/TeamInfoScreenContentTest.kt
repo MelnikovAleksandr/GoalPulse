@@ -58,7 +58,7 @@ class TeamInfoScreenContentTest {
         setScreen(
             teamInfo = arsenalWithoutSquad,
             onTeamInfoReload = { teamInfoReloads++ },
-            onMatchesReload = { matchesReloads++ }
+            onMatchesReload = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(reloadLabel).performClick()
@@ -91,7 +91,7 @@ class TeamInfoScreenContentTest {
 
         setScreen(
             onTeamInfoReload = { teamInfoReloads++ },
-            onMatchesReload = { matchesReloads++ }
+            onMatchesReload = { matchesReloads++ },
         )
 
         swipeDisplayedList()
@@ -108,7 +108,7 @@ class TeamInfoScreenContentTest {
         setScreen(
             matchesComplete = listOf(completedMatch),
             onTeamInfoReload = { teamInfoReloads++ },
-            onMatchesReload = { matchesReloads++ }
+            onMatchesReload = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -122,7 +122,7 @@ class TeamInfoScreenContentTest {
     fun isLoading_showsProgressOnSquadAndInfo_notOnMatches() {
         setScreen(
             isLoading = true,
-            matchesComplete = listOf(completedMatch)
+            matchesComplete = listOf(completedMatch),
         )
 
         assertEquals(1, displayedProgressCount())
@@ -143,7 +143,7 @@ class TeamInfoScreenContentTest {
     fun isMatchesLoading_showsProgressOnMatches_notOnSquadOrInfo() {
         setScreen(
             isMatchesLoading = true,
-            matchesComplete = listOf(completedMatch)
+            matchesComplete = listOf(completedMatch),
         )
 
         assertEquals(0, displayedProgressCount())
@@ -222,7 +222,7 @@ class TeamInfoScreenContentTest {
 
         setScreen(
             onTeamInfoReload = { teamInfoReloads++ },
-            onMatchesReload = { matchesReloads++ }
+            onMatchesReload = { matchesReloads++ },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -245,7 +245,7 @@ class TeamInfoScreenContentTest {
     fun clickAheadTab_showsUpcomingMatch() {
         setScreen(
             matchesComplete = listOf(completedMatch),
-            matchesAhead = listOf(aheadMatch)
+            matchesAhead = listOf(aheadMatch),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -260,7 +260,7 @@ class TeamInfoScreenContentTest {
 
         setScreen(
             matchesComplete = listOf(completedMatch),
-            onMatchItemClick = { clickedMatchId = it }
+            onMatchItemClick = { clickedMatchId = it },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -276,8 +276,8 @@ class TeamInfoScreenContentTest {
             expandedItemId = COMPLETED_MATCH_ID,
             head2head = Head2head(
                 id = COMPLETED_MATCH_ID,
-                aggregates = Aggregates(numberOfMatches = 0)
-            )
+                aggregates = Aggregates(numberOfMatches = 0),
+            ),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -299,7 +299,7 @@ class TeamInfoScreenContentTest {
     fun aheadMatch_showsAddCalendarButton() {
         setScreen(
             matchesComplete = listOf(completedMatch),
-            matchesAhead = listOf(aheadMatch)
+            matchesAhead = listOf(aheadMatch),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -314,7 +314,7 @@ class TeamInfoScreenContentTest {
         setScreen(
             matchesComplete = listOf(completedMatch),
             matchesAhead = listOf(aheadMatch),
-            calendarMatchIds = setOf(AHEAD_MATCH_ID)
+            calendarMatchIds = setOf(AHEAD_MATCH_ID),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -333,7 +333,7 @@ class TeamInfoScreenContentTest {
             matchesComplete = listOf(completedMatch),
             matchesAhead = listOf(aheadMatch),
             onMatchItemClick = { clickedMatchId = it },
-            onCalendarClick = { calendarMatch = it }
+            onCalendarClick = { calendarMatch = it },
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -349,7 +349,7 @@ class TeamInfoScreenContentTest {
         setScreen(
             matchesComplete = listOf(completedMatch),
             matchesAhead = listOf(aheadMatch),
-            calendarBusyMatchIds = setOf(AHEAD_MATCH_ID)
+            calendarBusyMatchIds = setOf(AHEAD_MATCH_ID),
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
@@ -426,7 +426,7 @@ class TeamInfoScreenContentTest {
         onBackClick: () -> Unit = {},
         calendarMatchIds: Set<Int> = emptySet(),
         calendarBusyMatchIds: Set<Int> = emptySet(),
-        onCalendarClick: (Match) -> Unit = {}
+        onCalendarClick: (Match) -> Unit = {},
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -450,7 +450,7 @@ class TeamInfoScreenContentTest {
                         isLoadingNews = false,
                         calendarMatchIds = calendarMatchIds,
                         calendarBusyMatchIds = calendarBusyMatchIds,
-                        onCalendarClick = onCalendarClick
+                        onCalendarClick = onCalendarClick,
                     )
                 }
             }
@@ -470,7 +470,7 @@ private const val ARSENAL_NEWS_TITLE = "Arteta praises Saka"
 
 private val arsenalWithoutSquad = TeamInfo(
     id = ARSENAL_ID,
-    name = "Arsenal FC"
+    name = "Arsenal FC",
 )
 
 private val arsenal = TeamInfo(
@@ -488,15 +488,15 @@ private val arsenal = TeamInfo(
                     id = SAKA_ID,
                     name = "Bukayo Saka",
                     nationality = "England",
-                    age = "22"
-                )
-            )
-        )
-    )
+                    age = "22",
+                ),
+            ),
+        ),
+    ),
 )
 
 private val arsenalNews = News(
-    articles = listOf(Article(title = ARSENAL_NEWS_TITLE))
+    articles = listOf(Article(title = ARSENAL_NEWS_TITLE)),
 )
 
 private val completedMatch = Match(
@@ -504,7 +504,7 @@ private val completedMatch = Match(
     homeTeam = MatchTeam(id = 57, shortName = "Arsenal"),
     awayTeam = MatchTeam(id = 61, shortName = "Chelsea"),
     score = Score(fullTime = Time(home = 2, away = 1)),
-    utcDate = "2026-05-09T14:00:00Z"
+    utcDate = "2026-05-09T14:00:00Z",
 )
 
 private val aheadMatch = Match(
@@ -512,7 +512,7 @@ private val aheadMatch = Match(
     homeTeam = MatchTeam(id = 73, shortName = "Spurs"),
     awayTeam = MatchTeam(id = 57, shortName = "Arsenal"),
     bigDate = "12.05",
-    utcDate = "2026-05-12T14:00:00Z"
+    utcDate = "2026-05-12T14:00:00Z",
 )
 
 // endregion

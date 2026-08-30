@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.realmListOf
+import java.util.UUID
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -27,7 +28,6 @@ import ru.asmelnikov.data.local.models.SquadByPositionEntity
 import ru.asmelnikov.data.local.models.TeamEmbeddedEntity
 import ru.asmelnikov.data.local.models.TeamInfoEntity
 import ru.asmelnikov.data.local.models.TimeEntity
-import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class TeamInfoRealmOptionsImplTest {
@@ -51,8 +51,8 @@ class TeamInfoRealmOptionsImplTest {
                 TimeEntity::class,
                 TeamEmbeddedEntity::class,
                 CompetitionEmbeddedEntity::class,
-                CurrentSeasonEntity::class
-            )
+                CurrentSeasonEntity::class,
+            ),
         )
             .inMemory()
             .name("team-info-test-${UUID.randomUUID()}")
@@ -84,9 +84,9 @@ class TeamInfoRealmOptionsImplTest {
                 coachName = "Mikel Arteta",
                 squad = listOf(
                     squadPosition("Goalkeeper", listOf("Raya")),
-                    squadPosition("Offence", listOf("Saka", "Jesus"))
-                )
-            ).toEntity()
+                    squadPosition("Offence", listOf("Saka", "Jesus")),
+                ),
+            ).toEntity(),
         )
 
         val updated = TeamInfoSnapshot(
@@ -99,8 +99,8 @@ class TeamInfoRealmOptionsImplTest {
             areaName = "England",
             coachName = "Mikel Arteta",
             squad = listOf(
-                squadPosition("Offence", listOf("Saka"))
-            )
+                squadPosition("Offence", listOf("Saka")),
+            ),
         )
         realmOptions.upsertTeamInfoFromRemoteToLocal(updated.toEntity())
 
@@ -120,9 +120,9 @@ class TeamInfoRealmOptionsImplTest {
                 areaName = "Spain",
                 coachName = "Hansi Flick",
                 squad = listOf(
-                    squadPosition("Offence", listOf("Lewandowski", "Yamal"))
-                )
-            ).toEntity()
+                    squadPosition("Offence", listOf("Lewandowski", "Yamal")),
+                ),
+            ).toEntity(),
         )
 
         val cleared = TeamInfoSnapshot(
@@ -134,7 +134,7 @@ class TeamInfoRealmOptionsImplTest {
             founded = 1899,
             areaName = "Spain",
             coachName = "Hansi Flick",
-            squad = emptyList()
+            squad = emptyList(),
         )
         realmOptions.upsertTeamInfoFromRemoteToLocal(cleared.toEntity())
 
@@ -152,7 +152,7 @@ class TeamInfoRealmOptionsImplTest {
             founded = 1886,
             areaName = "England",
             coachName = "Mikel Arteta",
-            squad = listOf(squadPosition("Offence", listOf("Saka")))
+            squad = listOf(squadPosition("Offence", listOf("Saka"))),
         )
         val chelsea = TeamInfoSnapshot(
             id = "61",
@@ -163,7 +163,7 @@ class TeamInfoRealmOptionsImplTest {
             founded = 1905,
             areaName = "England",
             coachName = "Enzo Maresca",
-            squad = listOf(squadPosition("Offence", listOf("Palmer")))
+            squad = listOf(squadPosition("Offence", listOf("Palmer"))),
         )
 
         realmOptions.upsertTeamInfoFromRemoteToLocal(arsenal.toEntity())
@@ -192,7 +192,7 @@ class TeamInfoRealmOptionsImplTest {
             founded = 1880,
             areaName = "England",
             coachName = "Pep Guardiola",
-            squad = listOf(squadPosition("Offence", listOf("Haaland")))
+            squad = listOf(squadPosition("Offence", listOf("Haaland"))),
         )
         realmOptions.upsertTeamInfoFromRemoteToLocal(first.toEntity())
         assertEquals(first, emissions.receive())
@@ -206,7 +206,7 @@ class TeamInfoRealmOptionsImplTest {
             founded = 1880,
             areaName = "England",
             coachName = "Pep Guardiola",
-            squad = listOf(squadPosition("Offence", listOf("Haaland", "Foden")))
+            squad = listOf(squadPosition("Offence", listOf("Haaland", "Foden"))),
         )
         realmOptions.upsertTeamInfoFromRemoteToLocal(second.toEntity())
         assertEquals(second, emissions.receive())
@@ -226,15 +226,15 @@ class TeamInfoRealmOptionsImplTest {
                 seasonType = "LEAGUE",
                 matches = listOf(
                     matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1),
-                    matchRow(101, "Arsenal", "City", "TIMED", -1, -1)
-                )
-            ).toEntity()
+                    matchRow(101, "Arsenal", "City", "TIMED", -1, -1),
+                ),
+            ).toEntity(),
         )
 
         val updated = MatchesSnapshot(
             id = "57",
             seasonType = "CUP",
-            matches = listOf(matchRow(200, "Arsenal", "Liverpool", "FINISHED", 1, 0))
+            matches = listOf(matchRow(200, "Arsenal", "Liverpool", "FINISHED", 1, 0)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(updated.toEntity())
 
@@ -247,8 +247,8 @@ class TeamInfoRealmOptionsImplTest {
             MatchesSnapshot(
                 id = "81",
                 seasonType = "LEAGUE",
-                matches = listOf(matchRow(300, "Barcelona", "Madrid", "FINISHED", 3, 1))
-            ).toEntity()
+                matches = listOf(matchRow(300, "Barcelona", "Madrid", "FINISHED", 3, 1)),
+            ).toEntity(),
         )
 
         val cleared = MatchesSnapshot(id = "81", seasonType = "LEAGUE", matches = emptyList())
@@ -262,12 +262,12 @@ class TeamInfoRealmOptionsImplTest {
         val arsenal = MatchesSnapshot(
             id = "57",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1))
+            matches = listOf(matchRow(100, "Arsenal", "Chelsea", "FINISHED", 2, 1)),
         )
         val chelsea = MatchesSnapshot(
             id = "61",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(400, "Chelsea", "Arsenal", "FINISHED", 0, 1))
+            matches = listOf(matchRow(400, "Chelsea", "Arsenal", "FINISHED", 0, 1)),
         )
 
         realmOptions.upsertMatchesFromRemoteToLocal(arsenal.toEntity())
@@ -290,7 +290,7 @@ class TeamInfoRealmOptionsImplTest {
         val first = MatchesSnapshot(
             id = "65",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(500, "City", "Arsenal", "FINISHED", 2, 2))
+            matches = listOf(matchRow(500, "City", "Arsenal", "FINISHED", 2, 2)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(first.toEntity())
         assertEquals(first, emissions.receive())
@@ -298,7 +298,7 @@ class TeamInfoRealmOptionsImplTest {
         val second = MatchesSnapshot(
             id = "65",
             seasonType = "LEAGUE",
-            matches = listOf(matchRow(501, "City", "Liverpool", "FINISHED", 1, 0))
+            matches = listOf(matchRow(501, "City", "Liverpool", "FINISHED", 1, 0)),
         )
         realmOptions.upsertMatchesFromRemoteToLocal(second.toEntity())
         assertEquals(second, emissions.receive())
@@ -322,7 +322,7 @@ class TeamInfoRealmOptionsImplTest {
 
     private fun squadPosition(
         position: String,
-        players: List<String>
+        players: List<String>,
     ) = SquadPositionSnapshot(position, players)
 
     private fun matchRow(
@@ -331,7 +331,7 @@ class TeamInfoRealmOptionsImplTest {
         awayTeam: String,
         status: String,
         homeGoals: Int,
-        awayGoals: Int
+        awayGoals: Int,
     ) = MatchRowSnapshot(matchId, homeTeam, awayTeam, status, homeGoals, awayGoals)
 
     // endregion
@@ -389,34 +389,32 @@ class TeamInfoRealmOptionsImplTest {
                                         person.id = index + 1
                                         person.name = playerName
                                     }
-                                }
+                                },
                             )
                         }
                     }
-                }
+                },
             )
         }
         return entity
     }
 
-    private fun TeamInfoEntity.toSnapshot(): TeamInfoSnapshot {
-        return TeamInfoSnapshot(
-            id = id,
-            name = name,
-            shortName = shortName,
-            tla = tla,
-            venue = venue,
-            founded = founded,
-            areaName = area?.name,
-            coachName = coach?.name,
-            squad = squadByPosition.orEmpty().map { group ->
-                SquadPositionSnapshot(
-                    position = group.position,
-                    players = group.squad.orEmpty().map { it.name }
-                )
-            }
-        )
-    }
+    private fun TeamInfoEntity.toSnapshot(): TeamInfoSnapshot = TeamInfoSnapshot(
+        id = id,
+        name = name,
+        shortName = shortName,
+        tla = tla,
+        venue = venue,
+        founded = founded,
+        areaName = area?.name,
+        coachName = coach?.name,
+        squad = squadByPosition.orEmpty().map { group ->
+            SquadPositionSnapshot(
+                position = group.position,
+                players = group.squad.orEmpty().map { it.name },
+            )
+        },
+    )
 
     private fun MatchesSnapshot.toEntity(): MatchesEntity {
         val snapshotId = id
@@ -442,28 +440,26 @@ class TeamInfoRealmOptionsImplTest {
                             }
                         }
                     }
-                }
+                },
             )
         }
         return entity
     }
 
-    private fun MatchesEntity.toSnapshot(): MatchesSnapshot {
-        return MatchesSnapshot(
-            id = id,
-            seasonType = seasonType,
-            matches = matches.orEmpty().map {
-                MatchRowSnapshot(
-                    matchId = it.id,
-                    homeTeam = it.homeTeam?.name.orEmpty(),
-                    awayTeam = it.awayTeam?.name.orEmpty(),
-                    status = it.status,
-                    homeGoals = it.score?.fullTime?.home ?: -1,
-                    awayGoals = it.score?.fullTime?.away ?: -1
-                )
-            }
-        )
-    }
+    private fun MatchesEntity.toSnapshot(): MatchesSnapshot = MatchesSnapshot(
+        id = id,
+        seasonType = seasonType,
+        matches = matches.orEmpty().map {
+            MatchRowSnapshot(
+                matchId = it.id,
+                homeTeam = it.homeTeam?.name.orEmpty(),
+                awayTeam = it.awayTeam?.name.orEmpty(),
+                status = it.status,
+                homeGoals = it.score?.fullTime?.home ?: -1,
+                awayGoals = it.score?.fullTime?.away ?: -1,
+            )
+        },
+    )
 
     // endregion
 
@@ -478,19 +474,12 @@ class TeamInfoRealmOptionsImplTest {
         val founded: Int,
         val areaName: String?,
         val coachName: String?,
-        val squad: List<SquadPositionSnapshot>
+        val squad: List<SquadPositionSnapshot>,
     )
 
-    private data class SquadPositionSnapshot(
-        val position: String,
-        val players: List<String>
-    )
+    private data class SquadPositionSnapshot(val position: String, val players: List<String>)
 
-    private data class MatchesSnapshot(
-        val id: String,
-        val seasonType: String,
-        val matches: List<MatchRowSnapshot>
-    )
+    private data class MatchesSnapshot(val id: String, val seasonType: String, val matches: List<MatchRowSnapshot>)
 
     private data class MatchRowSnapshot(
         val matchId: Int,
@@ -498,7 +487,7 @@ class TeamInfoRealmOptionsImplTest {
         val awayTeam: String,
         val status: String,
         val homeGoals: Int,
-        val awayGoals: Int
+        val awayGoals: Int,
     )
 
     // endregion

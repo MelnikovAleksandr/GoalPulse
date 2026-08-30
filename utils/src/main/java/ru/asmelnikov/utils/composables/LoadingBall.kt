@@ -28,22 +28,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.ui.theme.GoalPulseTheme
 import ru.asmelnikov.utils.ui.theme.dimens
-import kotlin.math.roundToInt
 
 @Composable
 fun LoadingBall(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing)
-        )
+            animation = tween(3000, easing = LinearEasing),
+        ),
     )
 
     val offsetY by infiniteTransition.animateFloat(
@@ -51,13 +51,13 @@ fun LoadingBall(
         targetValue = 100f,
         animationSpec = infiniteRepeatable(
             animation = tween(800, easing = EaseInOutQuad),
-            repeatMode = RepeatMode.Reverse
-        )
+            repeatMode = RepeatMode.Reverse,
+        ),
     )
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(dimens.large))
         Image(
@@ -68,7 +68,7 @@ fun LoadingBall(
                 .padding(horizontal = 100.dp)
                 .offset { IntOffset(0, offsetY.roundToInt()) }
                 .rotate(rotation),
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillWidth,
         )
     }
 }
@@ -80,7 +80,7 @@ private fun LoadingBallPreview() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             LoadingBall()
         }

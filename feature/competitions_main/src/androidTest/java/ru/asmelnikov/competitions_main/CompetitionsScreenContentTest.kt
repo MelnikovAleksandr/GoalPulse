@@ -113,7 +113,7 @@ class CompetitionsScreenContentTest {
             onCompClick = { id, url ->
                 clickedId = id
                 clickedUrl = url
-            }
+            },
         )
 
         composeTestRule.onNodeWithText("Premier League").performClick()
@@ -177,7 +177,7 @@ class CompetitionsScreenContentTest {
         comps: List<Competition>,
         isLoading: Boolean = false,
         onUpdate: () -> Unit = {},
-        onCompClick: (String, String) -> Unit = { _, _ -> }
+        onCompClick: (String, String) -> Unit = { _, _ -> },
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -189,7 +189,7 @@ class CompetitionsScreenContentTest {
                                 updateComps = onUpdate,
                                 isLoading = isLoading,
                                 onCompClick = onCompClick,
-                                animatedVisibilityScope = this
+                                animatedVisibilityScope = this,
                             )
                         }
                     }
@@ -206,13 +206,13 @@ class CompetitionsScreenContentTest {
 private val premierLeague = Competition(
     id = 2021,
     name = "Premier League",
-    emblem = "https://crests.football-data.org/PL.png"
+    emblem = "https://crests.football-data.org/PL.png",
 )
 
 private val laLiga = Competition(
     id = 2014,
     name = "La Liga",
-    emblem = "https://crests.football-data.org/PD.png"
+    emblem = "https://crests.football-data.org/PD.png",
 )
 
 // endregion

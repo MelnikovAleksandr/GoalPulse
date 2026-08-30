@@ -16,7 +16,6 @@ class CompetitionEntity : RealmObject {
     var type: String = ""
 }
 
-
 class AreaEntity : EmbeddedRealmObject {
     var id: Int = UUID.randomUUID().hashCode()
     var code: String = ""

@@ -9,17 +9,15 @@ import ru.asmelnikov.utils.calendar.CalendarPermissions
 import ru.asmelnikov.utils.calendar.isCalendarPermissionPermanentlyDeclined
 import ru.asmelnikov.utils.calendar.openCalendarPermissionSettings
 
-class MatchCalendarPermissionHandler(
-    val launchSystemPermission: () -> Unit
-)
+class MatchCalendarPermissionHandler(val launchSystemPermission: () -> Unit)
 
 @Composable
 fun rememberMatchCalendarPermissionHandler(
-    onPermissionResult: (granted: Boolean) -> Unit
+    onPermissionResult: (granted: Boolean) -> Unit,
 ): MatchCalendarPermissionHandler {
     val activity = LocalActivity.current
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
     ) { result ->
         val granted = CalendarPermissions.REQUIRED.all { permission ->
             result[permission] == true
@@ -33,7 +31,7 @@ fun rememberMatchCalendarPermissionHandler(
         MatchCalendarPermissionHandler(
             launchSystemPermission = {
                 permissionLauncher.launch(CalendarPermissions.REQUIRED)
-            }
+            },
         )
     }
 }

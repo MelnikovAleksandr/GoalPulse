@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.net.ConnectException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -26,7 +27,6 @@ import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
 
 class TeamInfoRepositoryImplTest {
 
@@ -41,7 +41,7 @@ class TeamInfoRepositoryImplTest {
         repository = TeamInfoRepositoryImpl(
             footballApi = api,
             realmOptions = realmOptions,
-            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl()
+            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl(),
         )
     }
 
@@ -63,8 +63,8 @@ class TeamInfoRepositoryImplTest {
                 squad = null,
                 tla = null,
                 venue = null,
-                website = null
-            )
+                website = null,
+            ),
         )
 
         val result = repository.getTeamInfoById("57")
@@ -127,10 +127,10 @@ class TeamInfoRepositoryImplTest {
                     currentSeason = null,
                     emblem = null,
                     name = "Premier League",
-                    type = null
+                    type = null,
                 ),
-                matches = emptyList()
-            )
+                matches = emptyList(),
+            ),
         )
 
         val result = repository.getTeamMatchesFromRemoteToLocal("65")
@@ -178,14 +178,14 @@ class TeamInfoRepositoryImplTest {
         }
 
         override suspend fun getCompetitionStandingById(
-            competitionId: String
+            competitionId: String,
         ): Response<CompetitionStandingsModelDTO> {
             error("not used")
         }
 
         override suspend fun getCompetitionTopScorers(
             competitionId: String,
-            limit: Int
+            limit: Int,
         ): Response<CompetitionScorersModelDTO> {
             error("not used")
         }

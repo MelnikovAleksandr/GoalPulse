@@ -13,13 +13,13 @@ import ru.asmelnikov.utils.getErrorMessage
 class CompetitionsScreenViewModel(
     private val footballRepository: CompetitionsRepository,
     private val stringResourceProvider: StringResourceProvider,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel(),
     ContainerHost<CompetitionsScreenState, CompetitionsScreenSideEffects> {
 
     override val container = container<CompetitionsScreenState, CompetitionsScreenSideEffects>(
         initialState = CompetitionsScreenState(),
-        savedStateHandle = savedStateHandle
+        savedStateHandle = savedStateHandle,
     ) {
         collectCompetitionsFlowFromLocal()
         updateCompetitionsFromRemoteToLocal()
@@ -54,5 +54,4 @@ class CompetitionsScreenViewModel(
         reduce { state.copy(isLoading = false) }
         postSideEffect(CompetitionsScreenSideEffects.Snackbar(error.getErrorMessage(stringResourceProvider)))
     }
-
 }

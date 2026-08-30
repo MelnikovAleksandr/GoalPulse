@@ -47,9 +47,8 @@ fun TeamInfoPage(
     topInset: Dp,
     news: News,
     isLoadingNews: Boolean,
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
-
     val listState = rememberLazyListState()
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -59,12 +58,12 @@ fun TeamInfoPage(
     val context = LocalContext.current
     AnimatedContent(
         targetState = teamInfo.name.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyState ->
         if (emptyState && !isLoading) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -74,7 +73,7 @@ fun TeamInfoPage(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -82,43 +81,48 @@ fun TeamInfoPage(
                         .fillMaxSize(),
                     state = listState,
                     verticalArrangement = Arrangement.spacedBy(dimens.small1),
-                    contentPadding = PaddingValues(bottom = dimens.small1, start = dimens.small1, end = dimens.small1, top = topInset)
+                    contentPadding = PaddingValues(
+                        bottom = dimens.small1,
+                        start = dimens.small1,
+                        end = dimens.small1,
+                        top = topInset,
+                    ),
                 ) {
                     item {
                         Column(
-                            modifier = Modifier
+                            modifier = Modifier,
                         ) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(dimens.small1),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(
                                     text = stringResource(R.string.team_info_area),
                                     textAlign = TextAlign.Start,
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 SubComposeAsyncImageCommon(
                                     imageUri = teamInfo.area.flag.ifBlank { R.drawable.unknown_flag },
                                     shape = CircleShape,
-                                    size = dimens.medium2
+                                    size = dimens.medium2,
                                 )
                             }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(dimens.small1),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(
                                     text = stringResource(R.string.team_info_address),
                                     textAlign = TextAlign.Start,
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
                                     text = teamInfo.address,
@@ -126,21 +130,21 @@ fun TeamInfoPage(
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.secondary,
                                 )
                             }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(dimens.small1),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(
                                     text = stringResource(R.string.team_info_founded),
                                     textAlign = TextAlign.Start,
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
                                     text = teamInfo.founded.toString(),
@@ -148,7 +152,7 @@ fun TeamInfoPage(
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.secondary,
                                 )
                             }
 
@@ -156,14 +160,14 @@ fun TeamInfoPage(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(dimens.small1),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(
                                     text = stringResource(R.string.team_info_venue),
                                     textAlign = TextAlign.Start,
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
                                     text = teamInfo.venue,
@@ -171,7 +175,7 @@ fun TeamInfoPage(
                                     style = MaterialTheme.typography.titleSmall,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colorScheme.secondary
+                                    color = MaterialTheme.colorScheme.secondary,
                                 )
                             }
 
@@ -179,7 +183,7 @@ fun TeamInfoPage(
                                 modifier = Modifier.padding(dimens.small1),
                                 onClick = {
                                     getWebIntent(teamInfo.website, context)
-                                }
+                                },
                             ) {
                                 Text(
                                     text = teamInfo.website,
@@ -188,7 +192,7 @@ fun TeamInfoPage(
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     textDecoration = TextDecoration.Underline,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.primary,
                                 )
                             }
                         }
@@ -200,18 +204,18 @@ fun TeamInfoPage(
                             style = MaterialTheme.typography.titleLarge,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
                         )
                     }
                     items(
-                        items = news.articles
+                        items = news.articles,
                     ) { article ->
                         ArticleItem(
                             modifier = Modifier.animateItem(),
                             article = article,
                             onArticleClick = { url ->
                                 getWebIntent(url, context)
-                            }
+                            },
                         )
                     }
                     item {
@@ -234,7 +238,7 @@ private fun TeamInfoPagePreview() {
             isPullToRefreshEnabled = true,
             topInset = Dp.Hairline,
             news = News(),
-            isLoadingNews = false
+            isLoadingNews = false,
         )
     }
 }

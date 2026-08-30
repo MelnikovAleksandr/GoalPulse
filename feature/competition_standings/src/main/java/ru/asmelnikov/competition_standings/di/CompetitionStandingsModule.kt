@@ -12,7 +12,7 @@ val competitionStandingsModule = module {
             matchCalendarRepository = get(),
             stringResourceProvider = get(),
             compId = compId,
-            compUrl = compUrl
+            compUrl = compUrl,
         )
     }
 }

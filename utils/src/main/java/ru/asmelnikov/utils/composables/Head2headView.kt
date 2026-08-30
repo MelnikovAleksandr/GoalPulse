@@ -17,9 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import ru.asmelnikov.utils.R
 import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.ui.theme.topGreen
-import ru.asmelnikov.utils.R
 
 @Composable
 fun Head2headView(
@@ -28,73 +28,80 @@ fun Head2headView(
     awayWinsPercentage: Float,
     homeWins: Int,
     homeDraws: Int,
-    homeLosses: Int
+    homeLosses: Int,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(dimens.medium2)
+            .height(dimens.medium2),
     ) {
         Row(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
-            if (homeWinsPercentage > 0)
+            if (homeWinsPercentage > 0) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(homeWinsPercentage)
-                        .background(topGreen)
+                        .background(topGreen),
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_home_wins_hyphen)} ${homeWinsPercentage.toInt()}% (${homeWins})",
+                        text = "${stringResource(
+                            R.string.stat_home_wins_hyphen,
+                        )} ${homeWinsPercentage.toInt()}% ($homeWins)",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.surface
+                        color = MaterialTheme.colorScheme.surface,
                     )
                 }
-            if (drawsPercentage > 0)
+            }
+            if (drawsPercentage > 0) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(drawsPercentage)
-                        .background(MaterialTheme.colorScheme.secondary)
+                        .background(MaterialTheme.colorScheme.secondary),
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_draws_hyphen)} ${drawsPercentage.toInt()}% (${homeDraws})",
+                        text = "${stringResource(R.string.stat_draws_hyphen)} ${drawsPercentage.toInt()}% ($homeDraws)",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.surface
+                        color = MaterialTheme.colorScheme.surface,
                     )
                 }
-            if (awayWinsPercentage > 0)
+            }
+            if (awayWinsPercentage > 0) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(awayWinsPercentage)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.primary),
                 ) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .basicMarquee(iterations = Int.MAX_VALUE),
-                        text = "${stringResource(R.string.stat_away_wins_hyphen)} ${awayWinsPercentage.toInt()}% (${homeLosses})",
+                        text = "${stringResource(
+                            R.string.stat_away_wins_hyphen,
+                        )} ${awayWinsPercentage.toInt()}% ($homeLosses)",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.surface
+                        color = MaterialTheme.colorScheme.surface,
                     )
                 }
+            }
         }
     }
 }

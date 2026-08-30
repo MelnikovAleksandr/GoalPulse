@@ -83,14 +83,13 @@ fun TeamInfoScreen(
         String,
         SnackbarDuration,
         String?,
-        actionPerformed: () -> Unit
+        actionPerformed: () -> Unit,
     ) -> Unit,
-    viewModel: TeamInfoViewModel = koinViewModel(parameters = { parametersOf(teamId) })
+    viewModel: TeamInfoViewModel = koinViewModel(parameters = { parametersOf(teamId) }),
 ) {
-
     val state by viewModel.container.stateFlow.collectAsState()
     val calendarPermissionHandler = rememberMatchCalendarPermissionHandler(
-        onPermissionResult = viewModel::onCalendarPermissionResult
+        onPermissionResult = viewModel::onCalendarPermissionResult,
     )
     val context = LocalContext.current
 
@@ -99,7 +98,7 @@ fun TeamInfoScreen(
             is TeamInfoSideEffects.Snackbar -> showSnackbar(
                 it.text,
                 it.duration,
-                null
+                null,
             ) {}
 
             is TeamInfoSideEffects.BackClick -> appState.popUp()
@@ -138,9 +137,8 @@ fun TeamInfoScreen(
         isLoadingNews = state.isNewsLoading,
         calendarMatchIds = state.calendarMatchIds,
         calendarBusyMatchIds = state.calendarBusyMatchIds,
-        onCalendarClick = viewModel::onCalendarClick
+        onCalendarClick = viewModel::onCalendarClick,
     )
-
 }
 
 @OptIn(ExperimentalToolbarApi::class)
@@ -164,7 +162,7 @@ fun TeamInfoScreenContent(
     isLoadingNews: Boolean,
     calendarMatchIds: Set<Int> = emptySet(),
     calendarBusyMatchIds: Set<Int> = emptySet(),
-    onCalendarClick: (Match) -> Unit = {}
+    onCalendarClick: (Match) -> Unit = {},
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val backdrop = rememberLayerBackdrop {
@@ -177,7 +175,7 @@ fun TeamInfoScreenContent(
     val collapsingState = rememberCollapsingToolbarScaffoldState()
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { TabsTeam.entries.count() }
+        pageCount = { TabsTeam.entries.count() },
     )
     var isPullActive by remember { mutableStateOf(false) }
     var blockOuterPagerScroll by remember { mutableStateOf(false) }
@@ -196,7 +194,7 @@ fun TeamInfoScreenContent(
             ImageRequest.Builder(context)
                 .data(teamInfo.crest)
                 .allowHardware(false)
-                .build()
+                .build(),
         )
         val bitmap = (result as? SuccessResult)
             ?.drawable
@@ -218,28 +216,28 @@ fun TeamInfoScreenContent(
     val color1 by animateColorAsState(
         targetValue = topColors.getOrElse(0) { defaultColor },
         animationSpec = tween(durationMillis = 500),
-        label = "color1"
+        label = "color1",
     )
 
     val color2 by animateColorAsState(
         targetValue = topColors.getOrElse(1) { color1 },
         animationSpec = tween(durationMillis = 500),
-        label = "color2"
+        label = "color2",
     )
 
     val color3 by animateColorAsState(
         targetValue = topColors.getOrElse(2) { color1 },
         animationSpec = tween(durationMillis = 500),
-        label = "color3"
+        label = "color3",
     )
 
     val gradientBrush = Brush.verticalGradient(
-        colors = listOf(color1, color2, color3)
+        colors = listOf(color1, color2, color3),
     )
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         CollapsingToolbarScaffold(
             modifier = Modifier.fillMaxSize(),
@@ -253,11 +251,10 @@ fun TeamInfoScreenContent(
                     secondColor = color2,
                     teamName = teamInfo.name,
                     teamCrest = teamInfo.crest,
-                    onBackClick = onBackClick
+                    onBackClick = onBackClick,
                 )
             },
             body = {
-
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     containerColor = Color.Transparent,
@@ -274,8 +271,8 @@ fun TeamInfoScreenContent(
                                     .drawProgressivePlainBackdrop(
                                         backdrop = backdrop,
                                         blurRadiusPx = blurRadiusPx,
-                                        tint = color2
-                                    )
+                                        tint = color2,
+                                    ),
                             )
 
                             LiquidBottomTabs(
@@ -285,8 +282,8 @@ fun TeamInfoScreenContent(
                                 background = color2,
                                 modifier = Modifier.padding(
                                     horizontal = dimens.medium2,
-                                    vertical = dimens.small3
-                                )
+                                    vertical = dimens.small3,
+                                ),
                             ) {
                                 tabTitles.forEachIndexed { index, title ->
                                     LiquidBottomTab({
@@ -295,13 +292,13 @@ fun TeamInfoScreenContent(
                                         Text(
                                             text = title,
                                             color = MaterialTheme.colorScheme.onBackground,
-                                            style = MaterialTheme.typography.labelMedium
+                                            style = MaterialTheme.typography.labelMedium,
                                         )
                                     }
                                 }
                             }
                         }
-                    }
+                    },
                 ) { paddingValues ->
                     val topInset = paddingValues.calculateTopPadding()
                     HorizontalPager(
@@ -312,19 +309,20 @@ fun TeamInfoScreenContent(
                         state = pagerState,
                         beyondViewportPageCount = 1,
                         userScrollEnabled = !blockOuterPagerScroll,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.Top,
                     ) { page ->
                         when (page) {
                             0 -> {
                                 SquadPagerList(
                                     teamInfo = teamInfo,
                                     topInset = topInset,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     isLoading = isLoading,
                                     itemColor = color2,
                                     onReloadClick = onTeamInfoReload,
                                     onPersonClick = onPersonClick,
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
 
@@ -332,12 +330,13 @@ fun TeamInfoScreenContent(
                                 TeamInfoPage(
                                     teamInfo = teamInfo,
                                     topInset = topInset,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     isLoading = isLoading,
                                     onReloadClick = onTeamInfoReload,
                                     news = news,
                                     isLoadingNews = isLoadingNews,
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
 
@@ -347,7 +346,8 @@ fun TeamInfoScreenContent(
                                     matchesAhead = matchesAhead,
                                     isLoading = isMatchesLoading,
                                     topInset = topInset,
-                                    isPullToRefreshEnabled = !isPortrait() || collapsingState.toolbarState.progress == 1f,
+                                    isPullToRefreshEnabled =
+                                    !isPortrait() || collapsingState.toolbarState.progress == 1f,
                                     onReloadClick = onMatchesReload,
                                     expandedItemId = expandedItemId,
                                     onMatchItemClick = onMatchItemClick,
@@ -359,13 +359,13 @@ fun TeamInfoScreenContent(
                                     calendarBusyMatchIds = calendarBusyMatchIds,
                                     onCalendarClick = onCalendarClick,
                                     onOuterPagerScrollBlocked = { blockOuterPagerScroll = it },
-                                    onPullActiveChange = { isPullActive = it }
+                                    onPullActiveChange = { isPullActive = it },
                                 )
                             }
                         }
                     }
                 }
-            }
+            },
         )
     }
 }
@@ -390,8 +390,7 @@ private fun TeamInfoPreview1() {
             onMatchesReload = {},
             onPersonClick = {},
             news = News(),
-            isLoadingNews = false
+            isLoadingNews = false,
         )
     }
 }
-

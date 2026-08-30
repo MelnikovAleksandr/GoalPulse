@@ -50,7 +50,7 @@ class SearchBarScrollState(initialHideOffsetPx: Float = 0f) {
             animate(
                 initialValue = start,
                 targetValue = target,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
             ) { value, _ ->
                 hideOffsetPx = value
             }
@@ -71,12 +71,12 @@ class SearchBarScrollState(initialHideOffsetPx: Float = 0f) {
     companion object {
         val Saver: Saver<SearchBarScrollState, Float> = Saver(
             save = { it.hideOffsetPx },
-            restore = { SearchBarScrollState(initialHideOffsetPx = it) }
+            restore = { SearchBarScrollState(initialHideOffsetPx = it) },
         )
     }
 }
 
 @Composable
 fun rememberSearchBarScrollState(): SearchBarScrollState = rememberSaveable(
-    saver = SearchBarScrollState.Saver
+    saver = SearchBarScrollState.Saver,
 ) { SearchBarScrollState() }

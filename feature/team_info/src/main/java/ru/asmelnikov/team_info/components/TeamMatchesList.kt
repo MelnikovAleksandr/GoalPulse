@@ -64,7 +64,7 @@ fun TeamMatchesList(
     calendarBusyMatchIds: Set<Int> = emptySet(),
     onCalendarClick: (Match) -> Unit = {},
     onOuterPagerScrollBlocked: (Boolean) -> Unit = {},
-    onPullActiveChange: (Boolean) -> Unit = {}
+    onPullActiveChange: (Boolean) -> Unit = {},
 ) {
     val backdrop = rememberLayerBackdrop {
         drawRect(color)
@@ -76,24 +76,24 @@ fun TeamMatchesList(
             buildList {
                 if (matchesCompleted.isNotEmpty()) add(TabsMatches.Completed)
                 if (matchesAhead.isNotEmpty()) add(TabsMatches.Ahead)
-            }
+            },
         )
     }
 
     val pagerState = rememberPagerState(
-        initialPage = 0
+        initialPage = 0,
     ) {
         tabListState.count()
     }
 
     AnimatedContent(
         targetState = matchesCompleted.isEmpty() && matchesAhead.isEmpty(),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) { emptyState ->
         if (emptyState && !isLoading) {
             EmptyContent(
                 modifier = Modifier.padding(top = topInset),
-                onReloadClick = onReloadClick
+                onReloadClick = onReloadClick,
             )
         } else {
             LiquidPullToRefreshWrapper(
@@ -103,7 +103,7 @@ fun TeamMatchesList(
                 onRefresh = onReloadClick,
                 enabled = isPullToRefreshEnabled,
                 onPullActiveChange = onPullActiveChange,
-                topOffset = topInset
+                topOffset = topInset,
             ) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -128,7 +128,7 @@ fun TeamMatchesList(
                                                 onOuterPagerScrollBlocked(false)
                                             }
                                         },
-                                    contentAlignment = Alignment.Center
+                                    contentAlignment = Alignment.Center,
                                 ) {
                                     LiquidBottomTabs(
                                         pagerState = pagerState,
@@ -139,7 +139,7 @@ fun TeamMatchesList(
                                         background = color,
                                         modifier = Modifier
                                             .fillMaxWidth(0.7f)
-                                            .padding(top = topInset, bottom = dimens.small3)
+                                            .padding(top = topInset, bottom = dimens.small3),
                                     ) {
                                         tabTitles.forEachIndexed { index, title ->
                                             LiquidBottomTab({
@@ -150,7 +150,7 @@ fun TeamMatchesList(
                                                 Text(
                                                     text = title,
                                                     color = MaterialTheme.colorScheme.onBackground,
-                                                    style = MaterialTheme.typography.labelSmall
+                                                    style = MaterialTheme.typography.labelSmall,
                                                 )
                                             }
                                         }
@@ -158,7 +158,7 @@ fun TeamMatchesList(
                                 }
                             }
                         }
-                    }
+                    },
                 ) { innerPaddingValues ->
                     val innerTopInset = innerPaddingValues.calculateTopPadding()
                     val topInsetResult =
@@ -169,7 +169,7 @@ fun TeamMatchesList(
                             .fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 1,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.Top,
                     ) { page ->
                         when (tabListState[page]) {
                             TabsMatches.Completed -> {
@@ -181,7 +181,7 @@ fun TeamMatchesList(
                                     onMatchItemClick = onMatchItemClick,
                                     head2head = head2head,
                                     isHead2headLoading = isHead2headLoading,
-                                    teamId = teamId
+                                    teamId = teamId,
                                 )
                             }
 
@@ -197,7 +197,7 @@ fun TeamMatchesList(
                                     teamId = teamId,
                                     calendarMatchIds = calendarMatchIds,
                                     calendarBusyMatchIds = calendarBusyMatchIds,
-                                    onCalendarClick = onCalendarClick
+                                    onCalendarClick = onCalendarClick,
                                 )
                             }
                         }
@@ -215,7 +215,7 @@ private fun MatchesPreview1() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             TeamMatchesList(
                 matchesCompleted = getMockMatchesComplete(),
@@ -229,7 +229,7 @@ private fun MatchesPreview1() {
                 isLoading = false,
                 head2head = getMockHead2Head(),
                 teamId = "66",
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
             )
         }
     }
@@ -242,7 +242,7 @@ private fun MatchesPreview2() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             TeamMatchesList(
                 matchesCompleted = getMockMatchesComplete(),
@@ -256,7 +256,7 @@ private fun MatchesPreview2() {
                 isLoading = false,
                 head2head = getMockHead2Head(),
                 teamId = "66",
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
             )
         }
     }
@@ -269,7 +269,7 @@ private fun MatchesPreview3() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             TeamMatchesList(
                 matchesCompleted = emptyList(),
@@ -283,7 +283,7 @@ private fun MatchesPreview3() {
                 isLoading = false,
                 head2head = getMockHead2Head(),
                 teamId = "66",
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
             )
         }
     }

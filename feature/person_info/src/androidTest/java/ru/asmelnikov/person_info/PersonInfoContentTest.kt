@@ -131,7 +131,7 @@ class PersonInfoContentTest {
         person: Person,
         isLoading: Boolean = false,
         onReload: () -> Unit = {},
-        onBackClick: () -> Unit = {}
+        onBackClick: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -140,7 +140,7 @@ class PersonInfoContentTest {
                         isLoading = isLoading,
                         person = person,
                         onReload = onReload,
-                        onBackClick = onBackClick
+                        onBackClick = onBackClick,
                     )
                 }
             }
@@ -154,7 +154,7 @@ class PersonInfoContentTest {
 
 private val emptyPerson = Person(
     id = 44,
-    name = ""
+    name = "",
 )
 
 private val saka = Person(
@@ -164,7 +164,7 @@ private val saka = Person(
     nationality = "England",
     position = PlayerPosition.RIGHT_WINGER,
     shirtNumber = 7,
-    currentTeam = CurrentTeam(crest = "https://crests.football-data.org/57.svg")
+    currentTeam = CurrentTeam(crest = "https://crests.football-data.org/57.svg"),
 )
 
 // endregion

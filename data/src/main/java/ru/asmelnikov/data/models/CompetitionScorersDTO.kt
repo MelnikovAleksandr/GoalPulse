@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class CompetitionScorersModelDTO(
     @Json(name = "competition") val competition: CompetitionDTO?,
     @Json(name = "season") val season: CurrentSeasonDTO?,
-    @Json(name = "scorers") val scorers: List<ScorerDTO>?
+    @Json(name = "scorers") val scorers: List<ScorerDTO>?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -17,5 +17,5 @@ data class ScorerDTO(
     @Json(name = "penalties") val penalties: Int?,
     @Json(name = "playedMatches") val playedMatches: Int?,
     @Json(name = "player") val player: PersonDTO?,
-    @Json(name = "team") val team: TeamInfoDTO?
+    @Json(name = "team") val team: TeamInfoDTO?,
 )

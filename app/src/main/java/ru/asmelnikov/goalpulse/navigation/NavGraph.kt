@@ -22,7 +22,6 @@ import ru.asmelnikov.team_info.TeamInfoScreen
 import ru.asmelnikov.utils.composables.MainAppState
 import ru.asmelnikov.utils.navigation.Routes
 
-
 @Composable
 fun SharedTransitionScope.NavGraph(
     appState: MainAppState,
@@ -31,10 +30,9 @@ fun SharedTransitionScope.NavGraph(
         String,
         SnackbarDuration,
         String?,
-        actionPerformed: () -> Unit
-    ) -> Unit
+        actionPerformed: () -> Unit,
+    ) -> Unit,
 ) {
-
     NavDisplay(
         modifier = Modifier.padding(paddingValues),
         backStack = appState.backStack,
@@ -43,14 +41,14 @@ fun SharedTransitionScope.NavGraph(
         },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
+            rememberViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
             entry<Routes.Competitions> {
                 CompetitionsScreen(
                     appState = appState,
                     showSnackbar = showSnackbar,
-                    animatedVisibilityScope = LocalNavAnimatedContentScope.current
+                    animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                 )
             }
 
@@ -60,7 +58,7 @@ fun SharedTransitionScope.NavGraph(
                     compId = it.compId,
                     compUrl = it.compUrl,
                     showSnackbar = showSnackbar,
-                    animatedVisibilityScope = LocalNavAnimatedContentScope.current
+                    animatedVisibilityScope = LocalNavAnimatedContentScope.current,
                 )
             }
 
@@ -68,7 +66,7 @@ fun SharedTransitionScope.NavGraph(
                 TeamInfoScreen(
                     appState = appState,
                     teamId = it.teamId,
-                    showSnackbar = showSnackbar
+                    showSnackbar = showSnackbar,
                 )
             }
 
@@ -76,9 +74,9 @@ fun SharedTransitionScope.NavGraph(
                 PersonInfoScreen(
                     appState = appState,
                     personId = it.personId,
-                    showSnackbar = showSnackbar
+                    showSnackbar = showSnackbar,
                 )
             }
-        }
+        },
     )
 }

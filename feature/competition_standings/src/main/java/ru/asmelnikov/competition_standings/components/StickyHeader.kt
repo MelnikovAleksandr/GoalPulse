@@ -16,18 +16,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ru.asmelnikov.domain.models.MatchesByTour
 import ru.asmelnikov.domain.models.TournamentType
-import ru.asmelnikov.utils.ui.theme.dimens
 import ru.asmelnikov.utils.R
+import ru.asmelnikov.utils.ui.theme.dimens
 
 @Composable
 fun StickyHeader(
     modifier: Modifier = Modifier,
-    matchesByTour: MatchesByTour
+    matchesByTour: MatchesByTour,
 ) {
-
     val text = when {
-        matchesByTour.matchDay == -1 -> stringResource(matchesByTour.matches.firstOrNull()?.stage?.stringResId ?: R.string.non)
-        matchesByTour.seasonType == TournamentType.CUP -> "${matchesByTour.matchDay} ${stringResource(R.string.tour)} ${stringResource(matchesByTour.stage.stringResId)}"
+        matchesByTour.matchDay == -1 -> stringResource(matchesByTour.matches.firstOrNull()?.stage?.stringResId ?: R.string.non,)
+        matchesByTour.seasonType == TournamentType.CUP -> "${matchesByTour.matchDay} ${stringResource(
+            R.string.tour,
+        )} ${stringResource(matchesByTour.stage.stringResId)}"
         else -> "${matchesByTour.matchDay} ${stringResource(R.string.tour)}"
     }
 
@@ -37,7 +38,7 @@ fun StickyHeader(
             .fillMaxWidth()
             .height(dimens.medium3),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.Start,
     ) {
         Text(
             modifier = Modifier.padding(start = dimens.small3),
@@ -46,7 +47,7 @@ fun StickyHeader(
             style = MaterialTheme.typography.labelMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onSecondary
+            color = MaterialTheme.colorScheme.onSecondary,
         )
     }
 }

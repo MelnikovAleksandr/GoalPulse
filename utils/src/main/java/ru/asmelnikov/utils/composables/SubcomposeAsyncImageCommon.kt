@@ -34,16 +34,15 @@ fun SubComposeAsyncImageCommon(
     loading: @Composable (SubcomposeAsyncImageScope.(AsyncImagePainter.State.Loading) -> Unit)? = {
         Box(
             modifier = Modifier.matchParentSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator(
-                modifier = Modifier.size(size * 0.6f)
+                modifier = Modifier.size(size * 0.6f),
             )
         }
     },
-    contentScale: ContentScale = ContentScale.FillHeight
+    contentScale: ContentScale = ContentScale.FillHeight,
 ) {
-
     if (isInPreview()) {
         Image(
             painter = painterResource(R.drawable.preview_image),
@@ -51,7 +50,7 @@ fun SubComposeAsyncImageCommon(
             contentScale = contentScale,
             modifier = modifier
                 .size(size)
-                .clip(shape)
+                .clip(shape),
         )
     } else {
         SubcomposeAsyncImage(
@@ -69,12 +68,10 @@ fun SubComposeAsyncImageCommon(
             contentScale = contentScale,
             modifier = modifier
                 .size(size)
-                .clip(shape)
+                .clip(shape),
         )
     }
 }
 
 @Composable
-fun isInPreview(): Boolean {
-    return LocalInspectionMode.current
-}
+fun isInPreview(): Boolean = LocalInspectionMode.current

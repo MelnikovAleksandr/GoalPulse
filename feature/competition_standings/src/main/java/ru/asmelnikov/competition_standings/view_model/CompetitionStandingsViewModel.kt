@@ -19,12 +19,12 @@ class CompetitionStandingsViewModel(
     private val matchCalendarRepository: MatchCalendarRepository,
     private val stringResourceProvider: StringResourceProvider,
     private val compId: String,
-    private val compUrl: String
+    private val compUrl: String,
 ) : ViewModel(),
     ContainerHost<CompetitionStandingsState, CompetitionStandingSideEffects> {
 
     override val container = container<CompetitionStandingsState, CompetitionStandingSideEffects>(
-        initialState = CompetitionStandingsState()
+        initialState = CompetitionStandingsState(),
     ) {
         reduce { state.copy(compId = compId, compUrl = compUrl) }
         collectStandingsFlowFromLocal()
@@ -45,15 +45,17 @@ class CompetitionStandingsViewModel(
             return@intent
         }
         reduce { state.copy(expandedItem = itemId, isHead2headLoading = true) }
-        when (val head2head =
-            standingsRepository.getHead2headById(
-                itemId
-            )) {
+        when (
+            val head2head =
+                standingsRepository.getHead2headById(
+                    itemId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
                         head2head = head2head.data ?: Head2head(),
-                        isHead2headLoading = false
+                        isHead2headLoading = false,
                     )
                 }
             }
@@ -81,8 +83,8 @@ class CompetitionStandingsViewModel(
             if (intent == null) {
                 postSideEffect(
                     CompetitionStandingSideEffects.Snackbar(
-                        stringResourceProvider.getString(R.string.calendar_event_failed)
-                    )
+                        stringResourceProvider.getString(R.string.calendar_event_failed),
+                    ),
                 )
                 return@intent
             }
@@ -94,8 +96,8 @@ class CompetitionStandingsViewModel(
             reduce { state.copy(calendarMatchIds = scheduledIds) }
             postSideEffect(
                 CompetitionStandingSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -103,8 +105,8 @@ class CompetitionStandingsViewModel(
         if (intent == null) {
             postSideEffect(
                 CompetitionStandingSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -121,7 +123,7 @@ class CompetitionStandingsViewModel(
         reduce {
             state.copy(
                 pendingCalendarMatch = null,
-                calendarMatchIds = scheduledIds
+                calendarMatchIds = scheduledIds,
             )
         }
         if (match == null) return@intent
@@ -130,8 +132,8 @@ class CompetitionStandingsViewModel(
             if (intent == null) {
                 postSideEffect(
                     CompetitionStandingSideEffects.Snackbar(
-                        stringResourceProvider.getString(R.string.calendar_event_failed)
-                    )
+                        stringResourceProvider.getString(R.string.calendar_event_failed),
+                    ),
                 )
                 return@intent
             }
@@ -141,8 +143,8 @@ class CompetitionStandingsViewModel(
         if (matchCalendarRepository.findEventId(match.id) == null) {
             postSideEffect(
                 CompetitionStandingSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -150,8 +152,8 @@ class CompetitionStandingsViewModel(
         if (intent == null) {
             postSideEffect(
                 CompetitionStandingSideEffects.Snackbar(
-                    stringResourceProvider.getString(R.string.calendar_event_failed)
-                )
+                    stringResourceProvider.getString(R.string.calendar_event_failed),
+                ),
             )
             return@intent
         }
@@ -161,8 +163,8 @@ class CompetitionStandingsViewModel(
     fun onCalendarInsertFailed() = intent {
         postSideEffect(
             CompetitionStandingSideEffects.Snackbar(
-                stringResourceProvider.getString(R.string.calendar_event_failed)
-            )
+                stringResourceProvider.getString(R.string.calendar_event_failed),
+            ),
         )
     }
 
@@ -172,14 +174,16 @@ class CompetitionStandingsViewModel(
 
     fun updateScorersFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingScorers = true) }
-        when (val compsFromRemote =
-            standingsRepository.getCompetitionTopScorersBySeason(
-                state.compId
-            )) {
+        when (
+            val compsFromRemote =
+                standingsRepository.getCompetitionTopScorersBySeason(
+                    state.compId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        isLoadingScorers = false
+                        isLoadingScorers = false,
                     )
                 }
             }
@@ -187,7 +191,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isLoadingScorers = false
+                        isLoadingScorers = false,
                     )
                 }
                 handleError(compsFromRemote.httpErrors)
@@ -197,14 +201,16 @@ class CompetitionStandingsViewModel(
 
     fun updateStandingsFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingStandings = true) }
-        when (val compsFromRemote =
-            standingsRepository.getCompetitionStandingsFromRemoteToLocalById(
-                state.compId
-            )) {
+        when (
+            val compsFromRemote =
+                standingsRepository.getCompetitionStandingsFromRemoteToLocalById(
+                    state.compId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        isLoadingStandings = false
+                        isLoadingStandings = false,
                     )
                 }
             }
@@ -212,7 +218,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isLoadingStandings = false
+                        isLoadingStandings = false,
                     )
                 }
                 handleError(compsFromRemote.httpErrors)
@@ -222,14 +228,16 @@ class CompetitionStandingsViewModel(
 
     fun updateMatchesFromRemoteToLocal() = intent {
         reduce { state.copy(isLoadingMatches = true) }
-        when (val matchesFromRemote =
-            standingsRepository.getAllMatchesFromRemoteToLocal(
-                state.compId
-            )) {
+        when (
+            val matchesFromRemote =
+                standingsRepository.getAllMatchesFromRemoteToLocal(
+                    state.compId,
+                )
+        ) {
             is Resource.Success -> {
                 reduce {
                     state.copy(
-                        isLoadingMatches = false
+                        isLoadingMatches = false,
                     )
                 }
             }
@@ -237,7 +245,7 @@ class CompetitionStandingsViewModel(
             is Resource.Error -> {
                 reduce {
                     state.copy(
-                        isLoadingMatches = false
+                        isLoadingMatches = false,
                     )
                 }
                 handleError(matchesFromRemote.httpErrors)
@@ -249,13 +257,12 @@ class CompetitionStandingsViewModel(
         postSideEffect(CompetitionStandingSideEffects.OnTeamInfoNavigate(teamId = teamId.toString()))
     }
 
-
     private fun collectStandingsFlowFromLocal() = intent {
         standingsRepository.getStandingsFlowFromLocalById(state.compId).collect { standings ->
             if (standings != null) {
                 reduce {
                     state.copy(
-                        competitionStandings = standings
+                        competitionStandings = standings,
                     )
                 }
             }
@@ -266,7 +273,7 @@ class CompetitionStandingsViewModel(
         standingsRepository.getScorersFlowFromLocal(state.compId).collect { scorers ->
             reduce {
                 state.copy(
-                    scorers = scorers?.scorers ?: emptyList()
+                    scorers = scorers?.scorers ?: emptyList(),
                 )
             }
         }
@@ -281,7 +288,7 @@ class CompetitionStandingsViewModel(
                     state.copy(
                         matchesCompleted = matches?.matchesByTourCompleted ?: emptyList(),
                         matchesAhead = ahead,
-                        calendarMatchIds = scheduledIds
+                        calendarMatchIds = scheduledIds,
                     )
                 }
             }
@@ -293,17 +300,17 @@ class CompetitionStandingsViewModel(
         return matchCalendarRepository.findScheduledMatchIds(matchIds)
     }
 
-    private fun aheadMatchIds(tours: List<MatchesByTour>): List<Int> {
-        return tours.flatMap { tour -> tour.matches.map { it.id } }
+    private fun aheadMatchIds(tours: List<MatchesByTour>): List<Int> = tours.flatMap { tour ->
+        tour.matches.map { it.id }
     }
 
     private fun handleError(error: ErrorsTypesHttp?) = intent {
         postSideEffect(
             CompetitionStandingSideEffects.Snackbar(
                 error.getErrorMessage(
-                    stringResourceProvider
-                )
-            )
+                    stringResourceProvider,
+                ),
+            ),
         )
     }
 }

@@ -14,9 +14,8 @@ fun PagerTabRow(
     selectedIndex: Int,
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.background,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
 ) {
-
     PrimaryTabRow(
         selectedTabIndex = selectedIndex,
         modifier = modifier,
@@ -29,15 +28,19 @@ fun PagerTabRow(
                     text = {
                         Text(
                             text = title,
-                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = if (selected) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                             style = MaterialTheme.typography.titleSmall,
-                            maxLines = 1
+                            maxLines = 1,
                         )
                     },
                     selected = selected,
-                    onClick = { onTabSelected(index) }
+                    onClick = { onTabSelected(index) },
                 )
             }
-        }
+        },
     )
 }

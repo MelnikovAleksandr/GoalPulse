@@ -9,16 +9,14 @@ import ru.asmelnikov.utils.Resource
 
 class PersonRepositoryImpl(
     private val footballApi: FootballApi,
-    private val retrofitErrorsHandler: RetrofitErrorsHandler
+    private val retrofitErrorsHandler: RetrofitErrorsHandler,
 ) : PersonRepository {
-    override suspend fun getPersonInfo(personId: String): Resource<Person> {
-        return retrofitErrorsHandler.executeSafely {
-            val response = footballApi.getPersonInfo(personId)
-            if (response.isSuccessful && response.code() == 200) {
-                Resource.Success(response.body()?.toPerson() ?: Person())
-            } else {
-                retrofitErrorsHandler.responseFailureHandler(response)
-            }
+    override suspend fun getPersonInfo(personId: String): Resource<Person> = retrofitErrorsHandler.executeSafely {
+        val response = footballApi.getPersonInfo(personId)
+        if (response.isSuccessful && response.code() == 200) {
+            Resource.Success(response.body()?.toPerson() ?: Person())
+        } else {
+            retrofitErrorsHandler.responseFailureHandler(response)
         }
     }
 }

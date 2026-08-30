@@ -18,46 +18,48 @@ import ru.asmelnikov.utils.Resource
 class TeamInfoRepositoryImpl(
     private val footballApi: FootballApi,
     private val realmOptions: TeamInfoRealmOptions,
-    private val retrofitErrorsHandler: RetrofitErrorsHandler
+    private val retrofitErrorsHandler: RetrofitErrorsHandler,
 ) : TeamInfoRepository {
-    override suspend fun getTeamInfoById(teamId: String): Resource<Boolean> {
-        return retrofitErrorsHandler.executeSafely {
-            val response =
-                footballApi.getTeamInfoById(teamId)
-            if (response.isSuccessful && response.code() == 200) {
-                val team = response.body()?.toTeamInfoEntity()
-                realmOptions.upsertTeamInfoFromRemoteToLocal(
-                    team ?: TeamInfoEntity()
-                )
-                Resource.Success(true)
-            } else {
-                retrofitErrorsHandler.responseFailureHandler(response)
-            }
+    override suspend fun getTeamInfoById(teamId: String): Resource<Boolean> = retrofitErrorsHandler.executeSafely {
+        val response =
+            footballApi.getTeamInfoById(teamId)
+        if (response.isSuccessful && response.code() == 200) {
+            val team = response.body()?.toTeamInfoEntity()
+            realmOptions.upsertTeamInfoFromRemoteToLocal(
+                team ?: TeamInfoEntity(),
+            )
+            Resource.Success(true)
+        } else {
+            retrofitErrorsHandler.responseFailureHandler(response)
         }
     }
 
-    override suspend fun getTeamInfoByIdFlowFromLocal(teamId: String): Flow<TeamInfo?> {
-        return realmOptions.getTeamInfoFlowById(teamId = teamId).map { it?.toTeamInfo() }
-    }
+    override suspend fun getTeamInfoByIdFlowFromLocal(teamId: String): Flow<TeamInfo?> =
+        realmOptions.getTeamInfoFlowById(
+            teamId = teamId,
+        ).map {
+            it?.toTeamInfo()
+        }
 
     override suspend fun getTeamMatchesFromRemoteToLocal(
-        teamId: String
-    ): Resource<Boolean> {
-        return retrofitErrorsHandler.executeSafely {
-            val response =
-                footballApi.getTeamMatches(teamId)
-            if (response.isSuccessful && response.code() == 200) {
-                response.body()?.toMatchesEntity(teamId = teamId)?.let { matches ->
-                    realmOptions.upsertMatchesFromRemoteToLocal(matches = matches)
-                }
-                Resource.Success(true)
-            } else {
-                retrofitErrorsHandler.responseFailureHandler(response)
+        teamId: String,
+    ): Resource<Boolean> = retrofitErrorsHandler.executeSafely {
+        val response =
+            footballApi.getTeamMatches(teamId)
+        if (response.isSuccessful && response.code() == 200) {
+            response.body()?.toMatchesEntity(teamId = teamId)?.let { matches ->
+                realmOptions.upsertMatchesFromRemoteToLocal(matches = matches)
             }
+            Resource.Success(true)
+        } else {
+            retrofitErrorsHandler.responseFailureHandler(response)
         }
     }
 
-    override suspend fun getTeamMatchesFlowFromLocal(teamId: String): Flow<TeamMatches?> {
-        return realmOptions.getMatchesFlowById(teamId).map { it?.toTeamMatches() }
-    }
+    override suspend fun getTeamMatchesFlowFromLocal(teamId: String): Flow<TeamMatches?> =
+        realmOptions.getMatchesFlowById(
+            teamId,
+        ).map {
+            it?.toTeamMatches()
+        }
 }

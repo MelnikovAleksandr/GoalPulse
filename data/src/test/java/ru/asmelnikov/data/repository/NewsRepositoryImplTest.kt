@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.net.ConnectException
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -14,7 +15,6 @@ import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.domain.models.News
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
 
 class NewsRepositoryImplTest {
 
@@ -26,7 +26,7 @@ class NewsRepositoryImplTest {
         api = FakeNewsApi()
         repository = NewsRepositoryImpl(
             newsApi = api,
-            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl()
+            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl(),
         )
     }
 
@@ -36,11 +36,11 @@ class NewsRepositoryImplTest {
             NewsDTO(
                 articles = listOf(
                     articleDto(title = "Arsenal win"),
-                    articleDto(title = "Saka scores")
+                    articleDto(title = "Saka scores"),
                 ),
                 status = "ok",
-                totalResults = 2
-            )
+                totalResults = 2,
+            ),
         )
 
         val result = repository.getNews("Arsenal")
@@ -49,7 +49,7 @@ class NewsRepositoryImplTest {
         assertEquals("Arsenal", api.requestedQuery)
         assertEquals(
             listOf("Arsenal win", "Saka scores"),
-            result.data?.articles?.map { it.title }
+            result.data?.articles?.map { it.title },
         )
     }
 
@@ -85,18 +85,16 @@ class NewsRepositoryImplTest {
 
     // region Factories
 
-    private fun articleDto(title: String): ArticleDTO {
-        return ArticleDTO(
-            author = null,
-            content = null,
-            description = null,
-            publishedAt = null,
-            source = null,
-            title = title,
-            url = null,
-            urlToImage = null
-        )
-    }
+    private fun articleDto(title: String): ArticleDTO = ArticleDTO(
+        author = null,
+        content = null,
+        description = null,
+        publishedAt = null,
+        source = null,
+        title = title,
+        url = null,
+        urlToImage = null,
+    )
 
     // endregion
 
@@ -111,7 +109,7 @@ class NewsRepositoryImplTest {
             query: String,
             language: String,
             sortBy: String,
-            pageSize: Int
+            pageSize: Int,
         ): Response<NewsDTO> {
             exception?.let { throw it }
             requestedQuery = query

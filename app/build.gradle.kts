@@ -48,7 +48,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -59,10 +59,10 @@ android {
             val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
             val baseName = "GoalPulse"
             val buildType = variant.buildType.name
-            val fileName = "${baseName}-${buildType}-" +
-                    "v${defaultConfig.versionName}-" +
-                    "vc${defaultConfig.versionCode}-" +
-                    "${getDateTimeFormat()}.apk"
+            val fileName = "$baseName-$buildType-" +
+                "v${defaultConfig.versionName}-" +
+                "vc${defaultConfig.versionCode}-" +
+                "${getDateTimeFormat()}.apk"
 
             outputImpl.outputFileName = fileName
         }

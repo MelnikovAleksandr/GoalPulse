@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.net.ConnectException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -25,7 +26,6 @@ import ru.asmelnikov.data.models.TeamInfoDTO
 import ru.asmelnikov.data.retrofit_errors_handler.RetrofitErrorsHandler
 import ru.asmelnikov.utils.ErrorsTypesHttp
 import ru.asmelnikov.utils.Resource
-import java.net.ConnectException
 
 class CompetitionsRepositoryImplTest {
 
@@ -40,7 +40,7 @@ class CompetitionsRepositoryImplTest {
         repository = CompetitionsRepositoryImpl(
             footballApi = api,
             realmOptions = realmOptions,
-            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl()
+            retrofitErrorsHandler = RetrofitErrorsHandler.RetrofitErrorsHandlerImpl(),
         )
     }
 
@@ -50,9 +50,9 @@ class CompetitionsRepositoryImplTest {
             CompetitionModelDTO(
                 competitions = listOf(
                     competitionDto(id = 2021, name = "Premier League"),
-                    competitionDto(id = 2014, name = "La Liga")
-                )
-            )
+                    competitionDto(id = 2014, name = "La Liga"),
+                ),
+            ),
         )
 
         val result = repository.getAllCompetitionsFromRemoteToLocal()
@@ -61,7 +61,7 @@ class CompetitionsRepositoryImplTest {
         assertEquals(true, result.data)
         assertEquals(
             listOf(2021 to "Premier League", 2014 to "La Liga"),
-            realmOptions.upserted?.map { it.id to it.name }
+            realmOptions.upserted?.map { it.id to it.name },
         )
     }
 
@@ -101,30 +101,28 @@ class CompetitionsRepositoryImplTest {
     fun localFlow_mapsEntitiesToDomain() = runBlocking {
         realmOptions.localCompetitions = listOf(
             competitionEntity(id = 2021, name = "Premier League"),
-            competitionEntity(id = 2014, name = "La Liga")
+            competitionEntity(id = 2014, name = "La Liga"),
         )
 
         val competitions = repository.getAllCompetitionsFlowFromLocal().first()
 
         assertEquals(
             listOf(2021 to "Premier League", 2014 to "La Liga"),
-            competitions.map { it.id to it.name }
+            competitions.map { it.id to it.name },
         )
     }
 
     // region Factories
 
-    private fun competitionDto(id: Int, name: String): CompetitionDTO {
-        return CompetitionDTO(
-            id = id,
-            area = null,
-            code = null,
-            currentSeason = null,
-            emblem = null,
-            name = name,
-            type = null
-        )
-    }
+    private fun competitionDto(id: Int, name: String): CompetitionDTO = CompetitionDTO(
+        id = id,
+        area = null,
+        code = null,
+        currentSeason = null,
+        emblem = null,
+        name = name,
+        type = null,
+    )
 
     private fun competitionEntity(id: Int, name: String): CompetitionEntity {
         val entity = CompetitionEntity()
@@ -153,7 +151,7 @@ class CompetitionsRepositoryImplTest {
 
         override suspend fun getCompetitionTopScorers(
             competitionId: String,
-            limit: Int
+            limit: Int,
         ): Response<CompetitionScorersModelDTO> {
             error("not used")
         }
@@ -184,14 +182,12 @@ class CompetitionsRepositoryImplTest {
         var localCompetitions: List<CompetitionEntity> = emptyList()
 
         override suspend fun upsertCompetitionsDataFromRemoteToLocal(
-            competitions: List<CompetitionEntity>
+            competitions: List<CompetitionEntity>,
         ) {
             upserted = competitions
         }
 
-        override fun getCompetitionsFlowFromLocal(): Flow<List<CompetitionEntity>> {
-            return flowOf(localCompetitions)
-        }
+        override fun getCompetitionsFlowFromLocal(): Flow<List<CompetitionEntity>> = flowOf(localCompetitions)
     }
 
     // endregion

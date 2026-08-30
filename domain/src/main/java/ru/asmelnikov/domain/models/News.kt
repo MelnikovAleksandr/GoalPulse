@@ -4,17 +4,11 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class News(
-    val articles: List<Article> = emptyList(),
-    val status: String = "",
-    val totalResults: Int = -1
-) : Parcelable
+data class News(val articles: List<Article> = emptyList(), val status: String = "", val totalResults: Int = -1) :
+    Parcelable
 
 @Parcelize
-data class Source(
-    val id: String = "",
-    val name: String = ""
-) : Parcelable
+data class Source(val id: String = "", val name: String = "") : Parcelable
 
 @Parcelize
 data class Article(
@@ -25,5 +19,5 @@ data class Article(
     val source: Source = Source(),
     val title: String = "",
     val url: String = "",
-    val urlToImage: String = ""
+    val urlToImage: String = "",
 ) : Parcelable

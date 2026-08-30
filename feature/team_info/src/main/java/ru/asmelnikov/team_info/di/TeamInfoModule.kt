@@ -13,7 +13,7 @@ val teamInfoModule = module {
             standingsRepository = get(),
             newsRepository = get(),
             matchCalendarRepository = get(),
-            teamId = teamId
+            teamId = teamId,
         )
     }
 }

@@ -79,12 +79,11 @@ fun SharedTransitionScope.CompetitionsScreen(
         String,
         SnackbarDuration,
         String?,
-        actionPerformed: () -> Unit
+        actionPerformed: () -> Unit,
     ) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: CompetitionsScreenViewModel = koinViewModel()
+    viewModel: CompetitionsScreenViewModel = koinViewModel(),
 ) {
-
     val state by viewModel.container.stateFlow.collectAsState()
 
     viewModel.collectSideEffect {
@@ -92,7 +91,7 @@ fun SharedTransitionScope.CompetitionsScreen(
             is CompetitionsScreenSideEffects.Snackbar -> showSnackbar(
                 it.text,
                 it.duration,
-                null
+                null,
             ) {}
 
             is CompetitionsScreenSideEffects.OnCompetitionNavigate -> {
@@ -106,7 +105,7 @@ fun SharedTransitionScope.CompetitionsScreen(
         updateComps = viewModel::updateCompetitionsFromRemoteToLocal,
         isLoading = state.isLoading,
         onCompClick = viewModel::onCompClick,
-        animatedVisibilityScope = animatedVisibilityScope
+        animatedVisibilityScope = animatedVisibilityScope,
     )
 }
 
@@ -116,7 +115,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
     updateComps: () -> Unit,
     isLoading: Boolean,
     onCompClick: (String, String) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
 ) {
     val videoBackdrop = rememberLayerBackdrop()
     val listBackdrop = rememberLayerBackdrop()
@@ -173,14 +172,14 @@ fun SharedTransitionScope.CompetitionsScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         MainBackVideo(
             modifier = Modifier
                 .fillMaxSize()
                 .layerBackdrop(videoBackdrop),
             videoResId = R.raw.main_back_video,
-            reverseVideoResId = R.raw.main_back_video_reverse
+            reverseVideoResId = R.raw.main_back_video_reverse,
         )
 
         Scaffold(
@@ -198,9 +197,9 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                     competitionsCount = comps.size,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
-                    searchBarScrollState = searchBarScrollState
+                    searchBarScrollState = searchBarScrollState,
                 )
-            }
+            },
         ) { paddingValues ->
             val listTopPadding = paddingValues.calculateTopPadding() + dimens.small3
             LiquidPullToRefreshWrapper(
@@ -212,7 +211,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                 backdrop = refreshBackdrop,
                 isRefreshing = isLoading,
                 onRefresh = updateComps,
-                topOffset = refreshIndicatorTopOffset
+                topOffset = refreshIndicatorTopOffset,
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     AnimatedContent(
@@ -223,7 +222,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                             filteredComps.isEmpty() -> ContentState.NotFound
                             else -> ContentState.List
                         },
-                        label = "competitions_content"
+                        label = "competitions_content",
                     ) { state ->
                         when (state) {
                             ContentState.Loading -> {
@@ -234,7 +233,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .competitionsListScrollEffects(
                                             searchBarScrollState = searchBarScrollState,
                                             focusManager = focusManager,
-                                            isScrollCollapseEnabled = searchQuery.isBlank()
+                                            isScrollCollapseEnabled = searchQuery.isBlank(),
                                         )
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.medium2),
@@ -242,8 +241,8 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         start = dimens.medium1,
                                         end = dimens.medium1,
                                         top = listTopPadding,
-                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3
-                                    )
+                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3,
+                                    ),
                                 ) {
                                     items(10) {
                                         ShimmerListItem(backdrop = videoBackdrop)
@@ -258,10 +257,10 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(top = paddingValues.calculateTopPadding())
+                                        .padding(top = paddingValues.calculateTopPadding()),
                                 ) {
                                     EmptyContent(
-                                        onReloadClick = updateComps
+                                        onReloadClick = updateComps,
                                     )
                                 }
                             }
@@ -270,15 +269,15 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(horizontal = dimens.medium1)
+                                        .padding(horizontal = dimens.medium1),
                                 ) {
                                     Text(
                                         modifier = Modifier.padding(
-                                            top = paddingValues.calculateTopPadding() + dimens.medium2
+                                            top = paddingValues.calculateTopPadding() + dimens.medium2,
                                         ),
                                         text = stringResource(R.string.competitions_not_found),
                                         style = MaterialTheme.typography.bodyLarge,
-                                        color = Color.White.copy(alpha = 0.55f)
+                                        color = Color.White.copy(alpha = 0.55f),
                                     )
                                 }
                             }
@@ -291,7 +290,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         .competitionsListScrollEffects(
                                             searchBarScrollState = searchBarScrollState,
                                             focusManager = focusManager,
-                                            isScrollCollapseEnabled = searchQuery.isBlank()
+                                            isScrollCollapseEnabled = searchQuery.isBlank(),
                                         )
                                         .layerBackdrop(listBackdrop),
                                     verticalArrangement = Arrangement.spacedBy(dimens.medium2),
@@ -299,8 +298,8 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                         start = dimens.medium1,
                                         end = dimens.medium1,
                                         top = listTopPadding,
-                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3
-                                    )
+                                        bottom = paddingValues.calculateBottomPadding() + dimens.small3,
+                                    ),
                                 ) {
                                     items(items = filteredComps, key = { it.id }) { comp ->
                                         CompetitionItem(
@@ -308,7 +307,7 @@ fun SharedTransitionScope.CompetitionsScreenContent(
                                             competition = comp,
                                             backdrop = videoBackdrop,
                                             animatedVisibilityScope = animatedVisibilityScope,
-                                            onCompClick = onCompClick
+                                            onCompClick = onCompClick,
                                         )
                                     }
                                     item {
@@ -323,7 +322,6 @@ fun SharedTransitionScope.CompetitionsScreenContent(
         }
     }
 }
-
 
 private enum class ContentState {
     Loading,
@@ -357,13 +355,14 @@ private fun Modifier.competitionsListScrollEffects(
                 return Velocity.Zero
             }
         }
-    }
+    },
 )
 
-
 @Preview(
-    showBackground = true, locale = "ru", showSystemUi = false,
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+    showBackground = true,
+    locale = "ru",
+    showSystemUi = false,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
 )
 @Composable
 private fun CompetitionsScreenContentPreview1() {
@@ -371,7 +370,7 @@ private fun CompetitionsScreenContentPreview1() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionsScreenContent(
@@ -379,7 +378,7 @@ private fun CompetitionsScreenContentPreview1() {
                     updateComps = {},
                     isLoading = false,
                     onCompClick = { _, _ -> },
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }
@@ -393,7 +392,7 @@ private fun CompetitionsScreenContentPreview2() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionsScreenContent(
@@ -401,13 +400,12 @@ private fun CompetitionsScreenContentPreview2() {
                     updateComps = {},
                     isLoading = false,
                     onCompClick = { _, _ -> },
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true, locale = "ru")
 @Composable
@@ -416,7 +414,7 @@ private fun CompetitionsScreenContentPreview3() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionsScreenContent(
@@ -424,7 +422,7 @@ private fun CompetitionsScreenContentPreview3() {
                     updateComps = {},
                     isLoading = true,
                     onCompClick = { _, _ -> },
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }
@@ -438,7 +436,7 @@ private fun CompetitionsScreenContentPreview4() {
         SharedTransitionLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
         ) {
             AnimatedVisibility(visible = true) {
                 CompetitionsScreenContent(
@@ -446,7 +444,7 @@ private fun CompetitionsScreenContentPreview4() {
                     updateComps = {},
                     isLoading = false,
                     onCompClick = { _, _ -> },
-                    animatedVisibilityScope = this
+                    animatedVisibilityScope = this,
                 )
             }
         }

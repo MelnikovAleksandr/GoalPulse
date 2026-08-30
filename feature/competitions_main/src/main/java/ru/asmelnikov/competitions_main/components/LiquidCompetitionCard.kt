@@ -27,7 +27,7 @@ fun LiquidCompetitionCard(
     backdrop: LayerBackdrop,
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val glassSpec = rememberLiquidGlassCardSpec()
     val liquidColor = MaterialTheme.colorScheme.onBackground
@@ -47,7 +47,7 @@ fun LiquidCompetitionCard(
                 },
                 onDrawSurface = {
                     drawLiquidGlassCardSurface(surfaceColor = liquidColor)
-                }
+                },
             )
             .then(
                 if (onClick != null) {
@@ -56,12 +56,12 @@ fun LiquidCompetitionCard(
                         .clickable(
                             interactionSource = interactionSource,
                             indication = ripple(bounded = true),
-                            onClick = onClick
+                            onClick = onClick,
                         )
                 } else {
                     Modifier
-                }
+                },
             ),
-        content = content
+        content = content,
     )
 }

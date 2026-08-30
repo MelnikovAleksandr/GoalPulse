@@ -17,11 +17,7 @@ object LiquidGlassDefaults {
     const val CARD_OVERLAY_ALPHA = 0.06f
 }
 
-data class LiquidGlassEffectSpec(
-    val blurPx: Float,
-    val lensWidthPx: Float,
-    val lensHeightPx: Float
-)
+data class LiquidGlassEffectSpec(val blurPx: Float, val lensWidthPx: Float, val lensHeightPx: Float)
 
 @Composable
 fun rememberLiquidGlassCompactSpec(): LiquidGlassEffectSpec {
@@ -31,7 +27,7 @@ fun rememberLiquidGlassCompactSpec(): LiquidGlassEffectSpec {
         appDimens.small1,
         appDimens.small3,
         appDimens.medium2,
-        density
+        density,
     ) {
         appDimens.liquidGlassCompactSpec(density)
     }
@@ -45,7 +41,7 @@ fun rememberLiquidGlassCardSpec(): LiquidGlassEffectSpec {
         appDimens.small1,
         appDimens.medium1,
         appDimens.medium3,
-        density
+        density,
     ) {
         appDimens.liquidGlassCardSpec(density)
     }
@@ -55,7 +51,7 @@ fun Dimens.liquidGlassCompactSpec(density: Density): LiquidGlassEffectSpec = wit
     LiquidGlassEffectSpec(
         blurPx = small1.toPx(),
         lensWidthPx = small3.toPx(),
-        lensHeightPx = medium2.toPx()
+        lensHeightPx = medium2.toPx(),
     )
 }
 
@@ -63,14 +59,14 @@ fun Dimens.liquidGlassCardSpec(density: Density): LiquidGlassEffectSpec = with(d
     LiquidGlassEffectSpec(
         blurPx = small1.toPx(),
         lensWidthPx = medium1.toPx(),
-        lensHeightPx = medium3.toPx()
+        lensHeightPx = medium3.toPx(),
     )
 }
 
 fun DrawScope.drawLiquidGlassSurface(
     surfaceAlpha: Float = LiquidGlassDefaults.COMPACT_SURFACE_ALPHA,
     overlayAlpha: Float = LiquidGlassDefaults.COMPACT_OVERLAY_ALPHA,
-    surfaceColor: Color = Color.White
+    surfaceColor: Color = Color.White,
 ) {
     drawRect(surfaceColor.copy(alpha = surfaceAlpha))
     drawRect(surfaceColor.copy(alpha = overlayAlpha), blendMode = BlendMode.Overlay)
@@ -80,6 +76,6 @@ fun DrawScope.drawLiquidGlassCardSurface(surfaceColor: Color = Color.White) {
     drawLiquidGlassSurface(
         surfaceAlpha = LiquidGlassDefaults.CARD_SURFACE_ALPHA,
         overlayAlpha = LiquidGlassDefaults.CARD_OVERLAY_ALPHA,
-        surfaceColor = surfaceColor
+        surfaceColor = surfaceColor,
     )
 }

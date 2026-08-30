@@ -10,12 +10,11 @@ interface StringResourceProvider {
     fun getString(@StringRes resourceId: Int, vararg arguments: Any): String
 
     class StringResourceProviderImpl(private val context: Context) : StringResourceProvider {
-        override fun getString(resourceId: Int): String {
-            return context.getString(resourceId)
-        }
+        override fun getString(resourceId: Int): String = context.getString(resourceId)
 
-        override fun getString(resourceId: Int, vararg arguments: Any): String {
-            return context.getString(resourceId, *arguments)
-        }
+        override fun getString(resourceId: Int, vararg arguments: Any): String = context.getString(
+            resourceId,
+            *arguments,
+        )
     }
 }

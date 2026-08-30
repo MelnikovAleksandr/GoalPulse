@@ -24,38 +24,38 @@ import ru.asmelnikov.utils.ui.theme.dimens
 @Composable
 fun ShimmerListItem(
     backdrop: LayerBackdrop,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LiquidCompetitionCard(
         backdrop = backdrop,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimens.medium1),
             horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(dimens.champLogoDefaultSize)
                     .aspectRatio(1f)
-                    .shimmerEffect()
+                    .shimmerEffect(),
             )
 
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Row {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(0.7f)
                             .height(dimens.medium1)
-                            .shimmerEffect()
+                            .shimmerEffect(),
                     )
 
                     Spacer(modifier = Modifier.width(dimens.small1))
@@ -64,7 +64,7 @@ fun ShimmerListItem(
                         modifier = Modifier
                             .size(dimens.medium1)
                             .clip(CircleShape)
-                            .shimmerEffect()
+                            .shimmerEffect(),
                     )
                 }
 
@@ -72,19 +72,19 @@ fun ShimmerListItem(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(dimens.medium1)
-                        .shimmerEffect()
+                        .shimmerEffect(),
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(dimens.medium1)
-                        .shimmerEffect()
+                        .shimmerEffect(),
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(dimens.medium1)
-                        .shimmerEffect()
+                        .shimmerEffect(),
                 )
             }
         }

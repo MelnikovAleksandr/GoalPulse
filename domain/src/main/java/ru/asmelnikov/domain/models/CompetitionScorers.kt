@@ -1,14 +1,14 @@
 package ru.asmelnikov.domain.models
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.util.UUID
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CompetitionScorers(
     val id: String = UUID.randomUUID().toString(),
     val season: CurrentSeason = CurrentSeason(),
-    val scorers: List<Scorer> = emptyList()
+    val scorers: List<Scorer> = emptyList(),
 ) : Parcelable
 
 @Parcelize
@@ -18,7 +18,7 @@ data class Scorer(
     val penalties: Int = 0,
     val playedMatches: Int = 0,
     val player: Player = Player(),
-    val team: Team = Team()
+    val team: Team = Team(),
 ) : Parcelable
 
 @Parcelize
@@ -30,5 +30,5 @@ data class Player(
     val name: String = "",
     val nationality: String = "",
     val position: PlayerPosition = PlayerPosition.NON,
-    val shirtNumber: Int = -1
+    val shirtNumber: Int = -1,
 ) : Parcelable

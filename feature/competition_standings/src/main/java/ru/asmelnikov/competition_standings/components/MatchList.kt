@@ -35,7 +35,7 @@ fun MatchList(
     isHead2headLoading: Boolean,
     calendarMatchIds: Set<Int> = emptySet(),
     calendarBusyMatchIds: Set<Int> = emptySet(),
-    onCalendarClick: (Match) -> Unit = {}
+    onCalendarClick: (Match) -> Unit = {},
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
@@ -43,20 +43,20 @@ fun MatchList(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         state = listState,
-        contentPadding = PaddingValues(top = topInset)
+        contentPadding = PaddingValues(top = topInset),
     ) {
         matches.forEachIndexed { index, matchesByTour ->
             val stickyKey = "standing_sticky_$index"
             stickyHeaderContentPaddingAware(
                 listState = listState,
                 key = stickyKey,
-                contentType = stickyKey
+                contentType = stickyKey,
             ) {
                 StickyHeader(matchesByTour = matchesByTour)
             }
             itemsIndexed(
                 items = matchesByTour.matches,
-                key = { _, match -> match.id }
+                key = { _, match -> match.id },
             ) { index, match ->
                 MatchItem(
                     modifier = Modifier.animateItem(),
@@ -83,7 +83,7 @@ fun MatchList(
                     head2headId = head2head.id,
                     isInCalendar = calendarMatchIds.contains(match.id),
                     isCalendarLoading = calendarBusyMatchIds.contains(match.id),
-                    onCalendarClick = { onCalendarClick(match) }
+                    onCalendarClick = { onCalendarClick(match) },
                 )
                 if (index < matchesByTour.matches.size - 1) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.primary)
@@ -106,7 +106,7 @@ private fun MatchListPreview1() {
             expandedItemId = -1,
             onMatchItemClick = {},
             head2head = getMockHead2Head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
         )
     }
 }
@@ -121,7 +121,7 @@ private fun MatchListPreview2() {
             expandedItemId = -1,
             onMatchItemClick = {},
             head2head = getMockHead2Head(),
-            isHead2headLoading = false
+            isHead2headLoading = false,
         )
     }
 }

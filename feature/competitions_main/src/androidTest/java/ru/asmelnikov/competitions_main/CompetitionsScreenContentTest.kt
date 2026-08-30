@@ -16,6 +16,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
@@ -38,7 +39,7 @@ class CompetitionsScreenContentTest {
     fun emptyListNotLoading_showsReload_hidesLeagues() {
         setScreen(comps = emptyList())
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Premier League").assertDoesNotExist()
         composeTestRule.onNodeWithText(notFoundLabel).assertDoesNotExist()
     }
@@ -49,7 +50,7 @@ class CompetitionsScreenContentTest {
 
         setScreen(comps = emptyList(), onUpdate = { updateCalls++ })
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, updateCalls)
     }

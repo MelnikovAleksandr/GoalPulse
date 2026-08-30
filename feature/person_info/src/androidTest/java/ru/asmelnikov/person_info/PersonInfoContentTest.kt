@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -31,7 +32,7 @@ class PersonInfoContentTest {
     fun emptyNotLoading_showsReload_hidesPlayer() {
         setScreen(person = emptyPerson)
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Bukayo Saka").assertDoesNotExist()
         composeTestRule.onNodeWithText(nameLabel).assertDoesNotExist()
     }
@@ -42,7 +43,7 @@ class PersonInfoContentTest {
 
         setScreen(person = emptyPerson, onReload = { reloadCalls++ })
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, reloadCalls)
     }

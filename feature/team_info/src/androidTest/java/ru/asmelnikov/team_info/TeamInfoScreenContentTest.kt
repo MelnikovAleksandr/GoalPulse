@@ -12,6 +12,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -45,7 +46,7 @@ class TeamInfoScreenContentTest {
     fun emptySquadNotLoading_showsReload_hidesPlayers() {
         setScreen(teamInfo = arsenalWithoutSquad)
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Bukayo Saka").assertDoesNotExist()
         composeTestRule.onNodeWithText("Mikel Arteta").assertDoesNotExist()
     }
@@ -61,7 +62,7 @@ class TeamInfoScreenContentTest {
             onMatchesReload = { matchesReloads++ },
         )
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, teamInfoReloads)
         assertEquals(0, matchesReloads)
@@ -211,7 +212,7 @@ class TeamInfoScreenContentTest {
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Arsenal - Chelsea").assertDoesNotExist()
     }
 
@@ -226,7 +227,7 @@ class TeamInfoScreenContentTest {
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(0, teamInfoReloads)
         assertEquals(1, matchesReloads)

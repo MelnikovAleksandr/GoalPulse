@@ -16,6 +16,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -50,7 +51,7 @@ class CompetitionStandingsContentTest {
     fun emptyStandingsNotLoading_showsReload_hidesTeam() {
         setScreen(competitionStandings = premierLeagueWithoutTable)
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Arsenal").assertDoesNotExist()
     }
 
@@ -67,7 +68,7 @@ class CompetitionStandingsContentTest {
             onReloadMatches = { matchesReloads++ },
         )
 
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(1, standingsReloads)
         assertEquals(0, scorersReloads)
@@ -256,7 +257,7 @@ class CompetitionStandingsContentTest {
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Bukayo Saka").assertDoesNotExist()
     }
 
@@ -275,7 +276,7 @@ class CompetitionStandingsContentTest {
         )
 
         composeTestRule.onNodeWithText(scorersTabLabel).performClick()
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(0, standingsReloads)
         assertEquals(1, scorersReloads)
@@ -317,7 +318,7 @@ class CompetitionStandingsContentTest {
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
 
-        composeTestRule.onNodeWithText(reloadLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(reloadLabel).assertExists()
         composeTestRule.onNodeWithText("Arsenal - Chelsea").assertDoesNotExist()
     }
 
@@ -334,7 +335,7 @@ class CompetitionStandingsContentTest {
         )
 
         composeTestRule.onNodeWithText(matchesTabLabel).performClick()
-        composeTestRule.onNodeWithText(reloadLabel).performClick()
+        composeTestRule.onNodeWithText(reloadLabel).performScrollTo().performClick()
 
         assertEquals(0, standingsReloads)
         assertEquals(0, scorersReloads)

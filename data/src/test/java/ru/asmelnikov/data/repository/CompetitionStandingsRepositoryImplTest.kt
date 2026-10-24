@@ -1,6 +1,7 @@
 package ru.asmelnikov.data.repository
 
 import java.net.ConnectException
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -69,6 +70,25 @@ class CompetitionStandingsRepositoryImplTest {
         assertEquals("2021", realmOptions.upsertedStandings?.id)
         assertNull(realmOptions.upsertedScorers)
         assertNull(realmOptions.upsertedMatches)
+    }
+
+    @Test
+    fun standingsForFinishedSeason_requestsTableAtSeasonEndDate() = runBlocking {
+        realmOptions.currentSeasonEndDate = "2024-07-14"
+
+        repository.getCompetitionStandingsFromRemoteToLocalById("2018")
+
+        assertEquals("2018", api.requestedStandingsId)
+        assertEquals("2024-07-14", api.requestedStandingsDate)
+    }
+
+    @Test
+    fun standingsForOngoingSeason_requestsTableForToday() = runBlocking {
+        realmOptions.currentSeasonEndDate = "2999-05-30"
+
+        repository.getCompetitionStandingsFromRemoteToLocalById("2021")
+
+        assertEquals(LocalDate.now().toString(), api.requestedStandingsDate)
     }
 
     @Test
@@ -213,6 +233,7 @@ class CompetitionStandingsRepositoryImplTest {
         var exception: Exception? = null
 
         var requestedStandingsId: String? = null
+        var requestedStandingsDate: String? = null
         var requestedScorersId: String? = null
         var requestedMatchesId: String? = null
         var requestedHead2headId: String? = null
@@ -223,9 +244,11 @@ class CompetitionStandingsRepositoryImplTest {
 
         override suspend fun getCompetitionStandingById(
             competitionId: String,
+            date: String?,
         ): Response<CompetitionStandingsModelDTO> {
             exception?.let { throw it }
             requestedStandingsId = competitionId
+            requestedStandingsDate = date
             return standingsResponse
         }
 
@@ -269,10 +292,13 @@ class CompetitionStandingsRepositoryImplTest {
         var upsertedMatches: MatchesEntity? = null
         var localStandings: CompetitionStandingsEntity? = null
         var requestedStandingsId: String? = null
+        var currentSeasonEndDate: String? = null
 
         override suspend fun upsertStandingsFromRemoteToLocal(standings: CompetitionStandingsEntity) {
             upsertedStandings = standings
         }
+
+        override suspend fun getCurrentSeasonEndDate(compId: String): String? = currentSeasonEndDate
 
         override fun getStandingsFlowById(compId: String): Flow<CompetitionStandingsEntity?> {
             requestedStandingsId = compId

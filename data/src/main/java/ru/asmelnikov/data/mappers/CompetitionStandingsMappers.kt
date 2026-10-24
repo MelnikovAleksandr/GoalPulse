@@ -17,6 +17,8 @@ import ru.asmelnikov.domain.models.Standing
 import ru.asmelnikov.domain.models.Table
 import ru.asmelnikov.domain.models.TournamentType
 
+private const val TOTAL_STANDING_TYPE = "TOTAL"
+
 fun CompetitionStandingsModelDTO.toCompetitionStandingsEntity(): CompetitionStandingsEntity =
     CompetitionStandingsEntity().apply {
         id = this@toCompetitionStandingsEntity.competition?.id?.toString() ?: UUID.randomUUID()
@@ -24,7 +26,9 @@ fun CompetitionStandingsModelDTO.toCompetitionStandingsEntity(): CompetitionStan
         area = this@toCompetitionStandingsEntity.area.toAreaEntity()
         competition = this@toCompetitionStandingsEntity.competition?.toCompetitionEmbeddedEntity()
         standings = realmListOf<StandingEntity>().apply {
-            this@toCompetitionStandingsEntity.standings?.map { it.toStandingEntity() }
+            this@toCompetitionStandingsEntity.standings
+                ?.filter { it.type == null || it.type == TOTAL_STANDING_TYPE }
+                ?.map { it.toStandingEntity() }
                 ?.let { addAll(it) }
         }
     }

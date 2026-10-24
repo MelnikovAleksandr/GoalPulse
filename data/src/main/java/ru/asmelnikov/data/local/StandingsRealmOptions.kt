@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import ru.asmelnikov.data.local.models.CompetitionEntity
 import ru.asmelnikov.data.local.models.CompetitionScorersEntity
 import ru.asmelnikov.data.local.models.CompetitionStandingsEntity
 import ru.asmelnikov.data.local.models.MatchesEntity
@@ -17,6 +18,8 @@ interface StandingsRealmOptions {
     suspend fun upsertStandingsFromRemoteToLocal(standings: CompetitionStandingsEntity)
 
     fun getStandingsFlowById(compId: String): Flow<CompetitionStandingsEntity?>
+
+    suspend fun getCurrentSeasonEndDate(compId: String): String?
 
     suspend fun upsertScorersFromRemoteToLocal(comp: CompetitionScorersEntity)
 
@@ -42,6 +45,12 @@ interface StandingsRealmOptions {
             ).asFlow()
                 .map { it.list.firstOrNull() }
                 .flowOn(Dispatchers.IO)
+
+        override suspend fun getCurrentSeasonEndDate(compId: String): String? = withContext(Dispatchers.IO) {
+            val id = compId.toIntOrNull() ?: return@withContext null
+            realm.query<CompetitionEntity>("id == $0", id).first().find()
+                ?.currentSeason?.endDate?.takeIf { it.isNotEmpty() }
+        }
 
         override suspend fun upsertScorersFromRemoteToLocal(comp: CompetitionScorersEntity) {
             withContext(Dispatchers.IO) {

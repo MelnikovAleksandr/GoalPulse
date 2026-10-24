@@ -145,7 +145,10 @@ class CompetitionsRepositoryImplTest {
             return competitionsResponse
         }
 
-        override suspend fun getCompetitionStandingById(competitionId: String): Response<CompetitionStandingsModelDTO> {
+        override suspend fun getCompetitionStandingById(
+            competitionId: String,
+            date: String?,
+        ): Response<CompetitionStandingsModelDTO> {
             error("not used")
         }
 

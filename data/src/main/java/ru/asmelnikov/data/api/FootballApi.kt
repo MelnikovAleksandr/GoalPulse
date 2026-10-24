@@ -24,6 +24,7 @@ interface FootballApi {
     @Headers("X-Auth-Token: $FOOTBALL_API_KEY")
     suspend fun getCompetitionStandingById(
         @Path("competitionId") competitionId: String,
+        @Query("date") date: String? = null,
     ): Response<CompetitionStandingsModelDTO>
 
     @GET("competitions/{competitionId}/scorers")

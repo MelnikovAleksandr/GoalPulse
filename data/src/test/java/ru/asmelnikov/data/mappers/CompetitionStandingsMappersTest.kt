@@ -6,6 +6,8 @@ import org.junit.Test
 import ru.asmelnikov.data.local.models.StandingEntity
 import ru.asmelnikov.data.local.models.TableEntity
 import ru.asmelnikov.data.local.models.TeamEmbeddedEntity
+import ru.asmelnikov.data.models.CompetitionStandingsModelDTO
+import ru.asmelnikov.data.models.StandingDTO
 
 class CompetitionStandingsMappersTest {
 
@@ -26,6 +28,23 @@ class CompetitionStandingsMappersTest {
                 3 to "Chelsea",
             ),
             standing.toStanding().table.map { it.position to it.team.name },
+        )
+    }
+
+    @Test
+    fun toCompetitionStandingsEntity_keepsOnlyTotalTable() {
+        val dto = CompetitionStandingsModelDTO(
+            area = null,
+            competition = null,
+            season = null,
+            standings = listOf("TOTAL", "HOME", "AWAY").map { type ->
+                StandingDTO(group = null, stage = "GROUP_STAGE", table = emptyList(), type = type)
+            },
+        )
+
+        assertEquals(
+            listOf("TOTAL"),
+            dto.toCompetitionStandingsEntity().standings?.map { it.type },
         )
     }
 

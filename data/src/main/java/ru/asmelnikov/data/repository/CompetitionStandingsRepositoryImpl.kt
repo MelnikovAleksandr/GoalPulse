@@ -1,5 +1,6 @@
 package ru.asmelnikov.data.repository
 
+import java.time.LocalDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -34,8 +35,10 @@ class CompetitionStandingsRepositoryImpl(
         compId: String,
     ): Resource<Boolean> = withContext(Dispatchers.IO) {
         retrofitErrorsHandler.executeSafely {
+            val today = LocalDate.now().toString()
+            val date = realmOptions.getCurrentSeasonEndDate(compId)?.let { minOf(it, today) } ?: today
             val response =
-                footballApi.getCompetitionStandingById(compId)
+                footballApi.getCompetitionStandingById(compId, date)
             if (response.isSuccessful && response.code() == 200) {
                 val standings = response.body()?.toCompetitionStandingsEntity()
                 realmOptions.upsertStandingsFromRemoteToLocal(

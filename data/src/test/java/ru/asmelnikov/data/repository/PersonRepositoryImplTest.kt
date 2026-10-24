@@ -105,6 +105,7 @@ class PersonRepositoryImplTest {
 
         override suspend fun getCompetitionStandingById(
             competitionId: String,
+            date: String?,
         ): Response<CompetitionStandingsModelDTO> {
             error("not used")
         }

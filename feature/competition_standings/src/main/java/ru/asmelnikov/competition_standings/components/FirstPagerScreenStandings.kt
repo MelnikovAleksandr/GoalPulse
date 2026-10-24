@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import ru.asmelnikov.domain.models.CompetitionStandings
+import ru.asmelnikov.domain.models.Group
 import ru.asmelnikov.domain.models.getMockStandings
 import ru.asmelnikov.utils.composables.EmptyContent
 import ru.asmelnikov.utils.composables.liquid.LiquidPullToRefreshWrapper
@@ -92,11 +93,12 @@ fun FirstPagerScreenStandings(
                         }
                         itemsIndexed(
                             items = standing.table,
-                            key = { _, table -> table.team.id },
+                            key = { _, table -> "standing_${standingIndex}_${table.team.id}" },
                         ) { tableIndex, table ->
                             val color = competitionStandings.competition.code.getCompColor(
                                 tableIndex,
                                 standing.table.size,
+                                isGroupTable = standing.group != Group.NON,
                             )
                             StandingItem(
                                 modifier = Modifier,
